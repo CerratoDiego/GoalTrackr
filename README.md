@@ -13,5 +13,5 @@ GoalTrackr è un'applicazione web gestionale progettata per assistere nell'organ
 
 ## Tecnologie Utilizzate
 
-- **Frontend**: HTML, CSS, JavaScript
+- **Frontend**: HTML, CSS, JavaScript, Bootstrap
 - **Backend**: Node.js, Express.js, MongoDB
