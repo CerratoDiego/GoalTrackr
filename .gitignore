@@ -1,0 +1,49 @@
+# Node.js
+node_modules/
+
+# Angular
+dist/
+*.log
+*.bak
+
+# IDE files
+.vscode/
+.idea/
+
+# Dependency directories
+jspm_packages/
+
+# Compiled TypeScript
+*.js
+*.js.map
+
+# Compiled CSS
+*.css
+
+# Sourcemaps
+*.js.map
+*.css.map
+
+# Test generated files
+karma.conf.js
+
+# System and project files
+*.suo
+*.user
+*.sln
+*.csproj
+*.csproj.user
+*.suo
+*.user
+
+# Visual Studio Code directories
+.vscode/
+
+# WebStorm directories
+.idea/
+
+# Angular CLI configuration
+.angular-cli.json
+.angular-cli.json.backup
+
+/.angular/cache
