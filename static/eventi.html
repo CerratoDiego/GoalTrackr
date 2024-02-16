@@ -43,6 +43,14 @@
             </a>
 
             <!-- Divider -->
+            <hr class="sidebar-divider d-none d-md-block">
+
+            <!-- Sidebar Toggler (Sidebar) -->
+            <div class="text-center d-none d-md-inline">
+                <button class="rounded-circle border-0" id="sidebarToggle"></button>
+            </div>
+
+            <!-- Divider -->
             <hr class="sidebar-divider my-0">
 
             <!-- Nav Item - Dashboard -->
@@ -58,12 +66,12 @@
 
             <!-- Heading -->
             <div class="sidebar-heading">
-                Organizzazione eventi
+                Gestione eventi
             </div>
 
             <!-- Nav Item - Calendario Collapse Menu -->
             <li class="nav-item">
-                <a id="calendarToggler" class="nav-link collapsed" href="#">
+                <a id="calendarToggler" class="nav-link collapsed" href="calendario.html">
                     <i class="fas fa-calendar"></i>
                     <span>Calendario</span>
                 </a>
@@ -76,7 +84,7 @@
                     <i class="fas fa-calendar-check"></i>
                     <span>Eventi</span>
                 </a>
-                <div id="collapseEventi" class="collapse" aria-labelledby="headingUtilities"
+                <div id="collapseEventi" class="collapse show" aria-labelledby="headingUtilities"
                     data-parent="#accordionSidebar">
                     <div class="bg-white py-2 collapse-inner rounded">
                         <h6 class="collapse-header">Eventi disponibili:</h6>
@@ -85,7 +93,7 @@
                             Allenamenti
                         </a>
                         <a class="collapse-item" href="eventi.html">
-                            <i class="fas fa-running"></i>
+                            <i class="fas fa-trophy"></i>
                             Partite
                         </a>
                         <a class="collapse-item" href="eventi.html">
@@ -106,16 +114,25 @@
 
             <!-- Nav Item - Pages Collapse Menu -->
             <li class="nav-item">
-                <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapsePages"
-                    aria-expanded="true" aria-controls="collapsePages">
+                <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseAssenze"
+                    aria-expanded="true" aria-controls="collapseAssenze">
                     <i class="fas fa-check-circle"></i>
                     <span>Assenze</span>
                 </a>
-                <div id="collapsePages" class="collapse" aria-labelledby="headingPages" data-parent="#accordionSidebar">
+                <div id="collapseAssenze" class="collapse" aria-labelledby="headingPages" data-parent="#accordionSidebar">
                     <div class="bg-white py-2 collapse-inner rounded">
-                        <a class="collapse-item" href="assenze.html">Allenamenti</a>
-                        <a class="collapse-item" href="assenze.html">Partite</a>
-                        <a class="collapse-item" href="assenze.html">Sessioni video</a>
+                        <a class="collapse-item" href="assenze.html">
+                            <i class="fas fa-dumbbell"></i>
+                            Allenamenti
+                        </a>
+                        <a class="collapse-item" href="assenze.html">
+                            <i class="fas fa-trophy"></i>
+                            Partite
+                        </a>
+                        <a class="collapse-item" href="assenze.html">
+                            <i class="fas fa-video"></i>
+                            Sessioni video
+                        </a>
                     </div>
                 </div>
             </li>
@@ -130,16 +147,36 @@
 
             <!-- Nav Item - Statistiche -->
             <li class="nav-item">
-                <a class="nav-link" href="charts.html">
-                    <i class="fas fa-fw fa-chart-area"></i>
-                    <span>Statistiche</span></a>
+                <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseStatistiche"
+                    aria-expanded="true" aria-controls="collapseStatistiche">
+                    <i class="fas fa-chart-area"></i>
+                    <span>Statistiche</span>
+                </a>
+                <div id="collapseStatistiche" class="collapse" aria-labelledby="headingPages" data-parent="#accordionSidebar">
+                    <div class="bg-white py-2 collapse-inner rounded">
+                        <a class="collapse-item" href="statistiche.html">
+                            <i class="fas fa-user"></i>
+                            Statistiche Giocatori
+                        </a>
+                        <a class="collapse-item" href="statistiche.html">
+                            <i class="fas fa-chart-bar"></i>
+                            Statistiche Squadra
+                        </a>
+                    </div>
+                </div>
             </li>
 
             <!-- Nav Item - Tables -->
             <li class="nav-item">
-                <a class="nav-link" href="tables.html">
-                    <i class="fas fa-fw fa-table"></i>
-                    <span>Tables</span></a>
+                <a class="nav-link" href="giocatori.html">
+                    <i class="fas fa-running"></i>
+                    <span>Giocatori</span></a>
+            </li>
+
+            <li class="nav-item">
+                <a class="nav-link" href="squadra.html">
+                    <i class="fas fa-users"></i>
+                    <span>Squadra</span></a>
             </li>
 
             <!-- Divider -->
@@ -165,12 +202,19 @@
             </li>
 
             <!-- Divider -->
-            <hr class="sidebar-divider d-none d-md-block">
+            <hr class="sidebar-divider">
 
-            <!-- Sidebar Toggler (Sidebar) -->
-            <div class="text-center d-none d-md-inline">
-                <button class="rounded-circle border-0" id="sidebarToggle"></button>
+            <!-- Heading -->
+            <div class="sidebar-heading">
+                Gestione account
             </div>
+
+            <!-- Nav Item - Login -->
+            <li class="nav-item">
+                <a class="nav-link" href="account.html">
+                    <i class="fas fa-user"></i>
+                    <span>Il mio Account</span></a>
+            </li>
 
         </ul>
         <!-- End of Sidebar -->
