@@ -14,7 +14,6 @@ dist/
 jspm_packages/
 
 # Compiled TypeScript
-*.js
 *.js.map
 
 # Compiled CSS
