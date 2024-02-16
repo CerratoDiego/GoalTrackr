@@ -1,0 +1,130 @@
+[
+    {
+        "name": "Diego",
+        "surname": "Cerrato",
+        "age": 18,
+        "date_of_birth": "29-06-2005",
+        "email": "diego.cerrato@gmail.com",
+        "phone": "9203827163",
+        "team": "Area Calcio U19",
+        "stats": {
+            "games_played": 10,
+            "goals": 5,
+            "assists": 3,
+            "yellow_cards": 2,
+            "red_cards": 0
+        },
+        "username": "diego.cerrato",
+        "password": "Cerrato",
+        "assenze": {
+            "allenamenti": 2,
+            "partite": 1,
+            "sessioni_video": 0
+        }
+    },
+    {
+        "name": "Diego",
+        "surname": "Tarasco",
+        "age": 17,
+        "date_of_birth": "12-03-2005",
+        "team": "Area Calcio U19",
+        "stats": {
+            "games_played": 8,
+            "goals": 3,
+            "assists": 1,
+            "yellow_cards": 1,
+            "red_cards": 0
+        },
+        "username": "diego.tarasco",
+        "password": "Tarasco",
+        "assenze": {
+            "allenamenti": 0,
+            "partite": 3,
+            "sessioni_video": 2
+        }
+    },
+    {
+        "name": "Lorenzo",
+        "surname": "Montrucchio",
+        "age": 17,
+        "date_of_birth": "05-08-2005",
+        "team": "Area Calcio U19",
+        "stats": {
+            "games_played": 7,
+            "goals": 2,
+            "assists": 2,
+            "yellow_cards": 3,
+            "red_cards": 1
+        },
+        "username": "lorenzo.montrucchio",
+        "password": "Montrucchio",
+        "assenze": {
+            "allenamenti": 1,
+            "partite": 2,
+            "sessioni_video": 1
+        }
+    },
+    {
+        "name": "Alessandro",
+        "surname": "Gambino",
+        "age": 16,
+        "date_of_birth": "21-11-2006",
+        "team": "Area Calcio U19",
+        "stats": {
+            "games_played": 9,
+            "goals": 4,
+            "assists": 5,
+            "yellow_cards": 0,
+            "red_cards": 0
+        },
+        "username": "alessandro.gambino",
+        "password": "Gambino",
+        "assenze": {
+            "allenamenti": 3,
+            "partite": 0,
+            "sessioni_video": 2
+        }
+    },
+    {
+        "name": "Matteo",
+        "surname": "Ponzo",
+        "age": 17,
+        "date_of_birth": "18-09-2005",
+        "team": "Area Calcio U19",
+        "stats": {
+            "games_played": 6,
+            "goals": 1,
+            "assists": 0,
+            "yellow_cards": 2,
+            "red_cards": 0
+        },
+        "username": "matteo.ponzo",
+        "password": "Ponzo",
+        "assenze": {
+            "allenamenti": 2,
+            "partite": 1,
+            "sessioni_video": 3
+        }
+    },
+    {
+        "name": "Gabriele",
+        "surname": "Reverdito",
+        "age": 16,
+        "date_of_birth": "07-05-2006",
+        "team": "Area Calcio U19",
+        "stats": {
+            "games_played": 5,
+            "goals": 0,
+            "assists": 1,
+            "yellow_cards": 1,
+            "red_cards": 0
+        },
+        "username": "gabriele.reverdito",
+        "password": "Reverdito",
+        "assenze": {
+            "allenamenti": 1,
+            "partite": 2,
+            "sessioni_video": 1
+        }
+    }
+]

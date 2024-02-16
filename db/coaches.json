@@ -1,0 +1,164 @@
+[
+    {
+      "name": "Ivan",
+      "surname": "Cassinelli",
+      "age": 45,
+      "email": "ivan.cassi@gmail.com",
+      "phone": "1234567890",
+      "teams": [
+        {
+          "team_name": "Area Calcio U19",
+          "role": "Head Coach"
+        }
+      ],
+      "username": "ivan.cassinelli",
+      "password": "cassinelli"
+    },
+    {
+      "name": "Marco",
+      "surname": "Rossi",
+      "age": 40,
+      "email": "marco.rossi@example.com",
+      "phone": "987654321",
+      "teams": [
+        {
+          "team_name": "Juventus FC",
+          "role": "Head Coach"
+        },
+        {
+          "team_name": "AC Milan",
+          "role": "Coach Assistant"
+        }
+      ],
+      "username": "marco.rossi",
+      "password": "rossi"
+    },
+    {
+      "name": "Giovanni",
+      "surname": "Bianchi",
+      "age": 38,
+      "email": "gio.b@example.com",
+      "phone": "555123456",
+      "teams": [
+        {
+          "team_name": "Inter Milan",
+          "role": "Coach Assistant"
+        }
+      ],
+      "username": "giovanni.bianchi",
+      "password": "bianchi"
+    },
+    {
+      "name": "Elena",
+      "surname": "Ferrari",
+      "age": 42,
+      "email": "elena.ferrari@example.com",
+      "phone": "999888777",
+      "teams": [
+        {
+          "team_name": "AS Roma",
+          "role": "Head Coach"
+        }
+      ],
+      "username": "elena.ferrari",
+      "password": "ferrari"
+    },
+    {
+      "name": "Antonio",
+      "surname": "Russo",
+      "age": 50,
+      "email": "antonio.russo@example.com",
+      "phone": "777666555",
+      "teams": [
+        {
+          "team_name": "Napoli FC",
+          "role": "Head Coach"
+        }
+      ],
+      "username": "antonio.russo",
+      "password": "russo"
+    },
+    {
+        "name": "Sofia",
+        "surname": "Moretti",
+        "age": 37,
+        "email": "sofia.moretti@example.com",
+        "phone": "444333222",
+        "teams": [
+            {
+                "team_name": "AC Fiorentina",
+                "role": "Head Coach"
+            }
+        ],
+        "username": "sofia.moretti",
+        "password": "moretti"
+    },
+    {
+        "name": "Diego",
+        "surname": "Conti",
+        "age": 48,
+        "email": "diego.conti@example.com",
+        "phone": "111222333",
+        "teams": [
+            {
+                "team_name": "Atalanta BC",
+                "role": "Head Coach"
+            },
+            {
+                "team_name": "SS Lazio",
+                "role": "Coach Assistant"
+            }
+        ],
+        "username": "diego.conti",
+        "password": "conti"
+    },
+    {
+        "name": "Luisa",
+        "surname": "Martinez",
+        "age": 41,
+        "email": "luisa.martinez@example.com",
+        "phone": "999000111",
+        "teams": [
+            {
+                "team_name": "SS Lazio",
+                "role": "Head Coach"
+            }
+        ],
+        "username": "luisa.martinez",
+        "password": "martinez"
+    },
+    {
+        "name": "Alessandro",
+        "surname": "Galli",
+        "age": 39,
+        "email": "alessandro.galli@example.com",
+        "phone": "666777888",
+        "teams": [
+            {
+                "team_name": "Genoa CFC",
+                "role": "Head Coach"
+            }
+        ],
+        "username": "alessandro.galli",
+        "password": "galli"
+    },
+    {
+        "name": "Giulia",
+        "surname": "Santos",
+        "age": 35,
+        "email": "giulia.santos@example.com",
+        "phone": "222333444",
+        "teams": [
+            {
+                "team_name": "UC Sampdoria",
+                "role": "Head Coach"
+            },
+            {
+                "team_name": "AC Milan",
+                "role": "Coach Assistant"
+            }
+        ],
+        "username": "giulia.santos",
+        "password": "santos"
+    }
+]
