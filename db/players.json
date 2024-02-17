@@ -16,7 +16,7 @@
         },
         "username": "diego.cerrato",
         "password": "Cerrato",
-        "assenze": {
+        "presenze": {
             "allenamenti": 2,
             "partite": 1,
             "sessioni_video": 0
@@ -37,7 +37,7 @@
         },
         "username": "diego.tarasco",
         "password": "Tarasco",
-        "assenze": {
+        "presenze": {
             "allenamenti": 0,
             "partite": 3,
             "sessioni_video": 2
@@ -58,7 +58,7 @@
         },
         "username": "lorenzo.montrucchio",
         "password": "Montrucchio",
-        "assenze": {
+        "presenze": {
             "allenamenti": 1,
             "partite": 2,
             "sessioni_video": 1
@@ -79,7 +79,7 @@
         },
         "username": "alessandro.gambino",
         "password": "Gambino",
-        "assenze": {
+        "presenze": {
             "allenamenti": 3,
             "partite": 0,
             "sessioni_video": 2
@@ -100,7 +100,7 @@
         },
         "username": "matteo.ponzo",
         "password": "Ponzo",
-        "assenze": {
+        "presenze": {
             "allenamenti": 2,
             "partite": 1,
             "sessioni_video": 3
@@ -121,7 +121,7 @@
         },
         "username": "gabriele.reverdito",
         "password": "Reverdito",
-        "assenze": {
+        "presenze": {
             "allenamenti": 1,
             "partite": 2,
             "sessioni_video": 1
