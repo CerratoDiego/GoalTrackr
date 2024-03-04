@@ -27,6 +27,44 @@
     <script src="./libreria.js"></script>
     <script src="./index.js"></script>
 
+    <style>
+        .button-container {
+            display: flex;
+            justify-content: center;
+            margin-top: 50px;
+        }
+
+        .switch-button {
+            border: none;
+            color: white;
+            padding: 15px 32px;
+            text-align: center;
+            text-decoration: none;
+            display: inline-block;
+            font-size: 16px;
+            margin: 4px 2px;
+            cursor: pointer;
+            border-radius: 8px;
+            transition: background-color 0.3s ease;
+        }
+
+        .switch-button:hover {
+            background-color: #107ed9;
+        }
+
+        .button-active {
+            background-color: #107ed9;
+        }
+
+        .button-inactive {
+            background-color: #b8dfff;
+        }
+
+        .button-hidden {
+            display: none;
+        }
+    </style>
+
 </head>
 
 <body>
@@ -134,17 +172,18 @@
                     <i class="fas fa-check-circle"></i>
                     <span>Presenze</span>
                 </a>
-                <div id="collapsePresenze" class="collapse" aria-labelledby="headingPages" data-parent="#accordionSidebar">
+                <div id="collapsePresenze" class="collapse" aria-labelledby="headingPages"
+                    data-parent="#accordionSidebar">
                     <div class="bg-white py-2 collapse-inner rounded">
-                        <a class="collapse-item" href="presenze.html">
+                        <a id="allenamentiToggler" class="collapse-item" href="presenze.html">
                             <i class="fas fa-dumbbell"></i>
                             Allenamenti
                         </a>
-                        <a class="collapse-item" href="presenze.html">
+                        <a id="partiteToggler" class="collapse-item" href="presenze.html">
                             <i class="fas fa-trophy"></i>
                             Partite
                         </a>
-                        <a class="collapse-item" href="presenze.html">
+                        <a id="sessionivideoToggler" class="collapse-item" href="presenze.html">
                             <i class="fas fa-video"></i>
                             Sessioni video
                         </a>
@@ -167,7 +206,8 @@
                     <i class="fas fa-chart-area"></i>
                     <span>Statistiche</span>
                 </a>
-                <div id="collapseStatistiche" class="collapse" aria-labelledby="headingPages" data-parent="#accordionSidebar">
+                <div id="collapseStatistiche" class="collapse" aria-labelledby="headingPages"
+                    data-parent="#accordionSidebar">
                     <div class="bg-white py-2 collapse-inner rounded">
                         <a class="collapse-item" href="statistiche.html">
                             <i class="fas fa-user"></i>
@@ -223,6 +263,68 @@
             <div id="calendar" class="container-fluid">
                 <br>
                 <h1 class="h3 mb-4 text-gray-800">Questo è il calendario degli eventi</h1>
+
+                <div class="button-container">
+                    <button id="programmaGeneraleButton" class="switch-button"
+                    style="background-color: #107ed9;">
+                        Programma generale</button>
+                    <button id="visualizzazioneDettagliataButton" class="switch-button"
+                    style="background-color: #b8dfff; color: #000;">
+                        Visualizzazione dettagliata</button>
+                </div>
+
+                <div id="programmaGenerale">
+                    <table class="table table-bordered">
+                        <thead>
+                            <tr>
+                                <th>Data</th>
+                                <th>Evento</th>
+                                <th>Luogo</th>
+                                <th>Ora</th>
+                            </tr>
+                        </thead>
+                        <tbody id="eventiCalendario">
+                            <tr>
+                                <td>01/01/2021</td>
+                                <td>Allenamento</td>
+                                <td>Stadio</td>
+                                <td>10:00</td>
+                            </tr>
+                            <tr>
+                                <td>01/01/2021</td>
+                                <td>Allenamento</td>
+                                <td>Stadio</td>
+                                <td>10:00</td>
+                            </tr>
+                            <tr>
+                                <td>01/01/2021</td>
+                                <td>Allenamento</td>
+                                <td>Stadio</td>
+                                <td>10:00</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <div id="visualizzazioneDettagliata">
+                    <table class=" table table-bordered">
+                        <thead>
+                            <tr>
+                                <th>Ora</th>
+                                <th>Lunedì</th>
+                                <th>Martedì</th>
+                                <th>Mercoledì</th>
+                                <th>Giovedì</th>
+                                <th>Venerdì</th>
+                                <th>Sabato</th>
+                                <th>Domenica</th>
+                            </tr>
+                        </thead>
+                        <tbody id="oreCalendario">
+
+                        </tbody>
+                    </table>
+                </div>
             </div>
         </div>
     </div>
