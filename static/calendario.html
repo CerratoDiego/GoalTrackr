@@ -28,6 +28,12 @@
     <script src="./index.js"></script>
 
     <style>
+        th {
+            text-align: center;
+            background-color: #4e73df;
+            color: white;
+        }
+        
         .button-container {
             display: flex;
             justify-content: center;
@@ -262,7 +268,7 @@
         <div id="mainContentWrapper" class="d-flex flex-column">
             <div id="calendar" class="container-fluid">
                 <br>
-                <h1 class="h3 mb-4 text-gray-800">Questo è il calendario degli eventi</h1>
+                <h1 class="mb-4 text-gray-800">Calendario generale</h1>
 
                 <div class="button-container">
                     <button id="programmaGeneraleButton" class="switch-button"
@@ -273,7 +279,7 @@
                         Visualizzazione dettagliata</button>
                 </div>
 
-                <div id="programmaGenerale">
+                <div class="table-responsive" id="programmaGenerale">
                     <table class="table table-bordered">
                         <thead>
                             <tr>

@@ -13,7 +13,7 @@ $(document).ready(function () {
 
     // Stili
     $(".statoPresenzaView").css('background-color', '#6c757d').css('color', 'white');
-    $(".table-responsive").css('margin', 'auto');
+    $(".presenceTables").css('margin', 'auto');
 
     // Visibilità
     _dashboard.show();
@@ -51,7 +51,7 @@ $(document).ready(function () {
     });
 
     // Nascondi tutti i div all'avvio tranne quello selezionato
-    $('.table-responsive').hide();
+    $('.presenceTables').hide();
     $('#' + selectedSection).show();
 
     // Gestisci il click su allenamentiToggler
@@ -87,8 +87,8 @@ $(document).ready(function () {
             showCancelButton: true,
             confirmButtonColor: '#d33',
             cancelButtonColor: '#6c757d',
-            confirmButtonText: 'Si',
-            cancelButtonText: 'No',
+            confirmButtonText: 'Conferma',
+            cancelButtonText: 'Annulla',
             preConfirm: () => {
                 const motivo = document.getElementById('motivoAssenza').value;
                 if (!motivo) {
@@ -110,7 +110,7 @@ $(document).ready(function () {
                         cancelButtonText: 'Annulla',
                         inputValidator: (value) => {
                             if (!value) {
-                                return 'Il motivo dell\'assenza è richiesto!';
+                                return 'E\' richiesto il motivo dell\'assenza!';
                             }
                         }
                     }).then((result) => {
