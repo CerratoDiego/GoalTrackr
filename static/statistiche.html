@@ -1,0 +1,238 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+    <title>GoalTrackr - Statistiche</title>
+
+    <link rel="icon" type="image/png" href="pages/img/logo.png" />
+
+    <!-- Custom fonts for this template-->
+    <link href="pages/vendor/fontawesome-free/css/all.min.css" rel="stylesheet" type="text/css">
+    <link
+        href="https://fonts.googleapis.com/css?family=Nunito:200,200i,300,300i,400,400i,600,600i,700,700i,800,800i,900,900i"
+        rel="stylesheet">
+
+    <!-- Custom styles for this template-->
+    <link href="pages/css/sb-admin-2.min.css" rel="stylesheet">
+
+    <!-- Libraries-->
+    <script src="./jquery-3.5.1.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    <script src="./axios@1.1.2.min.js"></script>
+    <script src="./libreria.js"></script>
+    <script src="./index.js"></script>
+
+</head>
+
+<body>
+    <div id="wrapper">
+        <!-- Sidebar -->
+        <ul class="navbar-nav bg-gradient-primary sidebar sidebar-dark accordion" id="accordionSidebar">
+
+            <!-- Sidebar - Brand -->
+            <a class="sidebar-brand d-flex align-items-center justify-content-center" href="index.html">
+                <div class="sidebar-brand-icon rotate-n-15">
+                    <i class="fas fa-futbol"></i>
+                </div>
+                <div class="sidebar-brand-text mx-3">GoalTrac<sup>k</sup>r</div>
+            </a>
+
+            <!-- Divider -->
+            <hr class="sidebar-divider d-none d-md-block">
+
+            <!-- Sidebar Toggler (Sidebar) -->
+            <div class="text-center d-none d-md-inline">
+                <button class="rounded-circle border-0" id="sidebarToggle"></button>
+            </div>
+
+            <!-- Divider -->
+            <hr class="sidebar-divider my-0">
+
+            <!-- Nav Item - Dashboard -->
+            <li class="nav-item">
+                <a id="dashboardToggler" class="nav-link" href="index.html">
+                    <i class="fas fa-fw fa-tachometer-alt"></i>
+                    <span>Dashboard</span>
+                </a>
+            </li>
+
+            <!-- Divider -->
+            <hr class="sidebar-divider">
+
+            <!-- Heading -->
+            <div class="sidebar-heading">
+                Gestione account
+            </div>
+
+            <!-- Nav Item - Login -->
+            <li class="nav-item">
+                <a class="nav-link" href="account.html">
+                    <i class="fas fa-user"></i>
+                    <span>Il mio Account</span></a>
+            </li>
+
+            <!-- Divider -->
+            <hr class="sidebar-divider">
+
+            <!-- Heading -->
+            <div class="sidebar-heading">
+                Gestione eventi
+            </div>
+
+            <!-- Nav Item - Calendario Collapse Menu -->
+            <li class="nav-item">
+                <a id="calendarToggler" class="nav-link collapsed" href="calendario.html">
+                    <i class="fas fa-calendar"></i>
+                    <span>Calendario</span>
+                </a>
+            </li>
+
+            <!-- Nav Item - Eventi Collapse Menu -->
+            <li class="nav-item">
+                <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseEventi"
+                    aria-expanded="true" aria-controls="collapseEventi">
+                    <i class="fas fa-calendar-check"></i>
+                    <span>Eventi</span>
+                </a>
+                <div id="collapseEventi" class="collapse" aria-labelledby="headingUtilities"
+                    data-parent="#accordionSidebar">
+                    <div class="bg-white py-2 collapse-inner rounded">
+                        <h6 class="collapse-header">Eventi disponibili:</h6>
+                        <a class="collapse-item" href="eventi.html">
+                            <i class="fas fa-dumbbell"></i>
+                            Allenamenti
+                        </a>
+                        <a class="collapse-item" href="eventi.html">
+                            <i class="fas fa-trophy"></i>
+                            Partite
+                        </a>
+                        <a class="collapse-item" href="eventi.html">
+                            <i class="fas fa-video"></i>
+                            Sessioni video
+                        </a>
+                    </div>
+                </div>
+            </li>
+
+            <!-- Divider -->
+            <hr class="sidebar-divider">
+
+            <!-- Heading -->
+            <div class="sidebar-heading">
+                Gestione presenze
+            </div>
+
+            <!-- Nav Item - Pages Collapse Menu -->
+            <li class="nav-item">
+                <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapsePresenze"
+                    aria-expanded="true" aria-controls="collapsePresenze">
+                    <i class="fas fa-check-circle"></i>
+                    <span>Presenze</span>
+                </a>
+                <div id="collapsePresenze" class="collapse" aria-labelledby="headingPages" data-parent="#accordionSidebar">
+                    <div class="bg-white py-2 collapse-inner rounded">
+                        <a class="collapse-item" href="presenze.html">
+                            <i class="fas fa-dumbbell"></i>
+                            Allenamenti
+                        </a>
+                        <a class="collapse-item" href="presenze.html">
+                            <i class="fas fa-trophy"></i>
+                            Partite
+                        </a>
+                        <a class="collapse-item" href="presenze.html">
+                            <i class="fas fa-video"></i>
+                            Sessioni video
+                        </a>
+                    </div>
+                </div>
+            </li>
+
+            <!-- Divider -->
+            <hr class="sidebar-divider">
+
+            <!-- Heading -->
+            <div class="sidebar-heading">
+                Dati
+            </div>
+
+            <!-- Nav Item - Statistiche -->
+            <li class="nav-item active">
+                <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseStatistiche"
+                    aria-expanded="true" aria-controls="collapseStatistiche">
+                    <i class="fas fa-chart-area"></i>
+                    <span>Statistiche</span>
+                </a>
+                <div id="collapseStatistiche" class="collapse" aria-labelledby="headingPages" data-parent="#accordionSidebar">
+                    <div class="bg-white py-2 collapse-inner rounded">
+                        <a class="collapse-item" href="statistiche.html">
+                            <i class="fas fa-user"></i>
+                            Statistiche Giocatori
+                        </a>
+                        <a class="collapse-item" href="statistiche.html">
+                            <i class="fas fa-chart-bar"></i>
+                            Statistiche Squadra
+                        </a>
+                    </div>
+                </div>
+            </li>
+
+            <!-- Nav Item - Tables -->
+            <li class="nav-item">
+                <a class="nav-link" href="giocatori.html">
+                    <i class="fas fa-running"></i>
+                    <span>Giocatori</span></a>
+            </li>
+
+            <li class="nav-item">
+                <a class="nav-link" href="squadra.html">
+                    <i class="fas fa-users"></i>
+                    <span>Squadra</span></a>
+            </li>
+
+            <!-- Divider -->
+            <hr class="sidebar-divider">
+
+            <!-- Heading -->
+            <div class="sidebar-heading">
+                Accesso
+            </div>
+
+            <!-- Nav Item - Login  -->
+            <li class="nav-item">
+                <a class="nav-link" href="login.html">
+                    <i class="fas fa-sign-in-alt"></i>
+                    <span>Login</span></a>
+            </li>
+
+            <!-- Nav Item - Registrazione -->
+            <li class="nav-item">
+                <a class="nav-link" href="register.html">
+                    <i class="fas fa-user-plus"></i>
+                    <span>Registrazione</span></a>
+            </li>
+
+            <!-- Nav Item - Logout -->
+            <li class="nav-item">
+                <a class="nav-link" href="register.html">
+                    <i class="fas fa-sign-out-alt"></i>
+                    <span>Logout</span></a>
+            </li>
+
+        </ul>
+        <!-- End of Sidebar -->
+
+        <div id="mainContentWrapper" class="d-flex flex-column">
+            <div id="dashboard" class="container-fluid">
+                <br>
+                <h1 class="mb-4 text-gray-800">Statistiche</h1>
+            </div>
+        </div>
+    </div>
+</body>
