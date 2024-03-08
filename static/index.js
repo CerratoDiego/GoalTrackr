@@ -75,7 +75,6 @@ $(document).ready(function () {
         $(this).addClass(isAscending ? "desc" : "asc");
     });
 
-    // Funzione per verificare se una stringa è una data nel formato "DD-MM-YYYY"
     function isDate(value) {
         var dateRegex = /^\d{2}-\d{2}-\d{4}$/;
         return dateRegex.test(value);
