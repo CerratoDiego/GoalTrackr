@@ -161,7 +161,7 @@ $(document).ready(function () {
     // Gestisci il click sul bottone Programma generale
     $('#programmaGeneraleButton').click(function () {
         $(this).css('background-color', '#107ed9').css('color', 'white');
-        $('#visualizzazioneButton').css('background-color', '#b8dfff').css('color', 'black');
+        $('#visualizzazioneDettagliataButton').css('background-color', '#b8dfff').css('color', 'black');
         // Qui puoi aggiungere il codice per passare al programma generale
         $("#programmaGenerale").show();
         $("#visualizzazioneDettagliata").hide();
@@ -170,7 +170,7 @@ $(document).ready(function () {
     // Gestisci il click sul bottone Visualizzazione dettagliata
     $('#visualizzazioneDettagliataButton').click(function () {
         $(this).css('background-color', '#107ed9').css('color', 'white');
-        $('#programmaButton').css('background-color', '#b8dfff').css('color', 'black');
+        $('#programmaGeneraleButton').css('background-color', '#b8dfff').css('color', 'black');
         // Qui puoi aggiungere il codice per passare alla visualizzazione dettagliata
         $("#visualizzazioneDettagliata").show();
         $("#programmaGenerale").hide();
