@@ -16,8 +16,8 @@ jspm_packages/
 # Compiled TypeScript
 *.js.map
 
-# Compiled CSS
-# *.css
+# Environment variables
+.env
 
 # Sourcemaps
 *.js.map

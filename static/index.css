@@ -21,3 +21,72 @@ ul {
     overflow-y: auto;
     overflow-x: hidden;
 }
+
+th {
+    cursor: pointer;
+    text-align: center;
+    background-color: #4e73df;
+    color: white;
+}
+
+th.asc:after {
+    content: ' ▲';
+}
+
+th.desc:after {
+    content: ' ▼';
+}
+
+td {
+    color: black;
+}
+
+.button-container {
+    display: flex;
+    justify-content: center;
+    margin-top: 50px;
+}
+
+.switch-button {
+    border: none;
+    color: white;
+    padding: 15px 32px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 16px;
+    margin: 4px 2px;
+    cursor: pointer;
+    border-radius: 8px;
+    transition: background-color 0.3s ease;
+}
+
+.stats-button {
+    border: none;
+    color: white;
+    padding: 5px 15px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 16px;
+    margin: 4px 2px;
+    cursor: pointer;
+    border-radius: 8px;
+    transition: background-color 0.3s ease;
+}
+
+.switch-button:hover {
+    background-color: #107ed9;
+}
+
+.button-active {
+    background-color: #107ed9;
+}
+
+.button-inactive {
+    background-color: #b8dfff;
+}
+
+.button-hidden {
+    display: none;
+}
