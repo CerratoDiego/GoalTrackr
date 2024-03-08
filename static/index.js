@@ -31,7 +31,6 @@ $(document).ready(function () {
         var columnIndex = $(this).index();
         var rows = table.find("tbody > tr").get();
         var isAscending = $(this).hasClass("asc");
-        var isNumericColumn = true; // Assume che tutti i valori siano numerici
 
         rows.sort(function (a, b) {
             var aValue = $(a).find("td").eq(columnIndex).text();
@@ -40,14 +39,31 @@ $(document).ready(function () {
             if ($.isNumeric(aValue) && $.isNumeric(bValue)) {
                 aValue = parseFloat(aValue);
                 bValue = parseFloat(bValue);
+                // Ordinamento numerico
+                if (isAscending) {
+                    return aValue - bValue;
+                } else {
+                    return bValue - aValue;
+                }
+            } else if (isDate(aValue) && isDate(bValue)) {
+                // Converte le date nel formato "DD-MM-YYYY" in oggetti Date
+                var aDateParts = aValue.split("-");
+                var bDateParts = bValue.split("-");
+                var aDate = new Date(aDateParts[2], aDateParts[1] - 1, aDateParts[0]);
+                var bDate = new Date(bDateParts[2], bDateParts[1] - 1, bDateParts[0]);
+                // Ordinamento per data
+                if (isAscending) {
+                    return aDate - bDate;
+                } else {
+                    return bDate - aDate;
+                }
             } else {
-                isNumericColumn = false; // Almeno un valore non è numerico
-            }
-
-            if (isAscending) {
-                return isNumericColumn ? aValue - bValue : aValue.localeCompare(bValue);
-            } else {
-                return isNumericColumn ? bValue - aValue : bValue.localeCompare(aValue);
+                // Ordinamento per stringa
+                if (isAscending) {
+                    return aValue.localeCompare(bValue);
+                } else {
+                    return bValue.localeCompare(aValue);
+                }
             }
         });
 
@@ -58,6 +74,12 @@ $(document).ready(function () {
         $("th").removeClass("asc").removeClass("desc");
         $(this).addClass(isAscending ? "desc" : "asc");
     });
+
+    // Funzione per verificare se una stringa è una data nel formato "DD-MM-YYYY"
+    function isDate(value) {
+        var dateRegex = /^\d{2}-\d{2}-\d{4}$/;
+        return dateRegex.test(value);
+    }
 
     caricaOreCalendario()
 
@@ -232,7 +254,7 @@ $(document).ready(function () {
         // Chiamata alla funzione getGiocatori solo se si è sulla pagina giocatori.html
         getGiocatori();
     }
-    
+
     function getGiocatori() {
         let rq = inviaRichiesta('GET', '/api/getGiocatori', {});
         rq.then((response) => {
