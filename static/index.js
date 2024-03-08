@@ -25,6 +25,40 @@ $(document).ready(function () {
         _navbar.addClass('toggled');
     }
 
+    // Ordinamento delle tabelle per campi
+    $("th").click(function () {
+        var table = $(this).closest("table");
+        var columnIndex = $(this).index();
+        var rows = table.find("tbody > tr").get();
+        var isAscending = $(this).hasClass("asc");
+        var isNumericColumn = true; // Assume che tutti i valori siano numerici
+
+        rows.sort(function (a, b) {
+            var aValue = $(a).find("td").eq(columnIndex).text();
+            var bValue = $(b).find("td").eq(columnIndex).text();
+
+            if ($.isNumeric(aValue) && $.isNumeric(bValue)) {
+                aValue = parseFloat(aValue);
+                bValue = parseFloat(bValue);
+            } else {
+                isNumericColumn = false; // Almeno un valore non è numerico
+            }
+
+            if (isAscending) {
+                return isNumericColumn ? aValue - bValue : aValue.localeCompare(bValue);
+            } else {
+                return isNumericColumn ? bValue - aValue : bValue.localeCompare(aValue);
+            }
+        });
+
+        $.each(rows, function (index, row) {
+            table.children("tbody").append(row);
+        });
+
+        $("th").removeClass("asc").removeClass("desc");
+        $(this).addClass(isAscending ? "desc" : "asc");
+    });
+
     caricaOreCalendario()
 
     /****************************************************** GESTIONE TOGGLER ************************************************************************/
@@ -191,5 +225,35 @@ $(document).ready(function () {
             _td = $("<td>").text(" -- ").appendTo(_tr);
             _td = $("<td>").text(" -- ").appendTo(_tr);
         }
+    }
+
+    /****************************************************** UTILIZZO SERVIZI ************************************************************************/
+    if (window.location.pathname.includes("giocatori.html")) {
+        // Chiamata alla funzione getGiocatori solo se si è sulla pagina giocatori.html
+        getGiocatori();
+    }
+    
+    function getGiocatori() {
+        let rq = inviaRichiesta('GET', '/api/getGiocatori', {});
+        rq.then((response) => {
+            console.log(response.data);
+            for (let item of response.data) {
+                let _tr = $("<tr>").appendTo($("#tbodyGiocatori"));
+                $("<td>").text(item.nome).appendTo(_tr);
+                $("<td>").text(item.cognome).appendTo(_tr);
+                $("<td>").text(item.data_di_nascita).appendTo(_tr);
+                $("<td>").text(item.numero).appendTo(_tr);
+                $("<td>").text(item.ruolo).appendTo(_tr);
+                $("<button>").text("VISUALIZZA STATISTICHE").addClass("stats-button").css("background-color", "#107ed9").appendTo($("<td>").appendTo(_tr)).click(function () {
+                    window.location.href = "/statistiche.html";
+                });
+            }
+        });
+        rq.catch((error) => {
+            console.log(error);
+        });
+        rq.finally(() => {
+            console.log("Chiamata getGiocatori terminata");
+        });
     }
 });

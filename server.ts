@@ -1,31 +1,58 @@
-import _http from "http";
+import _https from "https";
 import _url from "url";
 import _fs from "fs";
 import _express from "express";
 import _dotenv from "dotenv";
 import _cors from "cors";
-import _nodemailer from "nodemailer";
+import _fileUpload from "express-fileupload";
+// import _cloudinary, { UploadApiResponse } from 'cloudinary';
+// import _streamifier from "streamifier";
+// import _axios from "axios";
+// import _nodemailer from "nodemailer";
+// import _bcrypt from "bcryptjs";
+// import _jwt from "jsonwebtoken";
 
-// Lettura delle password
+// Lettura delle password e parametri fondamentali
 _dotenv.config({ "path": ".env" });
+
+// Configurazione Cloudinary
+// _cloudinary.v2.config({
+//     cloud_name: process.env.cloud_name,
+//     api_key: process.env.api_key,
+//     api_secret: process.env.api_secret
+// });
 
 // Variabili relative a MongoDB ed Express
 import { MongoClient, ObjectId } from "mongodb";
+import exp from "constants";
+import path from "path";
 const DBNAME = process.env.DBNAME;
 const connectionString: string = process.env.connectionStringAtlas;
 const app = _express();
 
-//CREAZIONE ED AVVIO DEL SERVER
+// Creazione ed avvio del server http
+// app è il router di Express, si occupa di tutta la gestione delle richieste http
+// const HTTP_PORT: number = parseInt(process.env.HTTP_PORT);
+// let paginaErrore;
+// const http_server = _http.createServer(app);
+// // Il secondo parametro facoltativo ipAddress consente di mettere il server in ascolto su una delle interfacce della macchina, se non lo metto viene messo in ascolto su tutte le interfacce (3 --> loopback e 2 di rete)
+// http_server.listen(HTTP_PORT, () => {
+//     init();
+//     console.log(`Server HTTP in ascolto sulla porta ${HTTP_PORT}`);
+// });
 
-//1. app è il router di Express, si occupa di tutta la gestione delle richieste http
-const PORT: number = parseInt(process.env.PORT);
+// Creazione ed avvio del server https, a questo server occorre passare le chiavi RSA (pubblica e privata)
+// app è il router di Express, si occupa di tutta la gestione delle richieste https
+const HTTPS_PORT: number = parseInt(process.env.HTTPS_PORT);
 let paginaErrore;
-const server = _http.createServer(app);
-
-//2. Il secondo parametro facoltativo ipAddress consente di mettere il server in ascolto su una delle interfacce della macchina, se non lo metto viene messo in ascolto su tutte le interfacce (3 --> loopback e 2 di rete)
-server.listen(PORT, () => {
+const PRIVATE_KEY = _fs.readFileSync("./keys/privateKey.pem", "utf8");
+const CERTIFICATE = _fs.readFileSync("./keys/certificate.crt", "utf8");
+const CREDENTIALS = { "key": PRIVATE_KEY, "cert": CERTIFICATE };
+const https_server = _https.createServer(CREDENTIALS, app);
+// Il secondo parametro facoltativo ipAddress consente di mettere il server in ascolto su una delle interfacce della macchina, se non lo metto viene messo in ascolto su tutte le interfacce (3 --> loopback e 2 di rete)
+https_server.listen(HTTPS_PORT, () => {
     init();
-    console.log(`Il Server è in ascolto sulla porta ${PORT}`);
+    console.log(`Server HTTPS in ascolto sulla porta ${HTTPS_PORT}`);
 });
 
 function init() {
@@ -59,7 +86,11 @@ app.use("/", _express.json({ "limit": "50mb" }));
 // .urlencoded() intercetta solo i parametri passati in urlencoded nel body della http request
 app.use("/", _express.urlencoded({ "limit": "50mb", "extended": true }));
 
-// 4. Log dei parametri GET, POST, PUT, PATCH, DELETE
+// 4. Aggancio dei parametri del FormData e dei parametri scalari passati dentro il FormData
+// Dimensione massima del file = 10 MB
+app.use("/", _fileUpload({ "limits": { "fileSize": (10 * 1024 * 1024) } }));
+
+// 5. Log dei parametri GET, POST, PUT, PATCH, DELETE
 app.use("/", (req: any, res: any, next: any) => {
     if (Object.keys(req["query"]).length > 0) {
         console.log(`       ${JSON.stringify(req["query"])}`);
@@ -70,235 +101,89 @@ app.use("/", (req: any, res: any, next: any) => {
     next();
 });
 
-// 5. Controllo degli accessi tramite CORS
-const whitelist = [
-    "http://cerratodiego-crud-server.onrender.com", // porta 80 (default)
-    "https://cerratodiego-crud-server.onrender.com", // porta 443 (default)
-    "http://localhost:3000",
-    "https://localhost:3001",
-    "http://localhost:4200" // server angular
-];
+// 6. Controllo degli accessi tramite CORS
+// Procedura che lascia passare tutto, accetta tutte le richieste
+/* const cors = require('cors');
+
+app.use(cors()); */
 
 const corsOptions = {
-    origin: function (origin, callback) {
-        if (!origin) // browser direct call
-            return callback(null, true);
-        if (whitelist.indexOf(origin) === -1) {
-            var msg = `The CORS policy for this site does not
-    allow access from the specified Origin.`
-            return callback(new Error(msg), false);
-        }
-        else
-            return callback(null, true);
-    },
+    origin: null,
     credentials: true
 };
 app.use("/", _cors(corsOptions));
+/* 
+const whitelist = [
+    "http://cerratodiego-crud-server.onrender.com",	// porta 80 (default)
+    "https://cerratodiego-crud-server.onrender.com",	// porta 443 (default)
+    "https://localhost:3000",
+    "http://localhost:3001",
+    "http://localhost:4200" // server angular
+]; */
+// Procedura che utilizza la whitelist, accetta solo le richieste presenti nella whitelist
+// const corsOptions = {
+//     origin: function (origin, callback) {
+//         if (!origin) // browser direct call
+//             return callback(null, true);
+//         if (whitelist.indexOf(origin) === -1) {
+//             var msg = `The CORS policy for this site does not allow access from the specified Origin.`
+//             return callback(new Error(msg), false);
+//         }
+//         else
+//             return callback(null, true);
+//     },
+//     credentials: true
+// };
+// app.use("/", _cors(corsOptions));
 
-/* const corsOptions = {
-    origin: function (origin, callback) {
-        return callback(null, true);
-    },
-    credentials: true
-};
-app.use("/", _cors(corsOptions)); */
-
-// 6. Configurazione di nodemailer
+// 7. Configurazione di nodemailer
 const auth = {
     "user": process.env.gmailUser,
-    "pass": process.env.gmailPassword
-};
-const transporter = _nodemailer.createTransport({
+    "pass": process.env.gmailPassword,
+}
+/* const transporter = _nodemailer.createTransport({
     "service": "gmail",
     "auth": auth
-});
-let message = _fs.readFileSync("./message.html", "utf8");
+}); */
+// let message = _fs.readFileSync("./message.html", "utf8");
 
 //********************************************************************************************//
 // Routes finali di risposta al client
 //********************************************************************************************//
 
-// app.post("/api/newMail", async (req, res, next) => {
-//     message = message.replace("__user", "pippo").replace("__password", "pippo");
-//     let mailOptions = {
-//         "from": auth.user,
-//         "to": req["body"].to,
-//         "subject": req["body"].subject,
-//         "html": message,
-//         "attachments": [
-//             {
-//                 "filename": "Qr Code del sito da cui scaricare l'applicazione",
-//                 "path": "./qrCode.png"
-//             }
-//         ]
-//     };
-//     transporter.sendMail(mailOptions, function (err, info) {
-//         if (err) {
-//             res.status(500).send(`Errore nell'invio della mail: ${err}`);
-//         }
-//         else {
-//             res.send(`OK`);
-//         }
-//     });
-// });
+// La .send() mette status 200 e fa il parsing. In caso di codice diverso da 200 la .send() non fa il parsing
+// I parametri GET in Express sono restituiti in req["query"]
+// I parametri POST, PATCH, PUT, DELETE in Express sono restituiti in req["body"]
+// Se nella url ho /api/:parametro il valore del parametro passato lo troverò in req["params"].parametro
+// Se uso un input:files il contenuto dei files li troverò in req["files"].nomeParametro
+// nomeParametro contiene due campi principali: 
+// nomeParametro.name contiene il nome del file scelto dal client
+// nomeParametro.data contiene il contenuto binario del file
+// _streamifier serve solo per aggiungere immagine binarie su Cloudinary
 
-// app.get("/api/getCollections", async (req, res, next) => {
-//     const client = new MongoClient(connectionString);
-//     await client.connect();
-//     let db = client.db(DBNAME);
-//     // db.listCollections() richiede al server l'elenco delle collezioni presenti nel db
-//     let rq = db.listCollections().toArray();
-//     rq.then((data) => res.send(data));
-//     rq.catch((err) => res.status(500).send(`Errore nella lettura delle collezioni: ${err}`));
-//     rq.finally(() => client.close());
-// });
+app.get("/api/getGiocatori", async (req, res, next) => {
+    const client = new MongoClient(connectionString)
+    await client.connect()
+    let db = client.db(DBNAME).collection("players")
+    let request = db.find().toArray()
+    request.then((data) => {
+        res.status(200).send(data)
+    })
+    request.catch((err) => {
+        res.status(500).send("Errore esecuzione query: " + err)
+    })
+    request.finally(() => {
+        client.close()
+    })
+});
 
-// app.get("/api/:collection", async (req, res, next) => {
-//     let filters = req["query"];
-//     let selectedCollection = req["params"].collection;
-//     const client = new MongoClient(connectionString);
-//     await client.connect();
-//     let collection = client.db(DBNAME).collection(selectedCollection);
-//     let rq = collection.find(filters).toArray();
-//     rq.then((data) => res.send(data));
-//     rq.catch((err) => res.status(500).send(`Errore esecuzione query: ${err}`));
-//     rq.finally(() => client.close());
-// });
+app.post("/api/", async (req, res, next) => { });
 
-// app.get("/api/:collection/:id", async (req, res, next) => {
-//     let selectedCollection = req["params"].collection;
-//     let id = req["params"].id;
-//     let objId;
-//     if (ObjectId.isValid(id)) {
-//         objId = new ObjectId(req["params"].id);
-//     }
-//     else {
-//         objId = id as unknown as ObjectId;
-//     }
-//     const client = new MongoClient(connectionString);
-//     await client.connect();
-//     let collection = client.db(DBNAME).collection(selectedCollection);
-//     let rq = collection.findOne({ "_id": objId });
-//     rq.then((data) => res.send(data));
-//     rq.catch((err) => res.status(500).send(`Errore esecuzione query: ${err}`));
-//     rq.finally(() => client.close());
-// });
+app.patch("/api/", async (req, res, next) => { });
 
-// app.post("/api/:collection", async (req, res, next) => {
-//     let newRecord = req["body"];
-//     let selectedCollection = req["params"].collection;
-//     const client = new MongoClient(connectionString);
-//     await client.connect();
-//     let collection = client.db(DBNAME).collection(selectedCollection);
-//     let rq = collection.insertOne(newRecord);
-//     rq.then((data) => res.send(data));
-//     rq.catch((err) => res.status(500).send(`Errore esecuzione query: ${err}`));
-//     rq.finally(() => client.close());
-// });
+app.put("/api/", async (req, res, next) => { });
 
-// app.delete("/api/:collection/:id", async (req, res, next) => {
-//     let selectedCollection = req["params"].collection;
-//     let id = req["params"].id;
-//     let objId;
-//     if (ObjectId.isValid(id)) {
-//         objId = new ObjectId(req["params"].id);
-//     }
-//     else {
-//         objId = id as unknown as ObjectId;
-//     }
-//     const client = new MongoClient(connectionString);
-//     await client.connect();
-//     let collection = client.db(DBNAME).collection(selectedCollection);
-//     let rq = collection.deleteOne({ "_id": objId });
-//     rq.then((data) => res.send(data));
-//     rq.catch((err) => res.status(500).send(`Errore esecuzione query: ${err}`));
-//     rq.finally(() => client.close());
-// });
-
-// app.delete("/api/:collection", async (req, res, next) => {
-//     let selectedCollection = req["params"].collection;
-//     let filters = req["body"];
-//     const client = new MongoClient(connectionString);
-//     await client.connect();
-//     let collection = client.db(DBNAME).collection(selectedCollection);
-//     let rq = collection.deleteMany(filters);
-//     rq.then((data) => res.send(data));
-//     rq.catch((err) => res.status(500).send(`Errore esecuzione query: ${err}`));
-//     rq.finally(() => client.close());
-// });
-
-// // /**
-// //  * Chiama il metodo patch con l'obbligo di specificare dentro il body la action da eseguire
-// //  * 
-// //  * @remarks
-// //  * Utilizzando questo metodo la patch esegue risulta più flessibile
-// //  * 
-// //  * @param id - id del record
-// //  * @body - I nuovi valori da aggiornare (es. { "$inc": { "qta": 1 }})
-// //  * @returns Un json di conferma dell'aggiornamento
-// //  */
-// app.patch("/api/:collection/:id", async (req, res, next) => {
-//     let selectedCollection = req["params"].collection;
-//     let id = req["params"].id;
-//     let objId;
-//     if (ObjectId.isValid(id)) {
-//         objId = new ObjectId(req["params"].id);
-//     }
-//     else {
-//         objId = id as unknown as ObjectId;
-//     }
-//     let action = req["body"];
-//     const client = new MongoClient(connectionString);
-//     await client.connect();
-//     let collection = client.db(DBNAME).collection(selectedCollection);
-//     let rq = collection.updateOne({ "_id": objId }, action);
-//     rq.then((data) => res.send(data));
-//     rq.catch((err) => res.status(500).send(`Errore esecuzione query: ${err}`));
-//     rq.finally(() => client.close());
-// });
-
-// app.patch("/api/:collection", async (req, res, next) => {
-//     let selectedCollection = req["params"].collection;
-//     let filters = req["body"].filters;
-//     let action = req["body"].action;
-//     const client = new MongoClient(connectionString);
-//     await client.connect();
-//     let collection = client.db(DBNAME).collection(selectedCollection);
-//     let rq = collection.updateMany(filters, action);
-//     rq.then((data) => res.send(data));
-//     rq.catch((err) => res.status(500).send(`Errore esecuzione query: ${err}`));
-//     rq.finally(() => client.close());
-// });
-
-// // /**
-// //  * Chiama il metodo put aggiornando il record invece che sostituirlo
-// //  * 
-// //  * @remarks
-// //  * Utilizzando questo metodo la put esegue direttamente il set del valore ricevuto
-// //  * 
-// //  * @param id - id del record
-// //  * @body - I nuovi valori da aggiornare
-// //  * @returns Un json di conferma dell'aggiornamento
-// //  */
-// app.put("/api/:collection/:id", async (req, res, next) => {
-//     let selectedCollection = req["params"].collection;
-//     let id = req["params"].id;
-//     let objId;
-//     if (ObjectId.isValid(id)) {
-//         objId = new ObjectId(req["params"].id);
-//     }
-//     else {
-//         objId = id as unknown as ObjectId;
-//     }
-//     let newValues = req["body"];
-//     const client = new MongoClient(connectionString);
-//     await client.connect();
-//     let collection = client.db(DBNAME).collection(selectedCollection);
-//     let rq = collection.updateOne({ "_id": objId }, { "$set": newValues });
-//     rq.then((data) => res.send(data));
-//     rq.catch((err) => res.status(500).send(`Errore esecuzione query: ${err}`));
-//     rq.finally(() => client.close());
-// });
+app.delete("/api/", async (req, res, next) => { });
 
 //********************************************************************************************//
 // Default route e gestione degli errori
