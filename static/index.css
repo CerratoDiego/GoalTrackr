@@ -1,0 +1,23 @@
+ul::-webkit-scrollbar {
+    width: 8px;
+}
+
+ul::-webkit-scrollbar-track {
+    background-color: #fff;
+}
+
+ul::-webkit-scrollbar-thumb {
+    background-color: #888;
+    border-radius: 5px;
+}
+
+ul::-webkit-scrollbar-thumb:hover {
+    background-color: #555;
+}
+
+ul {
+    width: 100%;
+    max-height: 500px;
+    overflow-y: auto;
+    overflow-x: hidden;
+}

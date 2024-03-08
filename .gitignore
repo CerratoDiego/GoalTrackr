@@ -17,7 +17,7 @@ jspm_packages/
 *.js.map
 
 # Compiled CSS
-*.css
+# *.css
 
 # Sourcemaps
 *.js.map
