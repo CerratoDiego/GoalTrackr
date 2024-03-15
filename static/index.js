@@ -2,7 +2,7 @@
 
 let giorniSettimana = ["Lunedì", "Martedì", "Mercoledì", "Giovedì", "Venerdì", "Sabato", "Domenica"];
 
-$(document).ready(function () {
+$(document).ready(async function () {
     // Variabili globali
     let selectedSection = localStorage.getItem('selectedSection');
     let isSidebarToggled = localStorage.getItem('sidebarToggled');
@@ -238,8 +238,9 @@ $(document).ready(function () {
     $("#selectData").change(function () {
         dataSelezionata = $(this).val();
         console.log(dataSelezionata);
-        eventiSettimana = filterEventsForSelectedWeek(eventiTotali);
+        eventiSettimana = filterEventsForSelectedWeek(eventi);
         console.log(eventiSettimana);
+        scriviSettimana(new Date(dataSelezionata));
     });
 
     /****************************************************** FUNZIONI ************************************************************************/
@@ -335,18 +336,27 @@ $(document).ready(function () {
     // Funzione per inserire gli eventi nella tabella ------------------------------------------------------
 
     if (window.location.pathname.includes("calendario.html")) {
-        getEventi();
+        await getEventi();
+        riempiVisualizzazioneDettagliata();
     }
 
+    function scriviSettimana(data) {
+        let giornoSettimana = data.getDay();
+        let lunedì = new Date(data);
+        lunedì.setDate(data.getDate() - giornoSettimana + (giornoSettimana === 0 ? -6 : 1));
+        let domenica = new Date(lunedì);
+        domenica.setDate(lunedì.getDate() + 6);
+        let lunedìFormat = formatDate(lunedì);
+        let domenicaFormat = formatDate(domenica);
+
+        $("#visualizzazioneDettagliata h3").text(`Settimana selezionata: da ${lunedìFormat} a ${domenicaFormat}`);
+    }
     let giornoSettimana = dataCorrente.getDay();
     let lunedì = new Date(dataCorrente);
     lunedì.setDate(dataCorrente.getDate() - giornoSettimana + (giornoSettimana === 0 ? -6 : 1));
     let domenica = new Date(lunedì);
     domenica.setDate(lunedì.getDate() + 6);
-    let lunedìFormat = formatDate(lunedì);
-    let domenicaFormat = formatDate(domenica);
-
-    $("#visualizzazioneDettagliata h3").text(`Settimana selezionata: da ${lunedìFormat} a ${domenicaFormat}`);
+    scriviSettimana(dataCorrente);
 
     let _tr = $("<tr>").appendTo($("#theadOreCalendario"));
     $("<th>").text("Orario").appendTo(_tr);
@@ -355,11 +365,11 @@ $(document).ready(function () {
     }
 
     let eventiSettimana = [];
-    let eventiTotali = [];
+    let eventi = [];
     function getEventi() {
         let rq = inviaRichiesta('GET', '/api/getEventi', {});
         rq.then((response) => {
-            let eventi = response.data;
+            eventi = response.data;
             eventi.sort((a, b) => {
                 let dateA = new Date(a.data);
                 let dateB = new Date(b.data);
@@ -388,7 +398,6 @@ $(document).ready(function () {
                 $("<td>").text(item.fine).appendTo(_tr);
             }
 
-            eventiTotali = eventi;
             eventiSettimana = filterEventsForSelectedWeek(eventi);
             console.log(eventiSettimana);
         });
@@ -400,10 +409,7 @@ $(document).ready(function () {
         });
     }
 
-
-
-    /* riempiVisualizzazioneDettagliata();
     function riempiVisualizzazioneDettagliata() {
 
-    } */
+    }
 });
