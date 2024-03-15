@@ -1,9 +1,13 @@
 "use strict"
 
+let giorniSettimana = ["Lunedì", "Martedì", "Mercoledì", "Giovedì", "Venerdì", "Sabato", "Domenica"];
+
 $(document).ready(function () {
     // Variabili globali
     let selectedSection = localStorage.getItem('selectedSection');
     let isSidebarToggled = localStorage.getItem('sidebarToggled');
+    let dataCorrente = new Date();
+    let dataSelezionata = dataCorrente;
 
     // Puntatori HTML
     let _wrapper = $("#wrapper");
@@ -231,9 +235,16 @@ $(document).ready(function () {
         $("#programmaGenerale").hide();
     });
 
+    $("#selectData").change(function () {
+        dataSelezionata = $(this).val();
+        console.log(dataSelezionata);
+        eventiSettimana = filterEventsForSelectedWeek(eventiTotali);
+        console.log(eventiSettimana);
+    });
+
     /****************************************************** FUNZIONI ************************************************************************/
     function caricaOreCalendario() {
-        let _tbodyCalendario = $("#oreCalendario");
+        let _tbodyCalendario = $("#tbodyOreCalendario");
 
         for (let i = 8; i < 24; i++) {
             let _tr = $("<tr>").appendTo(_tbodyCalendario);
@@ -248,7 +259,50 @@ $(document).ready(function () {
         }
     }
 
+    function parseDate(dateString) {
+        var parts = dateString.split("-");
+        return new Date(parts[2], parts[1] - 1, parts[0]); // Anno, mese (0-11), giorno
+    }
+
+    function formatDate(date) {
+        var day = date.getDate();
+        var month = date.getMonth() + 1;
+        var year = date.getFullYear();
+        return (day < 10 ? '0' : '') + day + '-' + (month < 10 ? '0' : '') + month + '-' + year;
+    }
+
+    function isDateInSelectedWeek(date) {
+        var selectedDate = new Date(dataSelezionata);
+        console.log(selectedDate);
+        var selectedWeek = getWeekNumber(selectedDate);
+        var targetWeek = getWeekNumber(date);
+
+        return selectedWeek === targetWeek && selectedDate.getFullYear() === date.getFullYear();
+    }
+
+    function getWeekNumber(date) {
+        var d = new Date(Date.UTC(date.getFullYear(), date.getMonth(), date.getDate()));
+        var dayNum = d.getUTCDay() || 7;
+        d.setUTCDate(d.getUTCDate() + 4 - dayNum);
+        var yearStart = new Date(Date.UTC(d.getUTCFullYear(), 0, 1));
+        return Math.ceil((((d - yearStart) / 86400000) + 1) / 7);
+    }
+
+    function filterEventsForSelectedWeek(events, selectedDate) {
+        var selectedWeekEvents = [];
+        for (var i = 0; i < events.length; i++) {
+            var eventDate = parseDate(events[i].data);
+            if (isDateInSelectedWeek(eventDate)) {
+                selectedWeekEvents.push(events[i]);
+            }
+        }
+        return selectedWeekEvents;
+    }
+
     /****************************************************** UTILIZZO SERVIZI ************************************************************************/
+
+    // Funzione per inserire i giocatori nella tabella
+
     if (window.location.pathname.includes("giocatori.html")) {
         // Chiamata alla funzione getGiocatori solo se si è sulla pagina giocatori.html
         getGiocatori();
@@ -277,4 +331,79 @@ $(document).ready(function () {
             console.log("Chiamata getGiocatori terminata");
         });
     }
+
+    // Funzione per inserire gli eventi nella tabella ------------------------------------------------------
+
+    if (window.location.pathname.includes("calendario.html")) {
+        getEventi();
+    }
+
+    let giornoSettimana = dataCorrente.getDay();
+    let lunedì = new Date(dataCorrente);
+    lunedì.setDate(dataCorrente.getDate() - giornoSettimana + (giornoSettimana === 0 ? -6 : 1));
+    let domenica = new Date(lunedì);
+    domenica.setDate(lunedì.getDate() + 6);
+    let lunedìFormat = formatDate(lunedì);
+    let domenicaFormat = formatDate(domenica);
+
+    $("#visualizzazioneDettagliata h3").text(`Settimana selezionata: da ${lunedìFormat} a ${domenicaFormat}`);
+
+    let _tr = $("<tr>").appendTo($("#theadOreCalendario"));
+    $("<th>").text("Orario").appendTo(_tr);
+    for (let i = 0; i < 7; i++) {
+        $("<th>").text(giorniSettimana[i] + ", " + parseInt(lunedì.getDate() + i) + "/" + (lunedì.getMonth() + 1)).appendTo(_tr);
+    }
+
+    let eventiSettimana = [];
+    let eventiTotali = [];
+    function getEventi() {
+        let rq = inviaRichiesta('GET', '/api/getEventi', {});
+        rq.then((response) => {
+            let eventi = response.data;
+            eventi.sort((a, b) => {
+                let dateA = new Date(a.data);
+                let dateB = new Date(b.data);
+
+                if (dateA.getTime() !== dateB.getTime()) {
+                    return dateA.getTime() - dateB.getTime();
+                } else {
+                    let oraA = a.inizio.split(':').map(Number);
+                    let oraB = b.inizio.split(':').map(Number);
+
+                    if (oraA[0] !== oraB[0]) {
+                        return oraA[0] - oraB[0];
+                    } else {
+                        return oraA[1] - oraB[1];
+                    }
+                }
+            });
+            console.log(eventi);
+
+            for (let item of eventi) {
+                let _tr = $("<tr>").appendTo($("#eventiCalendario"));
+                $("<td>").text(item.data).appendTo(_tr);
+                $("<td>").text(item.tipo).appendTo(_tr);
+                $("<td>").text(item.luogo + ", " + item.città).appendTo(_tr);
+                $("<td>").text(item.inizio).appendTo(_tr);
+                $("<td>").text(item.fine).appendTo(_tr);
+            }
+
+            eventiTotali = eventi;
+            eventiSettimana = filterEventsForSelectedWeek(eventi);
+            console.log(eventiSettimana);
+        });
+        rq.catch((error) => {
+            console.log(error);
+        });
+        rq.finally(() => {
+            console.log("Chiamata getEventi terminata");
+        });
+    }
+
+
+
+    /* riempiVisualizzazioneDettagliata();
+    function riempiVisualizzazioneDettagliata() {
+
+    } */
 });
