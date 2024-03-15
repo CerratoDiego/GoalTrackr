@@ -30,6 +30,22 @@
     <script src="./libreria.js"></script>
     <script src="./index.js"></script>
 
+    <style>
+        /* Personalizzazione dell'input di tipo "date" */
+        input[type="date"] {
+            height: 40px;
+            border: 1px solid #4e73df;
+            border-bottom: 3px solid #4e73df;
+            border-radius: 4px;
+            padding: 5px;
+            font-size: 1rem;
+            color: #4e73df;
+            width: 40%;
+            cursor: pointer;
+            margin-bottom: 5%;
+        }
+    </style>
+
 </head>
 
 <body>
@@ -234,14 +250,13 @@
         <div id="mainContentWrapper" class="d-flex flex-column">
             <div id="calendar" class="container-fluid">
                 <br>
-                <h1 class="mb-4 text-gray-800">Calendario generale</h1>
+                <h1 class="mb-4 text-gray-800">Calendario generale degli eventi</h1>
 
                 <div class="button-container">
-                    <button id="programmaGeneraleButton" class="switch-button"
-                    style="background-color: #107ed9;">
+                    <button id="programmaGeneraleButton" class="switch-button" style="background-color: #107ed9;">
                         Programma generale</button>
                     <button id="visualizzazioneDettagliataButton" class="switch-button"
-                    style="background-color: #b8dfff; color: #000;">
+                        style="background-color: #b8dfff; color: #000;">
                         Visualizzazione dettagliata</button>
                 </div>
 
@@ -252,36 +267,36 @@
                                 <th>Data</th>
                                 <th>Evento</th>
                                 <th>Luogo</th>
-                                <th>Ora</th>
+                                <th>Orario di inizio</th>
+                                <th>Orario di fine</th>
                             </tr>
                         </thead>
                         <tbody id="eventiCalendario">
-                            <tr>
+                            <!-- <tr>
                                 <td>01/01/2021</td>
                                 <td>Allenamento</td>
-                                <td>Stadio</td>
+                                <td>Stadio, Città</td>
                                 <td>10:00</td>
-                            </tr>
-                            <tr>
-                                <td>01/01/2021</td>
-                                <td>Allenamento</td>
-                                <td>Stadio</td>
-                                <td>10:00</td>
-                            </tr>
-                            <tr>
-                                <td>01/01/2021</td>
-                                <td>Allenamento</td>
-                                <td>Stadio</td>
-                                <td>10:00</td>
-                            </tr>
+                                <td>12:00</td>
+                            </tr> -->
                         </tbody>
                     </table>
                 </div>
 
                 <div id="visualizzazioneDettagliata">
-                    <table class=" table table-bordered">
-                        <thead>
-                            <tr>
+                    <h3 style="text-align: center;">Settimana attuale: </h3>
+                    <br>
+                    <div class="row" style="height: 50px;">
+                        <div class="col-3">
+                            <h4>Modifica data: </h4>
+                        </div>
+                        <div class="col-9">
+                            <input type="date" id="selectData">
+                        </div>
+                    </div>
+                    <table class="table table-bordered">
+                        <thead id="theadOreCalendario">
+                            <!-- <tr>
                                 <th>Ora</th>
                                 <th>Lunedì</th>
                                 <th>Martedì</th>
@@ -290,13 +305,14 @@
                                 <th>Venerdì</th>
                                 <th>Sabato</th>
                                 <th>Domenica</th>
-                            </tr>
+                            </tr> -->
                         </thead>
-                        <tbody id="oreCalendario">
+                        <tbody id="tbodyOreCalendario">
 
                         </tbody>
                     </table>
                 </div>
+
             </div>
         </div>
     </div>

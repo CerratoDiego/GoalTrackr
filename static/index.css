@@ -1,3 +1,9 @@
+/* #mainContentWrapper {
+    margin: auto; 
+    width: 80%; 
+    max-width: 1200px; 
+} */
+
 ul::-webkit-scrollbar {
     width: 8px;
 }
@@ -20,6 +26,30 @@ ul {
     max-height: 500px;
     overflow-y: auto;
     overflow-x: hidden;
+}
+
+#wrapper {
+    overflow-x: hidden;
+}
+
+#accordionSidebar {
+    position: fixed;
+    height: 100%;
+    top: 0;
+    left: 0;
+    z-index: 1;
+}
+
+#mainContentWrapper {
+    margin-left: 2%; /* Larghezza della barra laterale */
+}
+
+#wrapper {
+    margin-left: 200px; /* Larghezza della barra laterale */
+}
+
+#accordionSidebar {
+    width: 200px; /* Larghezza della barra laterale */
 }
 
 th {
@@ -55,7 +85,7 @@ td {
     text-decoration: none;
     display: inline-block;
     font-size: 16px;
-    margin: 4px 2px;
+    margin: 3% 1%;
     cursor: pointer;
     border-radius: 8px;
     transition: background-color 0.3s ease;
