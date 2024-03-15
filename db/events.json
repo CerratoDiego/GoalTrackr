@@ -1,0 +1,46 @@
+[
+    {
+        "nome": "Partita1",
+        "data": "12-12-2020",
+        "inizio": "12:00",
+        "fine": "14:00",
+        "luogo": "Campo 1, Renzo Saglietti",
+        "città": "Alba",
+        "tipo": "Partita",
+        "creatore": "marco.rossi",
+        "squadra":"Area Calcio U19"
+    },
+    {
+        "nome": "Allenamento1",
+        "data": "10-12-2020",
+        "inizio": "19:00",
+        "fine": "21:00",
+        "luogo": "Campo 2, Renzo Saglietti",
+        "città": "Alba",
+        "tipo": "Allenamento",
+        "creatore": "marco.rossi",
+        "squadra":"Area Calcio U19"
+    },
+    {
+        "nome": "Partita2",
+        "data": "19-12-2020",
+        "inizio": "15:00",
+        "fine": "17:00",
+        "luogo": "Campo 1, Renzo Saglietti",
+        "città": "Alba",
+        "tipo": "Partita",
+        "creatore": "marco.rossi",
+        "squadra":"Area Calcio U19"
+    },
+    {
+        "nome": "SessioneVideo1",
+        "data": "10-12-2020",
+        "inizio": "18:00",
+        "fine": "19:00",
+        "luogo": "Sala video, Renzo Saglietti",
+        "città": "Alba",
+        "tipo": "Sessione Video",
+        "creatore": "marco.rossi",
+        "squadra":"Area Calcio U19"
+    }
+]
