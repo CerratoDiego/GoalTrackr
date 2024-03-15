@@ -177,6 +177,22 @@ app.get("/api/getGiocatori", async (req, res, next) => {
     })
 });
 
+app.get("/api/getEventi", async (req, res, next) => {
+    const client = new MongoClient(connectionString)
+    await client.connect()
+    let db = client.db(DBNAME).collection("events")
+    let request = db.find().toArray()
+    request.then((data) => {
+        res.status(200).send(data)
+    })
+    request.catch((err) => {
+        res.status(500).send("Errore esecuzione query: " + err)
+    })
+    request.finally(() => {
+        client.close()
+    })
+});
+
 app.post("/api/", async (req, res, next) => { });
 
 app.patch("/api/", async (req, res, next) => { });
