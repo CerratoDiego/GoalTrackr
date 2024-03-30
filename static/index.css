@@ -4,6 +4,29 @@
     max-width: 1200px; 
 } */
 
+#tbodyOreCalendario td.event-start {
+    color: white;
+    text-align: center;
+}
+
+.eventTd:hover {
+    cursor: pointer;
+}
+
+/* .eventTd,
+.eventTd:hover ~ .eventTd {
+    cursor: pointer; /* Cambia il cursore quando si passa sopra ai TD */
+    transition: transform 0.2s ease; /* Aggiungi un'animazione di transizione */
+}
+
+.eventTd:hover {
+    transform: scale(1.05); /* Ingrandisci leggermente il TD quando ci si posiziona sopra */
+}
+
+.event-color.hovered {
+    transform: scale(1.05); /* Ingrandisce leggermente il TD al passaggio del mouse */
+} */
+
 ul::-webkit-scrollbar {
     width: 8px;
 }
