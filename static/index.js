@@ -84,8 +84,6 @@ $(document).ready(async function () {
         return dateRegex.test(value);
     }
 
-    caricaOreCalendario()
-
     /****************************************************** GESTIONE TOGGLER ************************************************************************/
     // Sidebar
     $('#sidebarToggle').click(function () {
@@ -241,11 +239,13 @@ $(document).ready(async function () {
         eventiSettimana = filterEventsForSelectedWeek(eventi);
         console.log(eventiSettimana);
         scriviSettimana(new Date(dataSelezionata));
+        riempiVisualizzazioneDettagliata(eventiSettimana);
     });
 
     /****************************************************** FUNZIONI ************************************************************************/
     function caricaOreCalendario() {
         let _tbodyCalendario = $("#tbodyOreCalendario");
+        _tbodyCalendario.html("");
 
         for (let i = 8; i < 24; i++) {
             let _tr = $("<tr>").appendTo(_tbodyCalendario);
@@ -335,11 +335,8 @@ $(document).ready(async function () {
 
     // Funzione per inserire gli eventi nella tabella ------------------------------------------------------
 
-    if (window.location.pathname.includes("calendario.html")) {
-        await getEventi();
-        riempiVisualizzazioneDettagliata();
-    }
-
+    let lunCorrente
+    let domCorrente
     function scriviSettimana(data) {
         let giornoSettimana = data.getDay();
         let lunedì = new Date(data);
@@ -348,20 +345,27 @@ $(document).ready(async function () {
         domenica.setDate(lunedì.getDate() + 6);
         let lunedìFormat = formatDate(lunedì);
         let domenicaFormat = formatDate(domenica);
+        lunCorrente = lunedì;
+        domCorrente = domenica;
+
+        let parti = lunedìFormat.split("-");
+        let lunedìFormatNuovo = `${parti[2]}-${parti[1]}-${parti[0]}`;
+        $("#selectData").val(lunedìFormatNuovo);
 
         $("#visualizzazioneDettagliata h3").text(`Settimana selezionata: da ${lunedìFormat} a ${domenicaFormat}`);
+
+        $("#theadOreCalendario").html("");
+        let _tr = $("<tr>").appendTo($("#theadOreCalendario"));
+        $("<th>").text("Orario").appendTo(_tr);
+        for (let i = 0; i < 7; i++) {
+            $("<th>").text(giorniSettimana[i] + ", " + parseInt(lunedì.getDate() + i) + "/" + (lunedì.getMonth() + 1)).appendTo(_tr);
+        }
     }
-    let giornoSettimana = dataCorrente.getDay();
-    let lunedì = new Date(dataCorrente);
-    lunedì.setDate(dataCorrente.getDate() - giornoSettimana + (giornoSettimana === 0 ? -6 : 1));
-    let domenica = new Date(lunedì);
-    domenica.setDate(lunedì.getDate() + 6);
+
     scriviSettimana(dataCorrente);
 
-    let _tr = $("<tr>").appendTo($("#theadOreCalendario"));
-    $("<th>").text("Orario").appendTo(_tr);
-    for (let i = 0; i < 7; i++) {
-        $("<th>").text(giorniSettimana[i] + ", " + parseInt(lunedì.getDate() + i) + "/" + (lunedì.getMonth() + 1)).appendTo(_tr);
+    if (window.location.pathname.includes("calendario.html")) {
+        await getEventi();
     }
 
     let eventiSettimana = [];
@@ -399,7 +403,7 @@ $(document).ready(async function () {
             }
 
             eventiSettimana = filterEventsForSelectedWeek(eventi);
-            console.log(eventiSettimana);
+            riempiVisualizzazioneDettagliata(eventiSettimana);
         });
         rq.catch((error) => {
             console.log(error);
@@ -409,7 +413,164 @@ $(document).ready(async function () {
         });
     }
 
-    function riempiVisualizzazioneDettagliata() {
+    function riempiVisualizzazioneDettagliata(eventiSettimana) {
+        caricaOreCalendario();
 
+        eventiSettimana.forEach(evento => {
+            let oraInizio = parseInt(evento.inizio.split(":")[0]);
+            let oraFine = parseInt(evento.fine.split(":")[0]);
+
+            let tdIndexStart = oraInizio - 8;
+            let tdIndexEnd = oraFine - 8;
+
+            if (tdIndexStart >= 0 && tdIndexStart < 16) {
+                let tdEventoStart = $("#tbodyOreCalendario tr:eq(" + tdIndexStart + ") td:eq(1)");
+                tdEventoStart.addClass("event-start").addClass("eventTd");
+                tdEventoStart.text(evento.nome);
+                tdEventoStart.prop("eventDetails", evento);
+                if (evento.tipo === "Partita") {
+                    tdEventoStart.css("background-color", "green");
+                    tdEventoStart.css("border-color", "green")
+                } else if (evento.tipo === "Allenamento") {
+                    tdEventoStart.css("background-color", "blue");
+                    tdEventoStart.css("border-color", "blue")
+                } else if (evento.tipo === "Sessione Video") {
+                    tdEventoStart.css("background-color", "yellow").css("color", "black");
+                    tdEventoStart.css("border-color", "yellow")
+                }
+            }
+
+            if (tdIndexEnd > tdIndexStart && tdIndexEnd < 16) {
+                for (let i = tdIndexStart + 1; i < tdIndexEnd; i++) {
+                    let tdEvento = $("#tbodyOreCalendario tr:eq(" + i + ") td:eq(1)");
+                    tdEvento.addClass("eventTd");
+                    tdEvento.prop("eventDetails", evento);
+                    if (evento.tipo === "Partita") {
+                        tdEvento.css("background-color", "green");
+                        tdEvento.css("border-color", "green")
+                    } else if (evento.tipo === "Allenamento") {
+                        tdEvento.css("background-color", "blue");
+                        tdEvento.css("border-color", "blue")
+                    } else if (evento.tipo === "Sessione Video") {
+                        tdEvento.css("background-color", "yellow");
+                        tdEvento.css("border-color", "yellow")
+                    }
+                    tdEvento.text("")
+                }
+            }
+        });
     }
+
+    $(document).on("click", ".eventTd", function () {
+        let eventDetails = $(this).prop("eventDetails");
+
+        let html = "<div>" +
+            "<p><strong>Nome:</strong> " + eventDetails.nome + "</p>" +
+            "<p><strong>Tipo:</strong> " + eventDetails.tipo + "</p>" +
+            "<p><strong>Data:</strong> " + eventDetails.data + "</p>" +
+            "<p><strong>Ora di inizio:</strong> " + eventDetails.inizio + "</p>" +
+            "<p><strong>Ora di fine:</strong> " + eventDetails.fine + "</p>" +
+            "<p><strong>Luogo:</strong> " + eventDetails.luogo + "</p>" +
+            "<p><strong>Città:</strong> " + eventDetails.città + "</p>" +
+            "</div>";
+
+        Swal.fire({
+            title: "Dettagli dell'evento",
+            html: html,
+            icon: "info",
+            confirmButtonText: "Gestisci presenza",
+            showCloseButton: true,
+            closeButtonAriaLabel: "Chiudi"
+        }).then((result) => {
+            if (result.isConfirmed) {
+                Swal.fire({
+                    title: "Gestione presenza",
+                    showCancelButton: true,
+                    showConfirmButton: true,
+                    showCloseButton: true,
+                    confirmButtonText: "PRESENTE",
+                    confirmButtonColor: "green",
+                    cancelButtonText: "ASSENTE",
+                    cancelButtonColor: "red",
+                    preConfirm: () => {
+                        return Swal.fire({
+                            title: "Conferma presenza",
+                            text: "Sei sicuro di voler confermare la presenza?",
+                            icon: "question",
+                            showCancelButton: true,
+                            confirmButtonText: "Conferma",
+                            cancelButtonText: "Annulla",
+                            reverseButtons: true
+                        }).then((result) => {
+                            if (result.isConfirmed) {
+                                Swal.fire("Presenza confermata!", "", "success");
+                            }
+                        });
+                    }
+                }).then((result) => {
+                    if (result.dismiss === Swal.DismissReason.cancel) {
+                        Swal.fire({
+                            title: 'Assenze',
+                            html:
+                                '<span style="font-weight: bold;">Motivo dell\'assenza:</span>' +
+                                '<select id="motivoAssenza" class="form-control" style="margin-top: 10px;">' +
+                                '<option value="">Seleziona un motivo</option>' +
+                                '<option value="Malattia">Motivi di salute</option>' +
+                                '<option value="Malattia">Visita medica</option>' +
+                                '<option value="Impegni personali">Impegni personali</option>' +
+                                '<option value="Altro">Altro</option>' +
+                                '</select>',
+                            icon: 'warning',
+                            showCancelButton: true,
+                            confirmButtonColor: '#d33',
+                            cancelButtonColor: '#6c757d',
+                            confirmButtonText: 'Conferma',
+                            cancelButtonText: 'Annulla',
+                            preConfirm: () => {
+                                const motivo = document.getElementById('motivoAssenza').value;
+                                if (!motivo) {
+                                    Swal.showValidationMessage('Seleziona il motivo dell\'assenza');
+                                }
+                                return { motivo: motivo };
+                            }
+                        }).then((result) => {
+                            if (result.isConfirmed) {
+                                if (result.value.motivo == 'Altro') {
+                                    Swal.fire({
+                                        title: 'Motivo dell\'assenza',
+                                        input: 'text',
+                                        inputPlaceholder: 'Inserisci il motivo dell\'assenza',
+                                        showCancelButton: true,
+                                        confirmButtonColor: '#d33',
+                                        cancelButtonColor: '#6c757d',
+                                        confirmButtonText: 'Conferma',
+                                        cancelButtonText: 'Annulla',
+                                        inputValidator: (value) => {
+                                            if (!value) {
+                                                return 'E\' richiesto il motivo dell\'assenza!';
+                                            }
+                                        }
+                                    }).then((result) => {
+                                        if (result.isConfirmed) {
+                                            Swal.fire(
+                                                'Assenza segnata!',
+                                                'Motivo: ' + result.value,
+                                                'success'
+                                            );
+                                        }
+                                    });
+                                } else {
+                                    Swal.fire(
+                                        'Assenza segnata!',
+                                        'Motivo: ' + result.value.motivo,
+                                        'success'
+                                    );
+                                }
+                            }
+                        });
+                    }
+                });
+            }
+        });
+    });
 });
