@@ -372,11 +372,11 @@ $(document).ready(async function () {
     let eventi = [];
     function getEventi() {
         let rq = inviaRichiesta('GET', '/api/getEventi', {});
-        rq.then((response) => {
+        rq.then(async (response) => {
             eventi = response.data;
-            eventi.sort((a, b) => {
-                let dateA = new Date(a.data);
-                let dateB = new Date(b.data);
+            await eventi.sort((a, b) => {
+                let dateA = parseDate(a.data);
+                let dateB = parseDate(b.data);
 
                 if (dateA.getTime() !== dateB.getTime()) {
                     return dateA.getTime() - dateB.getTime();
