@@ -8,6 +8,7 @@ $(document).ready(async function () {
     let isSidebarToggled = localStorage.getItem('sidebarToggled');
     let dataCorrente = new Date();
     let dataSelezionata = dataCorrente;
+    let mail = localStorage.getItem('mail') || "";
 
     // Puntatori HTML
     let _wrapper = $("#wrapper");
@@ -573,4 +574,173 @@ $(document).ready(async function () {
             }
         });
     });
+
+    if (window.location.pathname.includes("account.html")) {
+        getDatiPersonali();
+    }
+
+    function getDatiPersonali() {
+        let rq = inviaRichiesta('GET', '/api/getDatiPersonali', { mail });
+        rq.then((response) => {
+            console.log(response.data);
+            $(".accountFields").eq(0).val(response.data[0].nome);
+            $(".accountFields").eq(1).val(response.data[0].cognome);
+            $(".accountFields").eq(2).val(response.data[0].data_di_nascita);
+            $(".accountFields").eq(3).val(response.data[0].email);
+            $(".accountFields").eq(4).val(response.data[0].username);
+            $(".accountFields").eq(5).val(response.data[0].telefono);
+            $(".accountFields").eq(6).val(response.data[0].squadra);
+        });
+        rq.catch((error) => {
+            console.log(error);
+        });
+        rq.finally(() => {
+            console.log("Chiamata getDatiPersonali terminata");
+        });
+    }
+
+    $("#btnModificaDati").click(function () {
+        $(".accountFields").prop("disabled", false);
+        $("#btnModificaDati").prop("disabled", true);
+        $("#btnSalvaModifiche").prop("disabled", false);
+
+        $("#btnSalvaModifiche").click(function () {
+            $(".accountFields").prop("disabled", true);
+            $("#btnModificaDati").prop("disabled", false);
+            $("#btnSalvaModifiche").prop("disabled", true);
+
+            var isValid = true;
+            $("input").each(function () {
+                if ($(this).val().trim() === "") {
+                    isValid = false;
+                    return false;
+                }
+            });
+
+            if (!isValid) {
+                Swal.fire("Errore", "Compilare tutti i campi", "error");
+            } else {
+
+                Swal.fire("Modifiche salvate", "", "success");
+            }
+
+        });
+    });
+
+
+
+
+
+
+    // |       ||||  |||||  |  |   |
+    // |      |    | |      |  ||  |
+    // |      |    | | |||  |  | | |
+    // |      |    | |   |  |  |  ||
+    // |||||   ||||  ||||   |  |   |
+
+
+
+
+
+    // LOGIN ------------------------------------------------------------------------------------------------------------------------------------------------------------
+    let _username = $("#usr")
+    let _password = $("#pwd")
+    let _lblErrore = $("#lblErrore")
+    _lblErrore.hide();
+
+
+    $("#btnLogin").on("click", controllaLogin)
+    // $("#btnRecuperaPassword").on("click",recuperaPassword)
+
+    // il submit deve partire anche senza click 
+    // con il solo tasto INVIO
+    $(document).on('keydown', function (event) {
+        if (event.keyCode == 13)
+            controllaLogin();
+    });
+
+
+    function controllaLogin() {
+        _username.removeClass("is-invalid");
+        _username.prev().removeClass("icona-rossa");
+        _password.removeClass("is-invalid");
+        _password.prev().removeClass("icona-rossa");
+
+        _lblErrore.hide();
+
+        if (_username.val() == "") {
+            _username.addClass("is-invalid");
+            _username.prev().addClass("icona-rossa");
+        }
+        else if (_password.val() == "") {
+            _password.addClass("is-invalid");
+            _password.prev().addClass("icona-rossa");
+        }
+        else {
+            mail = _username.val();
+            localStorage.setItem('mail', mail);
+            console.log(mail)
+            let request = inviaRichiesta('POST', '/api/login',
+                {
+                    "username": _username.val(),
+                    "password": _password.val()
+                }
+            );
+            request.catch(function (err) {
+                // unauthorized
+                if (err.status == 401) {
+                    _lblErrore.show();
+                }
+                else
+                    errore(err)
+            });
+            request.then(function (response) {
+                window.location.href = "index.html"
+            })
+        }
+    }
+
+    // $("#btnGoogle").on("click",function(){
+    // 	google.accounts.id.initialize({
+    // 		"client_id": oAuthId,
+    // 		"callback": function (response) {
+    // 			if (response.credential !== "") {
+    // 				let token = response.credential
+    // 				console.log("token:", token)
+    // 				localStorage.setItem("token", token)
+    // 				/* window.location.href = "index.html" oppure */
+    // 				let request = inviaRichiesta("POST", "/api/googleLogin");
+    // 				request.then(function (response) {
+    // 					window.location.href = "index.html"
+    // 				});
+    // 				request.catch(errore);
+    // 			}
+    // 		}
+    // 	})
+    // 	google.accounts.id.renderButton(
+    // 		document.getElementById("googleDiv"), // qualunque tag DIV della pagina
+    // 		{
+    // 			"theme": "outline",
+    // 			"size": "large",
+    // 			"type": "standard",
+    // 			"text": "continue_with",
+    // 			"shape": "rectangular",
+    // 			"logo_alignment": "center"
+    // 		}
+    // 	);
+    // 	google.accounts.id.prompt();
+    // })
+
+
+    _lblErrore.children("button").on("click", function () {
+        _lblErrore.hide();
+    })
+
+    /* function recuperaPassword(){
+        let request=inviaRichiesta("POST","/api/sendNewPassword",{"skipCheckToken":true})
+        request.catch(errore)
+        request.then((response)=>{
+            alert("Mail inviata alla vostra casella di posta")
+        })
+    } */
 });
