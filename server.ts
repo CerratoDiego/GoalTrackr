@@ -5,6 +5,10 @@ import _express from "express";
 import _dotenv from "dotenv";
 import _cors from "cors";
 import _fileUpload from "express-fileupload";
+// const _nodemailer = require("nodemailer");
+import _jwt from "jsonwebtoken";
+import _bcrypt from "bcryptjs"; // + @types
+import { google } from "googleapis";
 // import _cloudinary, { UploadApiResponse } from 'cloudinary';
 // import _streamifier from "streamifier";
 // import _axios from "axios";
@@ -24,8 +28,6 @@ _dotenv.config({ "path": ".env" });
 
 // Variabili relative a MongoDB ed Express
 import { MongoClient, ObjectId } from "mongodb";
-import exp from "constants";
-import path from "path";
 const DBNAME = process.env.DBNAME;
 const connectionString: string = process.env.connectionStringAtlas;
 const app = _express();
@@ -49,6 +51,7 @@ const PRIVATE_KEY = _fs.readFileSync("./keys/privateKey.pem", "utf8");
 const CERTIFICATE = _fs.readFileSync("./keys/certificate.crt", "utf8");
 const CREDENTIALS = { "key": PRIVATE_KEY, "cert": CERTIFICATE };
 const https_server = _https.createServer(CREDENTIALS, app);
+const ENCRYPTION_KEY = _fs.readFileSync("./keys/encryptionKey.txt", "utf8")
 // Il secondo parametro facoltativo ipAddress consente di mettere il server in ascolto su una delle interfacce della macchina, se non lo metto viene messo in ascolto su tutte le interfacce (3 --> loopback e 2 di rete)
 https_server.listen(HTTPS_PORT, () => {
     init();
@@ -136,16 +139,144 @@ const whitelist = [
 // };
 // app.use("/", _cors(corsOptions));
 
-// 7. Configurazione di nodemailer
-const auth = {
-    "user": process.env.gmailUser,
-    "pass": process.env.gmailPassword,
+// 7. Configurazione di nodemailer con utilizzo di oAuth2
+/* const o_Auth2 = JSON.parse(process.env.oAuthCredential as any)
+const OAuth2 = google.auth.OAuth2; // Oggetto OAuth2
+const OAuth2Client = new OAuth2(
+    o_Auth2["client_id"],
+    o_Auth2["client_secret"]
+);
+OAuth2Client.setCredentials({
+    refresh_token: o_Auth2.refresh_token,
+}); 
+
+let message = _fs.readFileSync("./message.html", "utf8");*/
+
+//8. login
+
+app.post("/api/login", async (req, res, next) => {
+    let username = req["body"]["username"]
+    let password = req["body"]["password"]
+    const client = new MongoClient(connectionString)
+    await client.connect()
+    const collection = client.db(DBNAME).collection("users")
+    let regex = new RegExp("^" + username + "$", "i")
+    let request = collection.findOne({ "email": regex }, { "projection": { "email": 1, "password": 1 } })
+    request.then((dbUser) => {
+        if (!dbUser) {
+            res.status(401).send("Username not valid")
+        }
+        else {
+            let token = creaToken(dbUser);
+            console.log(token)
+            res.setHeader("authorization", token)
+            res.setHeader("access-control-expose-headers", "authorization")
+            res.send({ "ris": "ok" })
+        }
+        /* else {
+            _bcrypt.compare(password, dbUser.password, (err, success) => {
+                if (err)
+                    res.status(500).send("Bcrypt compare error " + err.message)
+                else {
+                    if (!success) {
+                        res.status(401).send("Password not valid")
+                    }
+                    else {
+                        let token = creaToken(dbUser);
+                        console.log(token)
+                        res.setHeader("authorization", token)
+                        res.setHeader("access-control-expose-headers", "authorization")
+                        res.send({ "ris": "ok" })
+                    }
+                }
+            })
+        } */
+    })
+    request.catch((err) => {
+        res.status(500).send("Query fallita")
+    })
+    request.finally(() => {
+        client.close()
+    })
+})
+
+function creaToken(data) {
+    let currentTime = Math.floor(new Date().getTime() / 1000)
+    let payload = {
+        "_id": data._id,
+        "username": data.username,
+        "iat": data.iat || currentTime,
+        "exp": currentTime + parseInt(process.env.durata_token)
+    }
+    let token = _jwt.sign(payload, ENCRYPTION_KEY)
+    return token
 }
-/* const transporter = _nodemailer.createTransport({
-    "service": "gmail",
-    "auth": auth
-}); */
-// let message = _fs.readFileSync("./message.html", "utf8");
+
+//9. controllo token Google
+app.post("/api/googleLogin", async (req, res, next) => {
+    if (!req.headers["authorization"]) {
+        res.status(403).send("Token mancante")
+    }
+    else {
+        let token = req.headers["authorization"]
+        //ottengo payload del token con decodifica Base64
+        let payload = _jwt.decode(token);
+        let username = payload["email"]
+        const client = new MongoClient(connectionString)
+        await client.connect()
+        const collection = client.db(DBNAME).collection("mails")
+        let regex = new RegExp("^" + username + "$", "i")
+        let request = collection.findOne({ "username": regex }, { "projection": { "username": 1 } })
+        request.then((dbUser) => {
+            if (!dbUser) {
+                res.status(403).send("Username non autorizzato")
+            }
+            else {
+                let token = creaToken(dbUser);
+                //console.log(token)
+                res.setHeader("authorization", token)
+                res.setHeader("access-control-expose-headers", "authorization")
+                res.send({ "ris": "ok" })
+            }
+        })
+        request.catch((err) => {
+            res.status(500).send("Query fallita")
+        })
+        request.finally(() => {
+            client.close()
+        })
+    }
+})
+
+//10. controllo token
+app.use("/api/", (req, res, next) => {
+    if (!req["body"]["skipCheckToken"]) {
+        if (!req.headers["authorization"]) {
+            res.status(403).send("Token mancante")
+        }
+        else {
+            let token = req["headers"]["authorization"]
+            _jwt.verify(token, ENCRYPTION_KEY, (err, payload) => {
+                if (err) {
+                    res.status(403).send("Token corrotto " + err)
+                }
+                else {
+                    let newToken = creaToken(payload)
+                    console.log(newToken)
+                    res.setHeader("authorization", newToken)
+                    res.setHeader("access-control-expose-headers", "authorization")
+                    req["payload"] = payload
+                    next()
+                }
+            })
+        }
+    }
+    else {
+      
+        next()
+    }
+
+})
 
 //********************************************************************************************//
 // Routes finali di risposta al client
@@ -164,8 +295,8 @@ const auth = {
 app.get("/api/getGiocatori", async (req, res, next) => {
     const client = new MongoClient(connectionString)
     await client.connect()
-    let db = client.db(DBNAME).collection("players")
-    let request = db.find().toArray()
+    let db = client.db(DBNAME).collection("users")
+    let request = db.find({ "categoria": "giocatore" }).toArray()
     request.then((data) => {
         res.status(200).send(data)
     })
@@ -193,6 +324,23 @@ app.get("/api/getEventi", async (req, res, next) => {
     })
 });
 
+app.get("/api/getDatiPersonali", async (req, res, next) => {
+    let mail = req["query"]["mail"]
+    const client = new MongoClient(connectionString)
+    await client.connect()
+    let db = client.db(DBNAME).collection("users")
+    let request = db.find({ "email": mail }).toArray()
+    request.then((data) => {
+        res.status(200).send(data)
+    })
+    request.catch((err) => {
+        res.status(500).send("Errore esecuzione query: " + err)
+    })
+    request.finally(() => {
+        client.close()
+    })
+});
+
 app.post("/api/", async (req, res, next) => { });
 
 app.patch("/api/", async (req, res, next) => { });
@@ -200,6 +348,49 @@ app.patch("/api/", async (req, res, next) => { });
 app.put("/api/", async (req, res, next) => { });
 
 app.delete("/api/", async (req, res, next) => { });
+
+/* app.post("/api/sendNewPassword", async (req, res, next) => {
+    let username = "d.cerrato.2230@vallauri.edu"
+    let password = "password"
+    message = message.replace("__user", username).replace("__password", password)
+    const accessToken = await OAuth2Client.getAccessToken().catch((err) => { res.status(500).send("Errore richiesta access token a google " + err) })
+    console.log(accessToken)
+    const auth = {
+        "type": "OAuth2",
+        "user": username, // process.env.email,
+        "clientId": o_Auth2.client_id,
+        "clientSecret": o_Auth2.client_secret,
+        "refreshToken": o_Auth2.refresh_token,
+        "accessToken": accessToken
+    }
+    const transporter = _nodemailer.createTransport({
+        "service": "gmail",
+        "auth": auth
+    });
+    let mailOptions = {
+        "from": auth.user,
+        "to": username,
+        "subject": "nuova password di accesso a rilievi e perizie",
+        "html": message,
+        "attachments": [{
+            "filename": "nuovaPassword.png",
+            "path": "./qrCode.png"
+        }]
+    }
+    transporter.sendMail(mailOptions, function (err, info) {
+        if (err) {
+            res.status(500).send("Errore invio mail\n" + err.message);
+        }
+        else {
+            console.log("Email inviata correttamente");
+            res.send({
+                "ris": "OK",
+                "info": info
+            });
+        }
+    })
+
+}) */
 
 //********************************************************************************************//
 // Default route e gestione degli errori
