@@ -137,7 +137,8 @@
                     <i class="fas fa-check-circle"></i>
                     <span>Presenze</span>
                 </a>
-                <div id="collapsePresenze" class="collapse" aria-labelledby="headingPages" data-parent="#accordionSidebar">
+                <div id="collapsePresenze" class="collapse" aria-labelledby="headingPages"
+                    data-parent="#accordionSidebar">
                     <div class="bg-white py-2 collapse-inner rounded">
                         <a class="collapse-item" href="presenze.html">
                             <i class="fas fa-dumbbell"></i>
@@ -170,7 +171,8 @@
                     <i class="fas fa-chart-area"></i>
                     <span>Statistiche</span>
                 </a>
-                <div id="collapseStatistiche" class="collapse" aria-labelledby="headingPages" data-parent="#accordionSidebar">
+                <div id="collapseStatistiche" class="collapse" aria-labelledby="headingPages"
+                    data-parent="#accordionSidebar">
                     <div class="bg-white py-2 collapse-inner rounded">
                         <a class="collapse-item" href="statistiche.html">
                             <i class="fas fa-user"></i>
@@ -229,10 +231,52 @@
         </ul>
         <!-- End of Sidebar -->
 
-        <div id="mainContentWrapper" class="d-flex flex-column">
-            <div id="dashboard" class="container-fluid">
-                <br>
-                <h1 class="mb-4 text-gray-800">Il mio Account</h1>
+        <div id="mainContentWrapper" class="d-flex flex-column" style="width: 70%;">
+            <div id="content">
+                <div class="container-fluid">
+                    <h1 class="mb-4 text-gray-800">Il mio account</h1>
+                    <div class="row">
+                        <div class="col-lg-12">
+                            <div class="card shadow mb-4">
+                                <div class="card-header py-3">
+                                    <h6 class="m-0 font-weight-bold text-primary">Informazioni personali</h6>
+                                </div>
+                                <div class="card-body">
+                                    <div class="form-group">
+                                        <label for="name">Nome</label>
+                                        <input type="text" class="form-control accountFields" id="name" placeholder="Nome" disabled>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="surname">Cognome</label>
+                                        <input type="text" class="form-control accountFields" id="surname" placeholder="Cognome" disabled>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="birthdate">Data di nascita</label>
+                                        <input type="date" class="form-control accountFields" id="birthdate" disabled>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="email">Email</label>
+                                        <input type="email" class="form-control accountFields" id="email" placeholder="Email" disabled>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="username">Username</label>
+                                        <input type="text" class="form-control accountFields" id="username" placeholder="Username" disabled>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="phone">Telefono</label>
+                                        <input type="tel" class="form-control accountFields" id="phone" placeholder="Telefono" disabled>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="team">Squadra</label>
+                                        <input type="text" class="form-control accountFields" id="team" placeholder="Squadra" disabled>
+                                    </div>
+                                    <button id="btnModificaDati" type="button" class="btn btn-primary">Modifica</button>
+                                    <button id="btnSalvaModifiche" type="button" class="btn btn-success" disabled>Salva</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
