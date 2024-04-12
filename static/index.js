@@ -313,7 +313,7 @@ $(document).ready(async function () {
 
     function getGiocatori() {
         console.log(utenteCorrente)
-        let rq = inviaRichiesta('GET', '/api/getGiocatori', {utenteCorrente});
+        let rq = inviaRichiesta('GET', '/api/getGiocatori', { utenteCorrente });
         rq.then((response) => {
             console.log(response.data);
             for (let item of response.data) {
@@ -374,7 +374,7 @@ $(document).ready(async function () {
     let eventiSettimana = [];
     let eventi = [];
     function getEventi() {
-        let rq = inviaRichiesta('GET', '/api/getEventi', {utenteCorrente});
+        let rq = inviaRichiesta('GET', '/api/getEventi', { utenteCorrente });
         rq.then(async (response) => {
             eventi = response.data;
             await eventi.sort((a, b) => {
@@ -652,6 +652,48 @@ $(document).ready(async function () {
             }
 
         });
+    });
+
+    // Inserimento di un nuovo giocatore da parte dell'allenatore
+    $("#newGiocatore").click(function () {
+        Swal.fire({
+            title: 'Inserisci i dati del giocatore',
+            html:
+                '<label for="nome">Nome: </label><input id="nome" class="swal2-input">' +
+                '<label for="cognome">Cognome: </label><input id="cognome" class="swal2-input">' +
+                '<label for="email">Email: </label><input id="email" class="swal2-input">' +
+                '<label for="data_di_nascita">Data di nascita: </label><input id="data_di_nascita" type="date" class="swal2-input">' +
+                '<label for="ruolo">Ruolo: </label><input id="ruolo" class="swal2-input">',
+            focusConfirm: false,
+            showCancelButton: true,
+            preConfirm: () => {
+                return [
+                    document.getElementById('nome').value,
+                    document.getElementById('cognome').value,
+                    document.getElementById('email').value,
+                    document.getElementById('data_di_nascita').value,
+                    document.getElementById('ruolo').value
+                ]
+            }
+        }).then((result) => {
+            if (result.isConfirmed) {
+                const [nome, cognome, email, data_di_nascita, ruolo] = result.value;
+                // console.log(nome, cognome, email, data_di_nascita, ruolo);
+                let rq = inviaRichiesta('POST', '/api/newGiocatore', { nome, cognome, email, data_di_nascita, ruolo, utenteCorrente });
+                rq.then((response) => {
+                    console.log(response);
+                    Swal.fire("Giocatore inserito", "", "success");
+                    $("#tbodyGiocatori").empty();
+                    getGiocatori();
+                });
+                rq.catch((error) => {
+                    console.log(error);
+                });
+            } else {
+                console.log('Operazione annullata');
+            }
+        });
+
     });
 
 

@@ -298,7 +298,7 @@ app.use("/api/", (req, res, next) => {
 // _streamifier serve solo per aggiungere immagine binarie su Cloudinary
 
 app.get("/api/getGiocatori", async (req, res, next) => {
-    let team = req["query"]["squadra"]
+    let team = req["query"]["utenteCorrente"]["squadra"]
     const client = new MongoClient(connectionString)
     await client.connect()
     let db = client.db(DBNAME).collection("users")
@@ -370,6 +370,34 @@ app.patch("/api/updateDatiPersonali", async (req, res, next) => {
     request.then((data) => {
         console.log(data)
         res.status(200).send("Dati aggiornati correttamente")
+    })
+    request.catch((err) => {
+        res.status(500).send("Errore esecuzione query: " + err)
+    })
+    request.finally(() => {
+        client.close()
+    })
+});
+
+app.post("/api/newGiocatore", async (req, res, next) => {
+    let nome = req["body"]["nome"]
+    let cognome = req["body"]["cognome"]
+    let username = ""
+    let telefono = ""
+    let dataNascita = req["body"]["data_di_nascita"]
+    let ruolo = req["body"]["ruolo"]
+    let squadra = req["body"]["utenteCorrente"]["squadra"]
+    let categoria = "giocatore"
+    const client = new MongoClient(connectionString)
+    await client.connect()
+    let db = client.db(DBNAME).collection("users")
+    let request = db.insertOne({
+        "nome": nome, "cognome": cognome, "username": username,
+        "telefono": telefono, "data_di_nascita": dataNascita, "email": username,
+        "ruolo": ruolo, "squadra": squadra, "categoria": categoria, "password": cognome
+    })
+    request.then((data) => {
+        res.status(200).send("Giocatore aggiunto correttamente")
     })
     request.catch((err) => {
         res.status(500).send("Errore esecuzione query: " + err)

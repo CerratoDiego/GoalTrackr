@@ -29,6 +29,7 @@
     <script src="./axios@1.1.2.min.js"></script>
     <script src="./libreria.js"></script>
     <script src="./index.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
     <style>
         th {
@@ -242,28 +243,40 @@
             <div id="events" class="container-fluid">
                 <br>
                 <h1 class="mb-4 text-gray-800">Giocatori</h1>
-                <div class="table-responsive">
-                    <table class="table table-bordered">
-                        <thead>
-                            <tr>
-                                <th>Nome</th>
-                                <th>Cognome</th>
-                                <th>Data di nascita</th>
-                                <th>Numero di maglia</th>
-                                <th>Ruolo</th>
-                                <th>Statistiche</th>
-                            </tr>
-                        </thead>
-                        <tbody id="tbodyGiocatori">
-                            <!-- <tr>
-                                <td>Francesco</td>
-                                <td>De Luca</td>
-                                <td>01/01/2000</td>
-                                <td>9</td>
-                                <td>Centrocampista</td>
-                            </tr> -->
-                        </tbody>
-                    </table>
+                <div class="row">
+                    <div class="table-responsive col-lg-8">
+                        <table class="table table-bordered">
+                            <thead>
+                                <tr>
+                                    <th>Nome</th>
+                                    <th>Cognome</th>
+                                    <th>Data di nascita</th>
+                                    <th>Numero di maglia</th>
+                                    <th>Ruolo</th>
+                                    <th>Statistiche</th>
+                                </tr>
+                            </thead>
+                            <tbody id="tbodyGiocatori">
+                                <!-- <tr>
+                                    <td>Francesco</td>
+                                    <td>De Luca</td>
+                                    <td>01/01/2000</td>
+                                    <td>9</td>
+                                    <td>Centrocampista</td>
+                                </tr> -->
+                            </tbody>
+                        </table>
+                    </div>
+                    <div class="container-fluid col-lg-4">
+                        <div class="card mb-4">
+                            <div class="card-header">
+                                <h6 class="m-0 font-weight-bold text-primary">Inserimento di un nuovo giocatore</h6>
+                            </div>
+                            <div class="card-body">
+                                <button id="newGiocatore" class="btn btn-primary btn-block">Nuovo giocatore</button>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
