@@ -585,7 +585,9 @@ $(document).ready(async function () {
             console.log(response.data);
             $(".accountFields").eq(0).val(response.data[0].nome);
             $(".accountFields").eq(1).val(response.data[0].cognome);
-            $(".accountFields").eq(2).val(response.data[0].data_di_nascita);
+            let parti = response.data[0].data_di_nascita.split("-");
+            let dataFormatNuovo = `${parti[2]}-${parti[1]}-${parti[0]}`;
+            $(".accountFields").eq(2).val(dataFormatNuovo);
             $(".accountFields").eq(3).val(response.data[0].email);
             $(".accountFields").eq(4).val(response.data[0].username);
             $(".accountFields").eq(5).val(response.data[0].telefono);

@@ -1,320 +1,260 @@
 [
-    {
-        "name": "Ivan",
-        "surname": "Cassinelli",
-        "age": 45,
-        "email": "ivan.cassi@gmail.com",
-        "phone": "1234567890",
-        "teams": [
-            {
-                "team_name": "Area Calcio U19",
-                "role": "Head Coach"
-            }
-        ],
-        "username": "ivan.cassinelli",
-        "password": "cassinelli",
-        "categoria": "allenatore"
+  {
+    "_id": {
+      "$oid": "6618e812cffa800dd6f92ab7"
     },
-    {
-        "name": "Marco",
-        "surname": "Rossi",
-        "age": 40,
-        "email": "marco.rossi@example.com",
-        "phone": "987654321",
-        "teams": [
-            {
-                "team_name": "Juventus FC",
-                "role": "Head Coach"
-            },
-            {
-                "team_name": "AC Milan",
-                "role": "Coach Assistant"
-            }
-        ],
-        "username": "marco.rossi",
-        "password": "rossi",
-        "categoria": "allenatore"
+    "nome": "Ivan",
+    "cognome": "Cassinelli",
+    "età": 45,
+    "email": "ivan.cassi@example.com",
+    "telefono": "1234567890",
+    "squadra": "Area Calcio U19",
+    "username": "ivan.cassinelli",
+    "password": "cassinelli",
+    "categoria": "allenatore"
+  },
+  {
+    "_id": {
+      "$oid": "6618e813cffa800dd6f92ab8"
     },
-    {
-        "name": "Giovanni",
-        "surname": "Bianchi",
-        "age": 38,
-        "email": "gio.b@example.com",
-        "phone": "555123456",
-        "teams": [
-            {
-                "team_name": "Inter Milan",
-                "role": "Coach Assistant"
-            }
-        ],
-        "username": "giovanni.bianchi",
-        "password": "bianchi",
-        "categoria": "allenatore"
+    "nome": "Marco",
+    "cognome": "Rossi",
+    "età": 40,
+    "email": "marco.rossi@example.com",
+    "telefono": "987654321",
+    "squadra": "Juventus FC",
+    "username": "marco.rossi",
+    "password": "rossi",
+    "categoria": "allenatore"
+  },
+  {
+    "_id": {
+      "$oid": "6618e813cffa800dd6f92ab9"
     },
-    {
-        "name": "Elena",
-        "surname": "Ferrari",
-        "age": 42,
-        "email": "elena.ferrari@example.com",
-        "phone": "999888777",
-        "teams": [
-            {
-                "team_name": "AS Roma",
-                "role": "Head Coach"
-            }
-        ],
-        "username": "elena.ferrari",
-        "password": "ferrari",
-        "categoria": "allenatore"
+    "nome": "Giovanni",
+    "cognome": "Bianchi",
+    "età": 38,
+    "email": "gio.b@example.com",
+    "telefono": "555123456",
+    "squadra": "Inter Milan",
+    "username": "giovanni.bianchi",
+    "password": "bianchi",
+    "categoria": "allenatore"
+  },
+  {
+    "_id": {
+      "$oid": "6618e813cffa800dd6f92aba"
     },
-    {
-        "name": "Antonio",
-        "surname": "Russo",
-        "age": 50,
-        "email": "antonio.russo@example.com",
-        "phone": "777666555",
-        "teams": [
-            {
-                "team_name": "Napoli FC",
-                "role": "Head Coach"
-            }
-        ],
-        "username": "antonio.russo",
-        "password": "russo",
-        "categoria": "allenatore"
+    "nome": "Elena",
+    "cognome": "Ferrari",
+    "età": 42,
+    "email": "elena.ferrari@example.com",
+    "telefono": "999888777",
+    "squadra": "AS Roma",
+    "username": "elena.ferrari",
+    "password": "ferrari",
+    "categoria": "allenatore"
+  },
+  {
+    "_id": {
+      "$oid": "6618e813cffa800dd6f92abb"
     },
-    {
-        "name": "Sofia",
-        "surname": "Moretti",
-        "age": 37,
-        "email": "sofia.moretti@example.com",
-        "phone": "444333222",
-        "teams": [
-            {
-                "team_name": "AC Fiorentina",
-                "role": "Head Coach"
-            }
-        ],
-        "username": "sofia.moretti",
-        "password": "moretti",
-        "categoria": "allenatore"
+    "nome": "Antonio",
+    "cognome": "Russo",
+    "età": 50,
+    "email": "antonio.russo@example.com",
+    "telefono": "777666555",
+    "squadra": "Napoli FC",
+    "username": "antonio.russo",
+    "password": "russo",
+    "categoria": "allenatore"
+  },
+  {
+    "_id": {
+      "$oid": "6618e813cffa800dd6f92abc"
     },
-    {
-        "name": "Diego",
-        "surname": "Conti",
-        "age": 48,
-        "email": "diego.conti@example.com",
-        "phone": "111222333",
-        "teams": [
-            {
-                "team_name": "Atalanta BC",
-                "role": "Head Coach"
-            },
-            {
-                "team_name": "SS Lazio",
-                "role": "Coach Assistant"
-            }
-        ],
-        "username": "diego.conti",
-        "password": "conti",
-        "categoria": "allenatore"
+    "nome": "Sofia",
+    "cognome": "Moretti",
+    "età": 37,
+    "email": "sofia.moretti@example.com",
+    "telefono": "444333222",
+    "squadra": "AC Fiorentina",
+    "username": "sofia.moretti",
+    "password": "moretti",
+    "categoria": "allenatore"
+  },
+  {
+    "_id": {
+      "$oid": "6618e813cffa800dd6f92ac1"
     },
-    {
-        "name": "Luisa",
-        "surname": "Martinez",
-        "age": 41,
-        "email": "luisa.martinez@example.com",
-        "phone": "999000111",
-        "teams": [
-            {
-                "team_name": "SS Lazio",
-                "role": "Head Coach"
-            }
-        ],
-        "username": "luisa.martinez",
-        "password": "martinez",
-        "categoria": "allenatore"
+    "nome": "Diego",
+    "cognome": "Cerrato",
+    "età": 18,
+    "data_di_nascita": "29-06-2005",
+    "email": "diego.cerrato@gmail.com",
+    "telefono": "1234567890",
+    "squadra": "Area Calcio U19",
+    "statistiche": {
+      "partite_giocate": 10,
+      "gol": 5,
+      "assist": 3,
+      "cartellini_gialli": 2,
+      "cartellini_rossi": 0
     },
-    {
-        "name": "Alessandro",
-        "surname": "Galli",
-        "age": 39,
-        "email": "alessandro.galli@example.com",
-        "phone": "666777888",
-        "teams": [
-            {
-                "team_name": "Genoa CFC",
-                "role": "Head Coach"
-            }
-        ],
-        "username": "alessandro.galli",
-        "password": "galli",
-        "categoria": "allenatore"
+    "username": "diego.cerrato",
+    "password": "Cerrato",
+    "presenze": {
+      "allenamenti": 2,
+      "partite": 1,
+      "sessioni_video": 0
     },
-    {
-        "name": "Giulia",
-        "surname": "Santos",
-        "age": 35,
-        "email": "giulia.santos@example.com",
-        "phone": "222333444",
-        "teams": [
-            {
-                "team_name": "UC Sampdoria",
-                "role": "Head Coach"
-            },
-            {
-                "team_name": "AC Milan",
-                "role": "Coach Assistant"
-            }
-        ],
-        "username": "giulia.santos",
-        "password": "santos",
-        "categoria": "allenatore"
+    "ruolo": "Difensore",
+    "numero": 5,
+    "categoria": "giocatore"
+  },
+  {
+    "_id": {
+      "$oid": "6618e813cffa800dd6f92ac2"
     },
-    {
-        "nome": "Diego",
-        "cognome": "Cerrato",
-        "età": 18,
-        "data_di_nascita": "29-06-2005",
-        "email": "diego.cerrato@gmail.com",
-        "telefono": "9203827163",
-        "squadra": "Area Calcio U19",
-        "statistiche": {
-            "partite_giocate": 10,
-            "gol": 5,
-            "assist": 3,
-            "cartellini_gialli": 2,
-            "cartellini_rossi": 0
-        },
-        "username": "diego.cerrato",
-        "password": "Cerrato",
-        "presenze": {
-            "allenamenti": 2,
-            "partite": 1,
-            "sessioni_video": 0
-        },
-        "ruolo": "Difensore",
-        "numero": 5,
-        "categoria": "giocatore"
+    "nome": "Diego",
+    "cognome": "Tarasco",
+    "età": 17,
+    "data_di_nascita": "12-03-2005",
+    "email": "diego.tarasco@example.com",
+    "telefono": "9876543210",
+    "squadra": "Area Calcio U19",
+    "statistiche": {
+      "partite_giocate": 8,
+      "gol": 3,
+      "assist": 1,
+      "cartellini_gialli": 1,
+      "cartellini_rossi": 0
     },
-    {
-        "nome": "Diego",
-        "cognome": "Tarasco",
-        "età": 17,
-        "data_di_nascita": "12-03-2005",
-        "squadra": "Area Calcio U19",
-        "statistiche": {
-            "partite_giocate": 8,
-            "gol": 3,
-            "assist": 1,
-            "cartellini_gialli": 1,
-            "cartellini_rossi": 0
-        },
-        "username": "diego.tarasco",
-        "password": "Tarasco",
-        "presenze": {
-            "allenamenti": 0,
-            "partite": 3,
-            "sessioni_video": 2
-        },
-        "ruolo": "Centrocampista",
-        "numero": 10,
-        "categoria": "giocatore"
+    "username": "diego.tarasco",
+    "password": "Tarasco",
+    "presenze": {
+      "allenamenti": 0,
+      "partite": 3,
+      "sessioni_video": 2
     },
-    {
-        "nome": "Lorenzo",
-        "cognome": "Montrucchio",
-        "età": 17,
-        "data_di_nascita": "05-08-2005",
-        "squadra": "Area Calcio U19",
-        "statistiche": {
-            "partite_giocate": 7,
-            "gol": 2,
-            "assist": 2,
-            "cartellini_gialli": 3,
-            "cartellini_rossi": 1
-        },
-        "username": "lorenzo.montrucchio",
-        "password": "Montrucchio",
-        "presenze": {
-            "allenamenti": 1,
-            "partite": 2,
-            "sessioni_video": 1
-        },
-        "ruolo": "Attaccante",
-        "numero": 9,
-        "categoria": "giocatore"
+    "ruolo": "Centrocampista",
+    "numero": 10,
+    "categoria": "giocatore"
+  },
+  {
+    "_id": {
+      "$oid": "6618e813cffa800dd6f92ac3"
     },
-    {
-        "nome": "Alessandro",
-        "cognome": "Gambino",
-        "età": 16,
-        "data_di_nascita": "21-11-2006",
-        "squadra": "Area Calcio U19",
-        "statistiche": {
-            "partite_giocate": 9,
-            "gol": 4,
-            "assist": 5,
-            "cartellini_gialli": 0,
-            "cartellini_rossi": 0
-        },
-        "username": "alessandro.gambino",
-        "password": "Gambino",
-        "presenze": {
-            "allenamenti": 3,
-            "partite": 0,
-            "sessioni_video": 2
-        },
-        "ruolo": "Centrocampista",
-        "numero": 8,
-        "categoria": "giocatore"
+    "nome": "Lorenzo",
+    "cognome": "Montrucchio",
+    "età": 17,
+    "data_di_nascita": "05-08-2005",
+    "email": "lorenzo.montrucchio@example.com",
+    "telefono": "5551234567",
+    "squadra": "Area Calcio U19",
+    "statistiche": {
+      "partite_giocate": 7,
+      "gol": 2,
+      "assist": 2,
+      "cartellini_gialli": 3,
+      "cartellini_rossi": 1
     },
-    {
-        "nome": "Matteo",
-        "cognome": "Ponzo",
-        "età": 17,
-        "data_di_nascita": "18-09-2005",
-        "squadra": "Area Calcio U19",
-        "statistiche": {
-            "partite_giocate": 6,
-            "gol": 1,
-            "assist": 0,
-            "cartellini_gialli": 2,
-            "cartellini_rossi": 0
-        },
-        "username": "matteo.ponzo",
-        "password": "Ponzo",
-        "presenze": {
-            "allenamenti": 2,
-            "partite": 1,
-            "sessioni_video": 3
-        },
-        "ruolo": "Difensore",
-        "numero": 3,
-        "categoria": "giocatore"
+    "username": "lorenzo.montrucchio",
+    "password": "Montrucchio",
+    "presenze": {
+      "allenamenti": 1,
+      "partite": 2,
+      "sessioni_video": 1
     },
-    {
-        "nome": "Gabriele",
-        "cognome": "Reverdito",
-        "età": 16,
-        "data_di_nascita": "07-05-2006",
-        "squadra": "Area Calcio U19",
-        "statistiche": {
-            "partite_giocate": 5,
-            "gol": 0,
-            "assist": 1,
-            "cartellini_gialli": 1,
-            "cartellini_rossi": 0
-        },
-        "username": "gabriele.reverdito",
-        "password": "Reverdito",
-        "presenze": {
-            "allenamenti": 1,
-            "partite": 2,
-            "sessioni_video": 1
-        },
-        "ruolo": "Portiere",
-        "numero": 1,
-        "categoria": "giocatore"
-    }
+    "ruolo": "Attaccante",
+    "numero": 9,
+    "categoria": "giocatore"
+  },
+  {
+    "_id": {
+      "$oid": "6618e813cffa800dd6f92ac4"
+    },
+    "nome": "Alessandro",
+    "cognome": "Gambino",
+    "età": 16,
+    "data_di_nascita": "21-11-2006",
+    "email": "alessandro.gambino@example.com",
+    "telefono": "9998887770",
+    "squadra": "Area Calcio U19",
+    "statistiche": {
+      "partite_giocate": 9,
+      "gol": 4,
+      "assist": 5,
+      "cartellini_gialli": 0,
+      "cartellini_rossi": 0
+    },
+    "username": "alessandro.gambino",
+    "password": "Gambino",
+    "presenze": {
+      "allenamenti": 3,
+      "partite": 0,
+      "sessioni_video": 2
+    },
+    "ruolo": "Centrocampista",
+    "numero": 8,
+    "categoria": "giocatore"
+  },
+  {
+    "_id": {
+      "$oid": "6618e813cffa800dd6f92ac5"
+    },
+    "nome": "Matteo",
+    "cognome": "Ponzo",
+    "età": 17,
+    "data_di_nascita": "18-09-2005",
+    "email": "matteo.ponzo@example.com",
+    "telefono": "6667778883",
+    "squadra": "Area Calcio U19",
+    "statistiche": {
+      "partite_giocate": 6,
+      "gol": 1,
+      "assist": 0,
+      "cartellini_gialli": 2,
+      "cartellini_rossi": 0
+    },
+    "username": "matteo.ponzo",
+    "password": "Ponzo",
+    "presenze": {
+      "allenamenti": 2,
+      "partite": 1,
+      "sessioni_video": 3
+    },
+    "ruolo": "Difensore",
+    "numero": 3,
+    "categoria": "giocatore"
+  },
+  {
+    "_id": {
+      "$oid": "6618e813cffa800dd6f92ac6"
+    },
+    "nome": "Gabriele",
+    "cognome": "Reverdito",
+    "età": 16,
+    "data_di_nascita": "07-05-2006",
+    "email": "gabriele.reverdito@example.com",
+    "telefono": "1112223334",
+    "squadra": "Area Calcio U19",
+    "statistiche": {
+      "partite_giocate": 5,
+      "gol": 0,
+      "assist": 1,
+      "cartellini_gialli": 1,
+      "cartellini_rossi": 0
+    },
+    "username": "gabriele.reverdito",
+    "password": "Reverdito",
+    "presenze": {
+      "allenamenti": 1,
+      "partite": 2,
+      "sessioni_video": 1
+    },
+    "ruolo": "Portiere",
+    "numero": 1,
+    "categoria": "giocatore"
+  }
 ]
