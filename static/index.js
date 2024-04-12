@@ -374,7 +374,7 @@ $(document).ready(async function () {
     let eventiSettimana = [];
     let eventi = [];
     function getEventi() {
-        let rq = inviaRichiesta('GET', '/api/getEventi', {});
+        let rq = inviaRichiesta('GET', '/api/getEventi', {utenteCorrente});
         rq.then(async (response) => {
             eventi = response.data;
             await eventi.sort((a, b) => {
