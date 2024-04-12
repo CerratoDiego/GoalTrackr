@@ -645,8 +645,6 @@ $(document).ready(async function () {
     // LOGIN ------------------------------------------------------------------------------------------------------------------------------------------------------------
     let _username = $("#usr")
     let _password = $("#pwd")
-    let _lblErrore = $("#lblErrore")
-    _lblErrore.hide();
 
 
     $("#btnLogin").on("click", controllaLogin)
@@ -665,8 +663,6 @@ $(document).ready(async function () {
         _username.prev().removeClass("icona-rossa");
         _password.removeClass("is-invalid");
         _password.prev().removeClass("icona-rossa");
-
-        _lblErrore.hide();
 
         if (_username.val() == "") {
             _username.addClass("is-invalid");
@@ -687,12 +683,11 @@ $(document).ready(async function () {
                 }
             );
             request.catch(function (err) {
-                // unauthorized
-                if (err.status == 401) {
-                    _lblErrore.show();
-                }
-                else
-                    errore(err)
+                _username.addClass("is-invalid");
+                _username.prev().addClass("icona-rossa");
+                _password.addClass("is-invalid");
+                _password.prev().addClass("icona-rossa");
+                errore(err)
             });
             request.then(function (response) {
                 window.location.href = "index.html"
@@ -730,11 +725,6 @@ $(document).ready(async function () {
     // 	);
     // 	google.accounts.id.prompt();
     // })
-
-
-    _lblErrore.children("button").on("click", function () {
-        _lblErrore.hide();
-    })
 
     /* function recuperaPassword(){
         let request=inviaRichiesta("POST","/api/sendNewPassword",{"skipCheckToken":true})

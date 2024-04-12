@@ -167,11 +167,16 @@ app.post("/api/login", async (req, res, next) => {
             res.status(401).send("Username not valid")
         }
         else {
-            let token = creaToken(dbUser);
-            console.log(token)
-            res.setHeader("authorization", token)
-            res.setHeader("access-control-expose-headers", "authorization")
-            res.send({ "ris": "ok" })
+            if (password !== dbUser.password) {
+                res.status(401).send("Password not valid");
+            }
+            else {
+                let token = creaToken(dbUser);
+                console.log(token)
+                res.setHeader("authorization", token)
+                res.setHeader("access-control-expose-headers", "authorization")
+                res.send({ "ris": "ok" })
+            }
         }
         /* else {
             _bcrypt.compare(password, dbUser.password, (err, success) => {
@@ -272,7 +277,7 @@ app.use("/api/", (req, res, next) => {
         }
     }
     else {
-      
+
         next()
     }
 
