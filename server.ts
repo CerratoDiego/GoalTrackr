@@ -346,6 +346,37 @@ app.get("/api/getDatiPersonali", async (req, res, next) => {
     })
 });
 
+app.patch("/api/updateDatiPersonali", async (req, res, next) => {
+    let email = req["body"]["accountDetails"]["email"]
+    let nome = req["body"]["accountDetails"]["nome"]
+    let cognome = req["body"]["accountDetails"]["cognome"]
+    let username = req["body"]["accountDetails"]["username"]
+    let telefono = req["body"]["accountDetails"]["telefono"]
+    let dataNascita = req["body"]["accountDetails"]["data_di_nascita"]
+    let squadra = req["body"]["accountDetails"]["squadra"]
+    console.log(email)
+    const client = new MongoClient(connectionString)
+    await client.connect()
+    let db = client.db(DBNAME).collection("users")
+    let request = db.updateOne({ "email": email },
+        {
+            "$set": {
+                "nome": nome, "cognome": cognome, "telefono": telefono,
+                "username": username, "data_di_nascita": dataNascita, "email": email, "squadra": squadra
+            }
+        })
+    request.then((data) => {
+        console.log(data)
+        res.status(200).send("Dati aggiornati correttamente")
+    })
+    request.catch((err) => {
+        res.status(500).send("Errore esecuzione query: " + err)
+    })
+    request.finally(() => {
+        client.close()
+    })
+});
+
 app.post("/api/", async (req, res, next) => { });
 
 app.patch("/api/", async (req, res, next) => { });

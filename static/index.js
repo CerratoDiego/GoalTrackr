@@ -585,9 +585,7 @@ $(document).ready(async function () {
             console.log(response.data);
             $(".accountFields").eq(0).val(response.data[0].nome);
             $(".accountFields").eq(1).val(response.data[0].cognome);
-            let parti = response.data[0].data_di_nascita.split("-");
-            let dataFormatNuovo = `${parti[2]}-${parti[1]}-${parti[0]}`;
-            $(".accountFields").eq(2).val(dataFormatNuovo);
+            $(".accountFields").eq(2).val(response.data[0].data_di_nascita);
             $(".accountFields").eq(3).val(response.data[0].email);
             $(".accountFields").eq(4).val(response.data[0].username);
             $(".accountFields").eq(5).val(response.data[0].telefono);
@@ -603,6 +601,7 @@ $(document).ready(async function () {
 
     $("#btnModificaDati").click(function () {
         $(".accountFields").prop("disabled", false);
+        $(".accountFields").eq(6).prop("disabled", true);
         $("#btnModificaDati").prop("disabled", true);
         $("#btnSalvaModifiche").prop("disabled", false);
 
@@ -622,8 +621,23 @@ $(document).ready(async function () {
             if (!isValid) {
                 Swal.fire("Errore", "Compilare tutti i campi", "error");
             } else {
+                let accountDetails = {};
+                accountDetails.nome = $(".accountFields").eq(0).val();
+                accountDetails.cognome = $(".accountFields").eq(1).val();
+                accountDetails.data_di_nascita = $(".accountFields").eq(2).val();
+                accountDetails.email = $(".accountFields").eq(3).val();
+                accountDetails.username = $(".accountFields").eq(4).val();
+                accountDetails.telefono = $(".accountFields").eq(5).val();
+                accountDetails.squadra = $(".accountFields").eq(6).val();
 
-                Swal.fire("Modifiche salvate", "", "success");
+                let rq = inviaRichiesta('PATCH', '/api/updateDatiPersonali', { accountDetails });
+                rq.then((response) => {
+                    console.log(response);
+                    Swal.fire("Modifiche salvate", "", "success");
+                });
+                rq.catch((error) => {
+                    console.log(error);
+                });
             }
 
         });
