@@ -298,10 +298,11 @@ app.use("/api/", (req, res, next) => {
 // _streamifier serve solo per aggiungere immagine binarie su Cloudinary
 
 app.get("/api/getGiocatori", async (req, res, next) => {
+    let team = req["query"]["utenteCorrente"]["squadra"]
     const client = new MongoClient(connectionString)
     await client.connect()
     let db = client.db(DBNAME).collection("users")
-    let request = db.find({ "categoria": "giocatore" }).toArray()
+    let request = db.find({ "categoria": "giocatore", "squadra": team }).toArray()
     request.then((data) => {
         res.status(200).send(data)
     })

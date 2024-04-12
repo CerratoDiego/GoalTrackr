@@ -9,6 +9,7 @@ $(document).ready(async function () {
     let dataCorrente = new Date();
     let dataSelezionata = dataCorrente;
     let mail = localStorage.getItem('mail') || "";
+    let utenteCorrente = JSON.parse(localStorage.getItem('utenteCorrente')) || "";
 
     // Puntatori HTML
     let _wrapper = $("#wrapper");
@@ -311,7 +312,8 @@ $(document).ready(async function () {
     }
 
     function getGiocatori() {
-        let rq = inviaRichiesta('GET', '/api/getGiocatori', {});
+        console.log(utenteCorrente)
+        let rq = inviaRichiesta('GET', '/api/getGiocatori', {utenteCorrente});
         rq.then((response) => {
             console.log(response.data);
             for (let item of response.data) {
@@ -575,9 +577,7 @@ $(document).ready(async function () {
         });
     });
 
-    if (window.location.pathname.includes("account.html")) {
-        getDatiPersonali();
-    }
+    getDatiPersonali();
 
     function getDatiPersonali() {
         let rq = inviaRichiesta('GET', '/api/getDatiPersonali', { mail });
@@ -590,6 +590,17 @@ $(document).ready(async function () {
             $(".accountFields").eq(4).val(response.data[0].username);
             $(".accountFields").eq(5).val(response.data[0].telefono);
             $(".accountFields").eq(6).val(response.data[0].squadra);
+
+            utenteCorrente = {
+                "nome": response.data[0].nome,
+                "cognome": response.data[0].cognome,
+                "data_di_nascita": response.data[0].data_di_nascita,
+                "email": response.data[0].email,
+                "username": response.data[0].username,
+                "telefono": response.data[0].telefono,
+                "squadra": response.data[0].squadra
+            };
+            localStorage.setItem('utenteCorrente', JSON.stringify(utenteCorrente));
         });
         rq.catch((error) => {
             console.log(error);
