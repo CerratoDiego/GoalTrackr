@@ -33,22 +33,6 @@
   },
   {
     "_id": {
-      "$oid": "6618e813cffa800dd6f92ab9"
-    },
-    "nome": "Giovanni",
-    "cognome": "Bianchi",
-    "età": 38,
-    "email": "gio.b@example.com",
-    "telefono": "555123456",
-    "squadra": "Inter Milan",
-    "username": "giovanni.bianchi",
-    "password": "bianchi",
-    "categoria": "allenatore",
-    "data_di_nascita": "1986-03-11",
-    "ruolo": "Allenatore"
-  },
-  {
-    "_id": {
       "$oid": "6618e813cffa800dd6f92aba"
     },
     "nome": "Elena",
@@ -65,18 +49,18 @@
   },
   {
     "_id": {
-      "$oid": "6618e813cffa800dd6f92abb"
+      "$oid": "6618e813cffa800dd6f92ab9"
     },
-    "nome": "Antonio",
-    "cognome": "Russo",
-    "età": 50,
-    "email": "antonio.russo@example.com",
-    "telefono": "777666555",
-    "squadra": "Napoli FC",
-    "username": "antonio.russo",
-    "password": "russo",
+    "nome": "Giovanni",
+    "cognome": "Bianchi",
+    "età": 38,
+    "email": "gio.b@example.com",
+    "telefono": "555123456",
+    "squadra": "Inter Milan",
+    "username": "giovanni.bianchi",
+    "password": "bianchi",
     "categoria": "allenatore",
-    "data_di_nascita": "1965-08-30",
+    "data_di_nascita": "1986-03-11",
     "ruolo": "Allenatore"
   },
   {
@@ -97,40 +81,10 @@
   },
   {
     "_id": {
-      "$oid": "6618e813cffa800dd6f92ac1"
-    },
-    "nome": "Diego",
-    "cognome": "Cerrato",
-    "età": 18,
-    "data_di_nascita": "2005-06-29",
-    "email": "diego.cerrato@gmail.com",
-    "telefono": "1234567890",
-    "squadra": "Area Calcio U19",
-    "statistiche": {
-      "partite_giocate": 10,
-      "gol": 5,
-      "assist": 3,
-      "cartellini_gialli": 2,
-      "cartellini_rossi": 0
-    },
-    "username": "diego.cerrato",
-    "password": "Cerrato",
-    "presenze": {
-      "allenamenti": 2,
-      "partite": 1,
-      "sessioni_video": 0
-    },
-    "ruolo": "Difensore",
-    "numero": 5,
-    "categoria": "giocatore"
-  },
-  {
-    "_id": {
       "$oid": "6618e813cffa800dd6f92ac2"
     },
     "nome": "Diego",
     "cognome": "Tarasco",
-    "età": 17,
     "data_di_nascita": "2005-03-12",
     "email": "diego.tarasco@example.com",
     "telefono": "9876543210",
@@ -139,8 +93,8 @@
       "partite_giocate": 8,
       "gol": 3,
       "assist": 1,
-      "cartellini_gialli": 1,
-      "cartellini_rossi": 0
+      "ammonizioni": 1,
+      "espulsioni": 0
     },
     "username": "diego.tarasco",
     "password": "Tarasco",
@@ -155,31 +109,58 @@
   },
   {
     "_id": {
-      "$oid": "6618e813cffa800dd6f92ac3"
+      "$oid": "66190311cffa800dd6f92acc"
     },
-    "nome": "Lorenzo",
-    "cognome": "Montrucchio",
-    "età": 17,
-    "data_di_nascita": "2005-08-05",
-    "email": "lorenzo.montrucchio@example.com",
-    "telefono": "5551234567",
-    "squadra": "Area Calcio U19",
+    "nome": "Francesco",
+    "cognome": "Verdi",
+    "data_di_nascita": "2005-04-07",
+    "email": "francesco.verdi@example.com",
+    "telefono": "1112123334",
+    "squadra": "AC Milan",
     "statistiche": {
-      "partite_giocate": 7,
-      "gol": 2,
-      "assist": 2,
-      "cartellini_gialli": 3,
-      "cartellini_rossi": 1
+      "partite_giocate": 5,
+      "gol": 0,
+      "assist": 1,
+      "ammonizioni": 1,
+      "espulsioni": 0
     },
-    "username": "lorenzo.montrucchio",
-    "password": "Montrucchio",
+    "username": "francesco.verdi",
+    "password": "Verdi",
     "presenze": {
       "allenamenti": 1,
-      "partite": 2,
+      "partite": 5,
       "sessioni_video": 1
     },
     "ruolo": "Attaccante",
-    "numero": 9,
+    "numero": 10,
+    "categoria": "giocatore"
+  },
+  {
+    "_id": {
+      "$oid": "6618e813cffa800dd6f92ac1"
+    },
+    "nome": "Diego",
+    "cognome": "Cerrato",
+    "data_di_nascita": "2005-06-29",
+    "email": "diego.cerrato@gmail.com",
+    "telefono": "3452637482",
+    "squadra": "Area Calcio U19",
+    "statistiche": {
+      "partite_giocate": 10,
+      "gol": 5,
+      "assist": 3,
+      "ammonizioni": 2,
+      "espulsioni": 0
+    },
+    "username": "diego.cerrato",
+    "password": "Cerrato",
+    "presenze": {
+      "allenamenti": 2,
+      "partite": 1,
+      "sessioni_video": 0
+    },
+    "ruolo": "Difensore",
+    "numero": 5,
     "categoria": "giocatore"
   },
   {
@@ -188,7 +169,6 @@
     },
     "nome": "Alessandro",
     "cognome": "Gambino",
-    "età": 16,
     "data_di_nascita": "2006-11-21",
     "email": "alessandro.gambino@example.com",
     "telefono": "9998887770",
@@ -197,8 +177,8 @@
       "partite_giocate": 9,
       "gol": 4,
       "assist": 5,
-      "cartellini_gialli": 0,
-      "cartellini_rossi": 0
+      "ammonizioni": 0,
+      "espulsioni": 0
     },
     "username": "alessandro.gambino",
     "password": "Gambino",
@@ -217,7 +197,6 @@
     },
     "nome": "Matteo",
     "cognome": "Ponzo",
-    "età": 17,
     "data_di_nascita": "2005-09-18",
     "email": "matteo.ponzo@example.com",
     "telefono": "6667778880",
@@ -226,8 +205,8 @@
       "partite_giocate": 6,
       "gol": 1,
       "assist": 0,
-      "cartellini_gialli": 2,
-      "cartellini_rossi": 0
+      "ammonizioni": 2,
+      "espulsioni": 0
     },
     "username": "matteo.ponzo",
     "password": "Ponzo",
@@ -242,11 +221,38 @@
   },
   {
     "_id": {
+      "$oid": "6618e813cffa800dd6f92ac3"
+    },
+    "nome": "Lorenzo",
+    "cognome": "Montrucchio",
+    "data_di_nascita": "2005-08-05",
+    "email": "lorenzo.montrucchio@example.com",
+    "telefono": "5551234567",
+    "squadra": "Area Calcio U19",
+    "statistiche": {
+      "partite_giocate": 7,
+      "gol": 2,
+      "assist": 2,
+      "ammonizioni": 3,
+      "espulsioni": 1
+    },
+    "username": "lorenzo.montrucchio",
+    "password": "Montrucchio",
+    "presenze": {
+      "allenamenti": 1,
+      "partite": 2,
+      "sessioni_video": 1
+    },
+    "ruolo": "Attaccante",
+    "numero": 9,
+    "categoria": "giocatore"
+  },
+  {
+    "_id": {
       "$oid": "6618e813cffa800dd6f92ac6"
     },
     "nome": "Gabriele",
     "cognome": "Reverdito",
-    "età": 16,
     "data_di_nascita": "2006-05-07",
     "email": "gabriele.reverdito@example.com",
     "telefono": "1112223334",
@@ -255,8 +261,8 @@
       "partite_giocate": 5,
       "gol": 0,
       "assist": 1,
-      "cartellini_gialli": 1,
-      "cartellini_rossi": 0
+      "ammonizioni": 1,
+      "espulsioni": 0
     },
     "username": "gabriele.reverdito",
     "password": "Reverdito",
@@ -267,35 +273,6 @@
     },
     "ruolo": "Portiere",
     "numero": 1,
-    "categoria": "giocatore"
-  },
-  {
-    "_id": {
-      "$oid": "66190311cffa800dd6f92acc"
-    },
-    "nome": "Francesco",
-    "cognome": "Verdi",
-    "età": 16,
-    "data_di_nascita": "2005-04-07",
-    "email": "francesco.verdi@example.com",
-    "telefono": "1112123334",
-    "squadra": "AC Milan",
-    "statistiche": {
-      "partite_giocate": 5,
-      "gol": 0,
-      "assist": 1,
-      "cartellini_gialli": 1,
-      "cartellini_rossi": 0
-    },
-    "username": "francesco.verdi",
-    "password": "Verdi",
-    "presenze": {
-      "allenamenti": 1,
-      "partite": 5,
-      "sessioni_video": 1
-    },
-    "ruolo": "Attaccante",
-    "numero": 10,
     "categoria": "giocatore"
   }
 ]

@@ -388,13 +388,22 @@ app.post("/api/newGiocatore", async (req, res, next) => {
     let ruolo = req["body"]["ruolo"]
     let squadra = req["body"]["utenteCorrente"]["squadra"]
     let categoria = "giocatore"
+    let numero = req["body"]["numero"]
+    let statistiche ={
+        "partite_giocate": 0,
+        "goal": 0,
+        "assist": 0,
+        "ammonizioni": 0,
+        "espulsioni": 0
+    }
     const client = new MongoClient(connectionString)
     await client.connect()
     let db = client.db(DBNAME).collection("users")
     let request = db.insertOne({
         "nome": nome, "cognome": cognome, "username": username,
         "telefono": telefono, "data_di_nascita": dataNascita, "email": username,
-        "ruolo": ruolo, "squadra": squadra, "categoria": categoria, "password": cognome
+        "ruolo": ruolo, "squadra": squadra, "categoria": categoria,
+        "password": cognome, "numero": numero
     })
     request.then((data) => {
         res.status(200).send("Giocatore aggiunto correttamente")
