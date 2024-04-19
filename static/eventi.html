@@ -137,7 +137,8 @@
                     <i class="fas fa-check-circle"></i>
                     <span>Presenze</span>
                 </a>
-                <div id="collapsePresenze" class="collapse" aria-labelledby="headingPages" data-parent="#accordionSidebar">
+                <div id="collapsePresenze" class="collapse" aria-labelledby="headingPages"
+                    data-parent="#accordionSidebar">
                     <div class="bg-white py-2 collapse-inner rounded">
                         <a class="collapse-item" href="presenze.html">
                             <i class="fas fa-dumbbell"></i>
@@ -170,7 +171,8 @@
                     <i class="fas fa-chart-area"></i>
                     <span>Statistiche</span>
                 </a>
-                <div id="collapseStatistiche" class="collapse" aria-labelledby="headingPages" data-parent="#accordionSidebar">
+                <div id="collapseStatistiche" class="collapse" aria-labelledby="headingPages"
+                    data-parent="#accordionSidebar">
                     <div class="bg-white py-2 collapse-inner rounded">
                         <a class="collapse-item" href="statistiche.html">
                             <i class="fas fa-user"></i>
@@ -232,7 +234,160 @@
         <div id="mainContentWrapper" class="d-flex flex-column">
             <div id="events" class="container-fluid">
                 <br>
-                <h1 class="h3 mb-4 text-gray-800">Questo è l'insieme degli eventi</h1>
+                <h1 class="mb-4 text-gray-800">Questo è l'insieme degli eventi</h1>
+
+                <div class="eventTables table-responsive" id="allenamenti">
+                    <h1 style="text-align: center; font-weight: bold;">Allenamenti</h1>
+                    <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
+                        <thead>
+                            <tr>
+                                <th>Data</th>
+                                <th>Nome evento</th>
+                                <th>Luogo</th>
+                                <th>Stato presenza</th>
+                                <th>Motivo assenza</th>
+                                <th>Gestisci</th>   <!--Cambia funzione da allenatore a giocatore-->
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>GG/MM/AAAA</td>
+                                <td></td>
+                                <td></td>
+                                <td class="statoPresenzaView">Non definito</td>
+                                <td class="motivoAssenzaView"> -- </td>
+                                <td>
+                                    <button type="button" class="btn btn-success presentBtns">PRESENTE</button>
+                                    <button type="button" class="btn btn-danger absentBtns">ASSENTE</button>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>GG/MM/AAAA</td>
+                                <td></td>
+                                <td></td>
+                                <td class="statoPresenzaView">Non definito</td>
+                                <td class="motivoAssenzaView"> -- </td>
+                                <td>
+                                    <button type="button" class="btn btn-success presentBtns">PRESENTE</button>
+                                    <button type="button" class="btn btn-danger absentBtns">ASSENTE</button>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>GG/MM/AAAA</td>
+                                <td></td>
+                                <td></td>
+                                <td class="statoPresenzaView">Non definito</td>
+                                <td class="motivoAssenzaView"> -- </td>
+                                <td>
+                                    <button type="button" class="btn btn-success presentBtns">PRESENTE</button>
+                                    <button type="button" class="btn btn-danger absentBtns">ASSENTE</button>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <div class="eventTables table-responsive" id="partite">
+                    <h1 style="text-align: center; font-weight: bold;">Partite</h1>
+                    <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
+                        <thead>
+                            <tr>
+                                <th>Data</th>
+                                <th>Nome evento</th>
+                                <th>Luogo</th>
+                                <th>Stato presenza</th>
+                                <th>Motivo assenza</th>
+                                <th>Gestisci</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>GG/MM/AAAA</td>
+                                <td></td>
+                                <td></td>
+                                <td class="statoPresenzaView">Non definito</td>
+                                <td class="motivoAssenzaView"> -- </td>
+                                <td>
+                                    <button type="button" class="btn btn-success presentBtns">PRESENTE</button>
+                                    <button type="button" class="btn btn-danger absentBtns">ASSENTE</button>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>GG/MM/AAAA</td>
+                                <td></td>
+                                <td></td>
+                                <td class="statoPresenzaView">Non definito</td>
+                                <td class="motivoAssenzaView"> -- </td>
+                                <td>
+                                    <button type="button" class="btn btn-success presentBtns">PRESENTE</button>
+                                    <button type="button" class="btn btn-danger absentBtns">ASSENTE</button>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>GG/MM/AAAA</td>
+                                <td></td>
+                                <td></td>
+                                <td class="statoPresenzaView">Non definito</td>
+                                <td class="motivoAssenzaView"> -- </td>
+                                <td>
+                                    <button type="button" class="btn btn-success presentBtns">PRESENTE</button>
+                                    <button type="button" class="btn btn-danger absentBtns">ASSENTE</button>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <div class="eventTables table-responsive" id="sessionivideo">
+                    <h1 style="text-align: center; font-weight: bold;">Sessioni video</h1>
+                    <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
+                        <thead>
+                            <tr>
+                                <th>Data</th>
+                                <th>Nome evento</th>
+                                <th>Luogo</th>
+                                <th>Stato presenza</th>
+                                <th>Motivo assenza</th>
+                                <th>Gestisci</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>GG/MM/AAAA</td>
+                                <td></td>
+                                <td></td>
+                                <td class="statoPresenzaView">Non definito</td>
+                                <td class="motivoAssenzaView"> -- </td>
+                                <td>
+                                    <button type="button" class="btn btn-success presentBtns">PRESENTE</button>
+                                    <button type="button" class="btn btn-danger absentBtns">ASSENTE</button>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>GG/MM/AAAA</td>
+                                <td></td>
+                                <td></td>
+                                <td class="statoPresenzaView">Non definito</td>
+                                <td class="motivoAssenzaView"> -- </td>
+                                <td>
+                                    <button type="button" class="btn btn-success presentBtns">PRESENTE</button>
+                                    <button type="button" class="btn btn-danger absentBtns">ASSENTE</button>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>GG/MM/AAAA</td>
+                                <td></td>
+                                <td></td>
+                                <td class="statoPresenzaView">Non definito</td>
+                                <td class="motivoAssenzaView"> -- </td>
+                                <td>
+                                    <button type="button" class="btn btn-success presentBtns">PRESENTE</button>
+                                    <button type="button" class="btn btn-danger absentBtns">ASSENTE</button>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
             </div>
         </div>
     </div>
