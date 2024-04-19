@@ -397,12 +397,18 @@ $(document).ready(async function () {
             console.log(eventi);
 
             for (let item of eventi) {
-                let _tr = $("<tr>").appendTo($("#eventiCalendario"));
-                $("<td>").text(item.data).appendTo(_tr);
-                $("<td>").text(item.tipo).appendTo(_tr);
-                $("<td>").text(item.luogo + ", " + item.città).appendTo(_tr);
-                $("<td>").text(item.inizio).appendTo(_tr);
-                $("<td>").text(item.fine).appendTo(_tr);
+                let eventDateTime = parseDate(item.data);
+                let yesterday = new Date();
+                yesterday.setDate(yesterday.getDate() - 1); // Imposta la data a ieri
+            
+                if (eventDateTime.getTime() > yesterday.getTime()) {
+                    let _tr = $("<tr>").appendTo($("#eventiCalendario"));
+                    $("<td>").text(item.data).appendTo(_tr);
+                    $("<td>").text(item.tipo).appendTo(_tr);
+                    $("<td>").text(item.luogo + ", " + item.città).appendTo(_tr);
+                    $("<td>").text(item.inizio).appendTo(_tr);
+                    $("<td>").text(item.fine).appendTo(_tr);
+                }
             }
 
             eventiSettimana = filterEventsForSelectedWeek(eventi);
