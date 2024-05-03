@@ -8,7 +8,6 @@ import _fileUpload from "express-fileupload";
 // const _nodemailer = require("nodemailer");
 import _jwt from "jsonwebtoken";
 import _bcrypt from "bcryptjs"; // + @types
-import { google } from "googleapis";
 // import _cloudinary, { UploadApiResponse } from 'cloudinary';
 // import _streamifier from "streamifier";
 // import _axios from "axios";
@@ -389,7 +388,7 @@ app.post("/api/newGiocatore", async (req, res, next) => {
     let squadra = req["body"]["utenteCorrente"]["squadra"]
     let categoria = "giocatore"
     let numero = req["body"]["numero"]
-    let statistiche ={
+    let statistiche = {
         "partite_giocate": 0,
         "goal": 0,
         "assist": 0,
@@ -413,6 +412,31 @@ app.post("/api/newGiocatore", async (req, res, next) => {
     })
     request.finally(() => {
         client.close()
+    })
+});
+
+app.post("/api/newEvento", async (req, res, next) => {
+    let squadra = req["body"]["utenteCorrente"]["squadra"]
+    let nome = req["body"]["nome"]
+    let tipo = req["body"]["tipo"]
+    let data = req["body"]["data"]
+    let inizio = req["body"]["inizio"]
+    let fine = req["body"]["fine"]
+    let luogo = req["body"]["luogo"]
+    let città = req["body"]["città"]
+    let creatore = req["body"]["utenteCorrente"]["username"]
+    const client = new MongoClient(connectionString)
+    await client.connect()
+    let db = client.db(DBNAME).collection("events")
+    let request = db.insertOne({
+        "squadra": squadra, "nome": nome, "tipo": tipo,
+        "data": data, "inizio": inizio, "fine": fine, "luogo": luogo, "città": città, "creatore": creatore
+    })
+    request.then((data) => {
+        res.status(200).send("Evento aggiunto correttamente")
+    })
+    request.catch((err) => {
+        res.status(500).send("Errore esecuzione query: " + err)
     })
 });
 

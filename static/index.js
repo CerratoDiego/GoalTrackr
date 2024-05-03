@@ -25,6 +25,16 @@ $(document).ready(async function () {
     _dashboard.show();
     $("#programmaGenerale").show();
     $("#visualizzazioneDettagliata").hide();
+    $("#btnAnnullaModifiche").hide();
+    $("#btnSalvaModifiche").hide();
+    /* $("#newGiocatoreContainer").hide();*/
+
+    await getDatiPersonali();
+    /*if(utenteCorrente.categoria === "allenatore") {
+        $("#newGiocatoreContainer").show();
+        //voglio rimuovere una classe css al div precedente
+        $("#newGiocatoreContainer").prev().removeClass("col-lg-8").addClass("col-lg-10");
+    } */
 
     if (isSidebarToggled === 'true') {
         $('body').addClass('sidebar-toggled');
@@ -400,7 +410,7 @@ $(document).ready(async function () {
                 let eventDateTime = parseDate(item.data);
                 let yesterday = new Date();
                 yesterday.setDate(yesterday.getDate() - 1); // Imposta la data a ieri
-            
+
                 if (eventDateTime.getTime() > yesterday.getTime()) {
                     let _tr = $("<tr>").appendTo($("#eventiCalendario"));
                     $("<td>").text(item.data).appendTo(_tr);
@@ -583,8 +593,6 @@ $(document).ready(async function () {
         });
     });
 
-    getDatiPersonali();
-
     function getDatiPersonali() {
         let rq = inviaRichiesta('GET', '/api/getDatiPersonali', { mail });
         rq.then((response) => {
@@ -604,7 +612,8 @@ $(document).ready(async function () {
                 "email": response.data[0].email,
                 "username": response.data[0].username,
                 "telefono": response.data[0].telefono,
-                "squadra": response.data[0].squadra
+                "squadra": response.data[0].squadra,
+                "categoria": response.data[0].categoria
             };
             localStorage.setItem('utenteCorrente', JSON.stringify(utenteCorrente));
         });
@@ -620,12 +629,14 @@ $(document).ready(async function () {
         $(".accountFields").prop("disabled", false);
         $(".accountFields").eq(6).prop("disabled", true);
         $("#btnModificaDati").prop("disabled", true);
-        $("#btnSalvaModifiche").prop("disabled", false);
+        $("#btnSalvaModifiche").show();
+        $("#btnAnnullaModifiche").show();
 
         $("#btnSalvaModifiche").click(function () {
             $(".accountFields").prop("disabled", true);
             $("#btnModificaDati").prop("disabled", false);
-            $("#btnSalvaModifiche").prop("disabled", true);
+            $("#btnSalvaModifiche").hide();
+            $("#btnAnnullaModifiche").hide();
 
             var isValid = true;
             $("input").each(function () {
@@ -658,6 +669,14 @@ $(document).ready(async function () {
             }
 
         });
+
+        $("#btnAnnullaModifiche").click(function () {
+            $(".accountFields").prop("disabled", true);
+            $("#btnModificaDati").prop("disabled", false);
+            $("#btnSalvaModifiche").hide();
+            $("#btnAnnullaModifiche").hide();
+            getDatiPersonali();
+        });
     });
 
     // Inserimento di un nuovo giocatore da parte dell'allenatore
@@ -672,6 +691,8 @@ $(document).ready(async function () {
                 '<label for="ruolo">Ruolo: </label><input id="ruolo" class="swal2-input">',
             focusConfirm: false,
             showCancelButton: true,
+            confirmButtonText: 'Conferma',
+            cancelButtonText: 'Annulla',
             preConfirm: () => {
                 return [
                     document.getElementById('nome').value,
@@ -701,6 +722,83 @@ $(document).ready(async function () {
         });
 
     });
+
+    // Inserimento di un nuovo evento da parte dell'allenatore
+    $("#newEvento").click(function () {
+        Swal.fire({
+            title: 'Inserisci i dati dell\'evento',
+            html:
+                '<label for="nome">Nome: </label><input id="nome" class="swal2-input"><br><br>' +
+                '<label for="tipo">Tipo: </label><select id="tipo" class="swal2-input"><br>' +
+                '<option value="Allenamento">Allenamento</option>' +
+                '<option value="Partita">Partita</option>' +
+                '<option value="Sessione Video">Sessione Video</option>' +
+                '</select><br>' +
+                '<label for="data">Data: </label><input id="data" type="date" class="swal2-input"><br>' +
+                '<label for="inizio">Ora di inizio: </label><input id="inizio" type="time" class="swal2-input"><br>' +
+                '<label for="fine">Ora di fine: </label><input id="fine" type="time" class="swal2-input"><br>' +
+                '<label for="luogo">Luogo: </label><input id="luogo" class="swal2-input"><br>' +
+                '<label for="città">Città: </label><input id="città" class="swal2-input">',
+            focusConfirm: false,
+            showCancelButton: true,
+            confirmButtonText: 'Conferma',
+            cancelButtonText: 'Annulla',
+            preConfirm: () => {
+                const nome = document.getElementById('nome').value;
+                const tipo = document.getElementById('tipo').value;
+                const data = document.getElementById('data').value;
+                const inizio = document.getElementById('inizio').value;
+                const fine = document.getElementById('fine').value;
+                const luogo = document.getElementById('luogo').value;
+                const città = document.getElementById('città').value;
+
+                if (!nome || !tipo || !data || !inizio || !fine || !luogo || !città) {
+                    Swal.showValidationMessage('Completa tutti i campi');
+                    return false;
+                }
+
+                return [nome, tipo, data, inizio, fine, luogo, città];
+            }
+        }).then((result) => {
+            if (result.isConfirmed) {
+                const [nome, tipo, data, inizio, fine, luogo, città] = result.value;
+                // console.log(nome, tipo, data, inizio, fine, luogo, città);
+                let rq = inviaRichiesta('POST', '/api/newEvento', { nome, tipo, data, inizio, fine, luogo, città, utenteCorrente });
+                rq.then((response) => {
+                    console.log(response);
+                    Swal.fire("Evento inserito", "", "success");
+                    $("#eventiCalendario").empty();
+                    getEventi();
+                });
+                rq.catch((error) => {
+                    console.log(error);
+                });
+            } else {
+                console.log('Operazione annullata');
+            }
+        });
+    });
+
+    /* if (window.location.pathname.includes("presenze.html")) {
+        await presenze();
+    }
+
+    function presenze() {
+        let rq = inviaRichiesta('GET', '/api/getEventi', { utenteCorrente });
+        rq.then((response) => {
+            console.log(response.data);
+            for (let item of response.data) {
+                let _tr = $("<tr>").appendTo($("#eventiPresenze"));
+                $("<td>").text(item.data).appendTo(_tr);
+                $("<td>").text(item.tipo).appendTo(_tr);
+                $("<td>").text(item.luogo + ", " + item.città).appendTo(_tr);
+                $("<td>").text(item.inizio).appendTo(_tr);
+                $("<td>").text(item.fine).appendTo(_tr);
+                $("<td>").text(" -- ").appendTo(_tr);
+                $("<td>").text(" -- ").appendTo(_tr);
+            }
+        });
+    } */
 
 
 
