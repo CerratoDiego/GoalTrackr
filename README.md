@@ -2,14 +2,40 @@
 
 ## Progetto di Cerrato Diego
 
-GoalTrackr è un'applicazione web gestionale progettata per assistere nell'organizzazione degli eventi sportivi, come sessioni di allenamento, partite, sessioni video, e nella gestione delle presenze, nell'accesso ai dati e alle statistiche. GoalTrackr offre la possibilità di differenziare tra account allenatore e giocatore.
+GoalTrackr è un'applicazione web gestionale per squadre di calcio, progettata per facilitare la gestione delle attività della squadra sia per gli allenatori che per i giocatori.
 
-## Caratteristiche
+## Descrizione del Progetto
 
-- **Gestione degli Eventi**: Gli utenti allenatore possono creare, visualizzare ed eliminare eventi sportivi come sessioni di allenamento, partite, sessioni video, ecc.
-- **Gestione delle Presenze**: Gli allenatori possono tracciare le presenze dei giocatori agli eventi, mentre i giocatori possono confermare la propria presenza ad un evento o giustificare la propria assenza tramite l'applicazione web.
-- **Accesso ai Dati e Statistiche**: Gli utenti possono accedere ai dati relativi agli eventi passati, alle prestazioni dei giocatori e alle statistiche della squadra. Gli allenatori possono anche accedere alle presenze dei giocatori agli eventi.
-- **Differenziazione tra Account Allenatore e Giocatore**: L'applicazione offre funzionalità specifiche per allenatori e giocatori, consentendo una gestione efficiente e personalizzata.
+GoalTrackr offre due tipologie di utenti: gli allenatori, che hanno privilegi di amministrazione, e i giocatori, che possono accedere alle funzionalità limitate del sistema.
+
+## Funzionalità Principali
+
+- **Gestione degli Utenti:**
+  - Gli utenti di categoria allenatore possono modificare le statistiche dei giocatori, creare nuovi profili giocatore e gestire gli eventi.
+  - Gli utenti di categoria giocatore possono visualizzare dati relativi ad eventi e statistiche, e modificare solo i propri dati personali.
+
+- **Dashboard:**
+  - Pagina principale che fornisce una panoramica della situazione generale della squadra.
+  - Accesso rapido alle pagine specifiche del sistema.
+
+- **Account:**
+  - Pagina dedicata alla visualizzazione e alla modifica dei dati personali dell'utente.
+
+- **Calendario:**
+  - Visualizzazione degli eventi futuri in una tabella.
+  - Visualizzazione dettagliata di tutti gli eventi in una tabella a mo' di calendario.
+
+- **Presenze:**
+  - Gestione delle presenze degli utenti agli eventi.
+
+- **Giocatori:**
+  - Visualizzazione dei membri della squadra e dei loro dati (ruolo, data di nascita, etc.).
+
+- **Statistiche:**
+  - Visualizzazione delle statistiche personali dei giocatori (partite giocate, goal, assist, ammonizioni, espulsioni, etc.).
+
+- **Login e Registrazione:**
+  - Pagine per l'autenticazione degli utenti.
 
 ## Tecnologie Utilizzate
 
