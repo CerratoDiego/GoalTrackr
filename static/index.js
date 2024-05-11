@@ -27,14 +27,12 @@ $(document).ready(async function () {
     $("#visualizzazioneDettagliata").hide();
     $("#btnAnnullaModifiche").hide();
     $("#btnSalvaModifiche").hide();
-    /* $("#newGiocatoreContainer").hide();*/
+    $("#newGiocatoreContainer").hide();
 
     await getDatiPersonali();
-    /*if(utenteCorrente.categoria === "allenatore") {
+    if (utenteCorrente.categoria === "allenatore") {
         $("#newGiocatoreContainer").show();
-        //voglio rimuovere una classe css al div precedente
-        $("#newGiocatoreContainer").prev().removeClass("col-lg-8").addClass("col-lg-10");
-    } */
+    }
 
     if (isSidebarToggled === 'true') {
         $('body').addClass('sidebar-toggled');
@@ -785,6 +783,27 @@ $(document).ready(async function () {
             }
         });
     });
+
+    if (window.location.pathname.includes("statistiche.html")) {
+        await getStatistiche();
+    }
+
+    function getStatistiche() {
+        let rq = inviaRichiesta('GET', '/api/getGiocatori', {utenteCorrente});
+        rq.then((response) => {
+            console.log(response.data);
+            for (let item of response.data) {
+                let _tr = $("<tr>").appendTo($("#tbodyStatistiche"));
+                $("<td>").text(item.nome).appendTo(_tr);
+                $("<td>").text(item.cognome).appendTo(_tr);
+                $("<td>").text(item.statistiche.partite_giocate).appendTo(_tr);
+                $("<td>").text(item.statistiche.gol).appendTo(_tr);
+                $("<td>").text(item.statistiche.assist).appendTo(_tr);
+                $("<td>").text(item.statistiche.ammonizioni).appendTo(_tr);
+                $("<td>").text(item.statistiche.espulsioni).appendTo(_tr);
+            }
+        });
+    }
 
     /* if (window.location.pathname.includes("presenze.html")) {
         await presenze();
