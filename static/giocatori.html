@@ -30,14 +30,6 @@
     <script src="./libreria.js"></script>
     <script src="./index.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-
-    <style>
-        th {
-            text-align: center;
-            background-color: #4e73df;
-            color: white;
-        }
-    </style>
 </head>
 
 <body>
@@ -233,18 +225,42 @@
         </ul>
         <!-- End of Sidebar -->
 
-        <div id="mainContentWrapper" class="d-flex flex-column">
+        <div id="mainContentWrapper" class="d-flex flex-column" style="width: 100%">
+            <!-- Topbar -->
+            <nav class="navbar navbar-expand navbar-light bg-white topbar mb-4 static-top shadow" style="height: 80px">
+
+                <!-- Sidebar Toggle (Topbar) -->
+                <button id="sidebarToggleTop" class="btn btn-link d-md-none rounded-circle mr-3">
+                    <i class="fa fa-bars"></i>
+                </button>
+
+                <!-- Topbar Navbar -->
+                <ul class="navbar-nav ml-auto" style="padding-left: 80%; padding-top: 5px; padding-bottom: 5px;">
+
+                    <!-- Nav Item - User Information -->
+                    <li class="nav-item accountNameLi">
+                        <a class="nav-link" href="account.html" class="userDropdown">
+                            <span class="mr-2 d-none d-lg-inline accountName"></span>
+                            <i class="fas fa-user userAccount"></i>
+                        </a>
+                    </li>
+
+                </ul>
+
+            </nav>
+            <!-- End of Topbar -->
+
             <div id="events" class="container-fluid">
                 <br>
                 <h1 class="mb-4 text-gray-800">Giocatori</h1>
                 <div class="row">
-                    <div class="table-responsive col-lg-8">
+                    <div class="table-responsive col-lg-9">
                         <table class="table table-bordered">
                             <thead>
                                 <tr>
                                     <th>Nome</th>
                                     <th>Cognome</th>
-                                    <th>Data di nascita</th>
+                                    <th id="dataNasc">Data di nascita</th>
                                     <th>Numero di maglia</th>
                                     <th>Ruolo</th>
                                     <th>Statistiche</th>
@@ -261,7 +277,7 @@
                             </tbody>
                         </table>
                     </div>
-                    <div class="container-fluid col-lg-4" id="newGiocatoreContainer">
+                    <div class="container-fluid col-lg-3" id="newGiocatoreContainer">
                         <div class="card mb-4">
                             <div class="card-header">
                                 <h6 class="m-0 font-weight-bold text-primary">Inserimento di un nuovo giocatore</h6>

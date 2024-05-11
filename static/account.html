@@ -226,10 +226,32 @@
         </ul>
         <!-- End of Sidebar -->
 
-        <div id="mainContentWrapper" class="d-flex flex-column" style="width: 70%;">
+        <div id="mainContentWrapper" class="d-flex flex-column" style="width: 100%;">
+            <!-- Topbar -->
+            <nav class="navbar navbar-expand navbar-light bg-white topbar mb-4 static-top shadow" style="height: 80px">
+
+                <!-- Sidebar Toggle (Topbar) -->
+                <button id="sidebarToggleTop" class="btn btn-link d-md-none rounded-circle mr-3">
+                    <i class="fa fa-bars"></i>
+                </button>
+
+                <!-- Topbar Navbar -->
+                <ul class="navbar-nav ml-auto" style="padding-left: 80%; padding-top: 5px; padding-bottom: 5px;">
+
+                    <!-- Nav Item - User Information -->
+                    <li class="nav-item accountNameLi">
+                        <a class="nav-link" href="#" class="userDropdown">
+                            <span class="mr-2 d-none d-lg-inline accountName"></span>
+                            <i class="fas fa-user userAccount"></i>
+                        </a>
+                    </li>
+
+                </ul>
+
+            </nav>
+            <!-- End of Topbar -->
             <div id="content">
                 <div class="container-fluid">
-                    <br>
                     <h1 class="mb-4 text-gray-800">Il mio account</h1>
                     <div class="row">
                         <div class="col-lg-12">
