@@ -159,31 +159,20 @@ app.post("/api/login", async (req, res, next) => {
     const client = new MongoClient(connectionString)
     await client.connect()
     const collection = client.db(DBNAME).collection("users")
-    let regex = new RegExp("^" + username + "$", "i")
+    let regex = new RegExp(username, "i")
     let request = collection.findOne({ "email": regex }, { "projection": { "email": 1, "password": 1 } })
     request.then((dbUser) => {
         if (!dbUser) {
-            res.status(401).send("Username not valid")
+            res.status(401).send("Username non valido")
         }
         else {
-            if (password !== dbUser.password) {
-                res.status(401).send("Password not valid");
-            }
-            else {
-                let token = creaToken(dbUser);
-                console.log(token)
-                res.setHeader("authorization", token)
-                res.setHeader("access-control-expose-headers", "authorization")
-                res.send({ "ris": "ok" })
-            }
-        }
-        /* else {
+            console.log("Password: " + password + " dbUser.password: " + dbUser.password)
             _bcrypt.compare(password, dbUser.password, (err, success) => {
                 if (err)
                     res.status(500).send("Bcrypt compare error " + err.message)
                 else {
                     if (!success) {
-                        res.status(401).send("Password not valid")
+                        res.status(401).send("Password errata")
                     }
                     else {
                         let token = creaToken(dbUser);
@@ -194,7 +183,7 @@ app.post("/api/login", async (req, res, next) => {
                     }
                 }
             })
-        } */
+        }
     })
     request.catch((err) => {
         res.status(500).send("Query fallita")
@@ -295,6 +284,41 @@ app.use("/api/", (req, res, next) => {
 // nomeParametro.name contiene il nome del file scelto dal client
 // nomeParametro.data contiene il contenuto binario del file
 // _streamifier serve solo per aggiungere immagine binarie su Cloudinary
+app.patch("/api/encryptPassword", async (req, res, next) => {
+    const client = new MongoClient(connectionString);
+    let promise = client.connect();
+    promise.then(() => {
+        let collection = client.db(DBNAME).collection("users");
+        let rq = collection.find().toArray();
+        rq.then((data) => {
+            let promises = []
+            for (let user of data) {
+                let regex = new RegExp("^\\$2[aby]\\$10\\$.{53}$")
+                if (!regex.test(user.password) || user.passwordUpdated == true) {
+
+                    let _id = new ObjectId(user._id)
+                    let newPassword = _bcrypt.hashSync(user.oldPassword, 10)
+                    let promise = collection.updateOne({ "_id": _id }, { "$set": { "password": newPassword, "passwordUpdated": false } })
+                    promises.push(promise)
+                }
+            }
+            Promise.all(promises).then((results) => {
+                console.log("Password aggiornate correttamente " + promises.length)
+            }).catch((err) => {
+                console.log("Errore aggiornamento password " + err.message)
+            }).finally(() => {
+                client.close()
+            })
+        })
+        rq.catch((err) => {
+            console.log("Errore lettura record " + err)
+            client.close()
+        })
+    })
+    promise.catch((err) => {
+        console.log("Errore connessione database " + err)
+    })
+})
 
 app.get("/api/getGiocatori", async (req, res, next) => {
     let team = req["query"]["utenteCorrente"]["squadra"]
