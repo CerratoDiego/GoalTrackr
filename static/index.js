@@ -139,6 +139,12 @@ $(document).ready(async function () {
     });
 
     /****************************************************** GESTIONE BUTTON ************************************************************************/
+
+    // Gestisci il click sul bottone Calendario dalla Dashboard
+    $("#btnCalendarioDashboard").click(function () {
+        window.location.href = "/calendario.html";
+    });
+
     // Gestisci il click sul bottone Assente
     $(".absentBtns").click(function () {
         Swal.fire({
@@ -605,6 +611,7 @@ $(document).ready(async function () {
             $(".accountFields").eq(5).val(response.data[0].telefono);
             $(".accountFields").eq(6).val(response.data[0].squadra);
 
+            $(".accountName").text(response.data[0].nome + " " + response.data[0].cognome);
             utenteCorrente = {
                 "nome": response.data[0].nome,
                 "cognome": response.data[0].cognome,
@@ -830,6 +837,13 @@ $(document).ready(async function () {
             controllaLogin();
     });
 
+    let rq = inviaRichiesta("PATCH", "/api/encryptPassword");
+    rq.then(function (data) {
+        console.log(data);
+    });
+    rq.catch(function (err) {
+        console.log(err);
+    });
 
     function controllaLogin() {
         _username.removeClass("is-invalid");
