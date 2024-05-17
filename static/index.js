@@ -29,7 +29,10 @@ $(document).ready(async function () {
     $("#btnSalvaModifiche").hide();
     $("#newGiocatoreContainer").hide();
 
-    await getDatiPersonali();
+    if (!window.location.pathname.includes("login.html") || !window.location.pathname.includes("register.html")) {
+        await getDatiPersonali();
+    }
+
     if (utenteCorrente.categoria === "allenatore") {
         $("#newGiocatoreContainer").show();
     }
@@ -789,7 +792,7 @@ $(document).ready(async function () {
     }
 
     function getStatistiche() {
-        let rq = inviaRichiesta('GET', '/api/getGiocatori', {utenteCorrente});
+        let rq = inviaRichiesta('GET', '/api/getGiocatori', { utenteCorrente });
         rq.then((response) => {
             console.log(response.data);
             for (let item of response.data) {
@@ -939,4 +942,82 @@ $(document).ready(async function () {
             alert("Mail inviata alla vostra casella di posta")
         })
     } */
+
+
+    // REGISTRAZIONE -----------------------------------------------------------------------------------------------------------------------------------------------------
+
+    let _nome = $("#FirstName")
+    let _cognome = $("#LastName")
+    let _email = $("#Email")
+    let _passwordReg = $("#Password")
+    let _confermaPassword = $("#RepeatPassword")
+    let _categoriaGiocatore = $("input[name='category'][value='Giocatore']");
+    let _categoriaAllenatore = $("input[name='category'][value='Allenatore']");
+    $("#btnRegister").on("click", controllaRegistrazione)
+    function controllaRegistrazione() {
+        _nome.removeClass("is-invalid");
+        _nome.prev().removeClass("icona-rossa");
+        _cognome.removeClass("is-invalid");
+        _cognome.prev().removeClass("icona-rossa");
+        _email.removeClass("is-invalid");
+        _email.prev().removeClass("icona-rossa");
+        _passwordReg.removeClass("is-invalid");
+        _passwordReg.prev().removeClass("icona-rossa");
+        _confermaPassword.removeClass("is-invalid");
+        _confermaPassword.prev().removeClass("icona-rossa");
+        $(".radio-inputs").removeClass("is-invalid");
+        $(".radio-inputs").prev().removeClass("icona-rossa");
+
+        if (_nome.val() == "") {
+            _nome.addClass("is-invalid");
+            _nome.prev().addClass("icona-rossa");
+        }
+        else if (_cognome.val() == "") {
+            _cognome.addClass("is-invalid");
+            _cognome.prev().addClass("icona-rossa");
+        }
+        else if (!_categoriaGiocatore.is(":checked") && !_categoriaAllenatore.is(":checked")) {
+            _categoriaGiocatore.css("border-color", "red");
+            _categoriaAllenatore.css("border-color", "red");
+        }
+        else if (_email.val() == "") {
+            _email.addClass("is-invalid");
+            _email.prev().addClass("icona-rossa");
+        }
+        else if (_passwordReg.val() == "") {
+            _passwordReg.addClass("is-invalid");
+            _passwordReg.prev().addClass("icona-rossa");
+        }
+        else if (_confermaPassword.val() == "") {
+            _confermaPassword.addClass("is-invalid");
+            _confermaPassword.prev().addClass("icona-rossa");
+        }
+        else if (_passwordReg.val() != _confermaPassword.val()) {
+            _passwordReg.addClass("is-invalid");
+            _passwordReg.prev().addClass("icona-rossa");
+            _confermaPassword.addClass("is-invalid");
+            _confermaPassword.prev().addClass("icona-rossa");
+        }
+        else {
+            mail = _email.val();
+            localStorage.setItem('mail', mail);
+            console.log(mail)
+            /* let request = inviaRichiesta('POST', '/api/login',
+                {
+                    "username": _username.val(),
+                    "password": _password.val()
+                }
+            );
+            request.catch(function (err) {
+                _username.addClass("is-invalid");
+                _username.prev().addClass("icona-rossa");
+                _password.addClass("is-invalid");
+                _password.prev().addClass("icona-rossa");
+                errore(err)
+            });
+            request.then(function (response) {
+                window.location.href = "index.html"
+            }) */
+        }
+    }
 });
