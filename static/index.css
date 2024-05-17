@@ -4,6 +4,10 @@
     max-width: 1200px; 
 } */
 
+.swal2-container {
+    z-index: 9999 !important;
+}
+
 #tbodyOreCalendario td.event-start {
     color: white;
     text-align: center;
@@ -102,6 +106,19 @@ th {
     color: #107ed9;
     border: 1px solid #107ed9 !important;
     line-height: normal;
+}
+
+#dashBoardTr {
+    cursor: pointer;
+}
+
+td.dashBoardTable {
+    text-align: center;
+    background-color: #fff;
+    color: #107ed9;
+    border: 1px solid #107ed9 !important;
+    line-height: normal;
+    font-weight: bold;
 }
 
 #dataNasc {
@@ -272,6 +289,33 @@ th.desc:after {
     }
 }
 
+
+
+
+#nGiocatoriH1,
+#goalMigliorMarcatore {
+    text-shadow: 0 0 10px #107ed9;
+    animation: pulse 1.5s infinite;
+}
+
+@keyframes pulse {
+    0% {
+        text-shadow: 0 0 10px #107ed9;
+    }
+
+    50% {
+        text-shadow: 0 0 20px #107ed9;
+    }
+
+    100% {
+        text-shadow: 0 0 10px #107ed9;
+    }
+}
+
+img {
+    width: 170px;
+    border-radius: 10px;
+}
 
 
 

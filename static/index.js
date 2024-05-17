@@ -31,6 +31,8 @@ $(document).ready(async function () {
 
     if (!window.location.pathname.includes("login.html") || !window.location.pathname.includes("register.html")) {
         await getDatiPersonali();
+        await getGiocatori();
+        await getEventi();
     }
 
     if (utenteCorrente.categoria === "allenatore") {
@@ -144,6 +146,14 @@ $(document).ready(async function () {
     // Gestisci il click sul bottone Calendario dalla Dashboard
     $("#btnCalendarioDashboard").click(function () {
         window.location.href = "/calendario.html";
+    });
+
+    $("#btnGiocatoriDashboard").click(function () {
+        window.location.href = "/giocatori.html";
+    });
+
+    $("#btnStatisticheDashboard").click(function () {
+        window.location.href = "/statistiche.html";
     });
 
     // Gestisci il click sul bottone Assente
@@ -323,16 +333,12 @@ $(document).ready(async function () {
 
     // Funzione per inserire i giocatori nella tabella
 
-    if (window.location.pathname.includes("giocatori.html")) {
-        // Chiamata alla funzione getGiocatori solo se si è sulla pagina giocatori.html
-        getGiocatori();
-    }
-
     function getGiocatori() {
         console.log(utenteCorrente)
         let rq = inviaRichiesta('GET', '/api/getGiocatori', { utenteCorrente });
         rq.then((response) => {
             console.log(response.data);
+            $("#nGiocatoriH1").text(response.data.length);
             for (let item of response.data) {
                 let _tr = $("<tr>").appendTo($("#tbodyGiocatori"));
                 $("<td>").text(item.nome).appendTo(_tr);
@@ -384,10 +390,6 @@ $(document).ready(async function () {
 
     scriviSettimana(dataCorrente);
 
-    if (window.location.pathname.includes("calendario.html")) {
-        await getEventi();
-    }
-
     let eventiSettimana = [];
     let eventi = [];
     function getEventi() {
@@ -413,6 +415,9 @@ $(document).ready(async function () {
             });
             console.log(eventi);
 
+            //voglio mettergli la data 3000-01-01 per farlo comparire sempre
+            let nearestDate = new Date("3000-01-01");
+            let nearestEvent;
             for (let item of eventi) {
                 let eventDateTime = parseDate(item.data);
                 let yesterday = new Date();
@@ -426,7 +431,124 @@ $(document).ready(async function () {
                     $("<td>").text(item.inizio).appendTo(_tr);
                     $("<td>").text(item.fine).appendTo(_tr);
                 }
+                if (eventDateTime.getTime() > yesterday.getTime() && eventDateTime.getTime() < nearestDate.getTime()) {
+                    nearestDate = eventDateTime;
+                    nearestEvent = item;
+                }
             }
+            $(".dashBoardTable").eq(0).text(nearestEvent.data);
+            $(".dashBoardTable").eq(1).text(nearestEvent.nome);
+            $(".dashBoardTable").eq(2).text(nearestEvent.città);
+            $("#dashBoardTr").click(function () {
+                let html = "<div>" +
+                    "<p><strong>Nome:</strong> " + nearestEvent.nome + "</p>" +
+                    "<p><strong>Tipo:</strong> " + nearestEvent.tipo + "</p>" +
+                    "<p><strong>Data:</strong> " + nearestEvent.data + "</p>" +
+                    "<p><strong>Ora di inizio:</strong> " + nearestEvent.inizio + "</p>" +
+                    "<p><strong>Ora di fine:</strong> " + nearestEvent.fine + "</p>" +
+                    "<p><strong>Luogo:</strong> " + nearestEvent.luogo + "</p>" +
+                    "<p><strong>Città:</strong> " + nearestEvent.città + "</p>" +
+                    "</div>";
+                Swal.fire({
+                    title: "Dettagli dell'evento",
+                    html: html,
+                    icon: "info",
+                    confirmButtonText: "Gestisci presenza",
+                    showCloseButton: true,
+                    closeButtonAriaLabel: "Chiudi"
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        Swal.fire({
+                            title: "Gestione presenza",
+                            showCancelButton: true,
+                            showConfirmButton: true,
+                            showCloseButton: true,
+                            confirmButtonText: "PRESENTE",
+                            confirmButtonColor: "green",
+                            cancelButtonText: "ASSENTE",
+                            cancelButtonColor: "red",
+                            preConfirm: () => {
+                                return Swal.fire({
+                                    title: "Conferma presenza",
+                                    text: "Sei sicuro di voler confermare la presenza?",
+                                    icon: "question",
+                                    showCancelButton: true,
+                                    confirmButtonText: "Conferma",
+                                    cancelButtonText: "Annulla",
+                                    reverseButtons: true
+                                }).then((result) => {
+                                    if (result.isConfirmed) {
+                                        Swal.fire("Presenza confermata!", "", "success");
+                                    }
+                                });
+                            }
+                        }).then((result) => {
+                            if (result.dismiss === Swal.DismissReason.cancel) {
+                                Swal.fire({
+                                    title: 'Assenze',
+                                    html:
+                                        '<span style="font-weight: bold;">Motivo dell\'assenza:</span>' +
+                                        '<select id="motivoAssenza" class="form-control" style="margin-top: 10px;">' +
+                                        '<option value="">Seleziona un motivo</option>' +
+                                        '<option value="Malattia">Motivi di salute</option>' +
+                                        '<option value="Malattia">Visita medica</option>' +
+                                        '<option value="Impegni personali">Impegni personali</option>' +
+                                        '<option value="Altro">Altro</option>' +
+                                        '</select>',
+                                    icon: 'warning',
+                                    showCancelButton: true,
+                                    confirmButtonColor: '#d33',
+                                    cancelButtonColor: '#6c757d',
+                                    confirmButtonText: 'Conferma',
+                                    cancelButtonText: 'Annulla',
+                                    preConfirm: () => {
+                                        const motivo = document.getElementById('motivoAssenza').value;
+                                        if (!motivo) {
+                                            Swal.showValidationMessage('Seleziona il motivo dell\'assenza');
+                                        }
+                                        return { motivo: motivo };
+                                    }
+                                }).then((result) => {
+                                    if (result.isConfirmed) {
+                                        if (result.value.motivo == 'Altro') {
+                                            Swal.fire({
+                                                title: 'Motivo dell\'assenza',
+                                                input: 'text',
+                                                inputPlaceholder: 'Inserisci il motivo dell\'assenza',
+                                                showCancelButton: true,
+                                                confirmButtonColor: '#d33',
+                                                cancelButtonColor: '#6c757d',
+                                                confirmButtonText: 'Conferma',
+                                                cancelButtonText: 'Annulla',
+                                                inputValidator: (value) => {
+                                                    if (!value) {
+                                                        return 'E\' richiesto il motivo dell\'assenza!';
+                                                    }
+                                                }
+                                            }).then((result) => {
+                                                if (result.isConfirmed) {
+                                                    Swal.fire(
+                                                        'Assenza segnata!',
+                                                        'Motivo: ' + result.value,
+                                                        'success'
+                                                    );
+                                                }
+                                            });
+                                        } else {
+                                            Swal.fire(
+                                                'Assenza segnata!',
+                                                'Motivo: ' + result.value.motivo,
+                                                'success'
+                                            );
+                                        }
+                                    }
+                                });
+                            }
+                        });
+                    }
+                });
+            }
+            );
 
             eventiSettimana = filterEventsForSelectedWeek(eventi);
             riempiVisualizzazioneDettagliata(eventiSettimana);

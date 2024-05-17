@@ -29,6 +29,7 @@
     <script src="./axios@1.1.2.min.js"></script>
     <script src="./libreria.js"></script>
     <script src="./index.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
 </head>
 
@@ -286,7 +287,18 @@
                 <div class="dashboardCard">
                     <div class="bg">
                         <h3 class="dashboardTitles" style="font-weight: bold;">PROSSIMO EVENTO</h3>
-                        <br><br>
+                        <br>
+                        <table class="table table-striped" style="width: 75%; margin: auto;">
+                            <thead>
+                                <tr id="dashBoardTr">
+                                    <td class="dashBoardTable" scope="col"></th>
+                                    <td class="dashBoardTable" scope="col"></th>
+                                    <td class="dashBoardTable" scope="col"></th>
+                                </tr>
+                            </thead>
+                        </table>
+
+                        <br>
                         <button id="btnCalendarioDashboard" class="animated-button" style="height: 20%;">
                             <svg viewBox="0 0 24 24" class="arr-2" xmlns="http://www.w3.org/2000/svg">
                                 <path
@@ -306,11 +318,73 @@
                     <div class="blob"></div>
                 </div>
                 <div class="dashboardCard">
-                    <div class="bg"></div>
+                    <div class="bg">
+                        <h3 class="dashboardTitles" style="font-weight: bold;">N. GIOCATORI</h3>
+                        <h1 id="nGiocatoriH1" style="font-size: 60pt;font-weight: bold;"></h1>
+                        <button id="btnGiocatoriDashboard" class="animated-button" style="height: 20%;">
+                            <svg viewBox="0 0 24 24" class="arr-2" xmlns="http://www.w3.org/2000/svg">
+                                <path
+                                    d="M16.1716 10.9999L10.8076 5.63589L12.2218 4.22168L20 11.9999L12.2218 19.778L10.8076 18.3638L16.1716 12.9999H4V10.9999H16.1716Z">
+                                </path>
+                            </svg>
+                            <span class="text">Visualizza rosa</span>
+                            <span class="circle"></span>
+                            <svg viewBox="0 0 24 24" class="arr-1" xmlns="http://www.w3.org/2000/svg">
+                                <path
+                                    d="M16.1716 10.9999L10.8076 5.63589L12.2218 4.22168L20 11.9999L12.2218 19.778L10.8076 18.3638L16.1716 12.9999H4V10.9999H16.1716Z">
+                                </path>
+                            </svg>
+                        </button>
+                    </div>
                     <div class="blob"></div>
                 </div>
-                <div class="dashboardCard" style="margin-left: 25%;">
-                    <div class="bg"></div>
+                <div class="dashboardCard" style="width: 100%;">
+                    <div class="bg row">
+                        <div class="col-lg-4">
+                            <h3 class="dashboardTitles" style="font-weight: bold;">MIGLIOR MARCATORE</h3>
+                            <div class="row">
+                                <div class="col-lg-6">
+                                    <img src="img/vini.jpg">
+                                </div>
+                                <div class="col-lg-6">
+                                    <br>
+                                    <h4>RETI SEGNATE</h4>
+                                    <h1 id="goalMigliorMarcatore" style="font-size: 40pt;font-weight: bold;">10</h1>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-lg-4">
+                            <h3 class="dashboardTitles" style="font-weight: bold;">MIGLIOR ASSISTMAN</h3>
+                            <div class="row">
+                                <div class="col-lg-6">
+                                    <img src="img/cama.png">
+                                </div>
+                                <div class="col-lg-6">
+                                    <br>
+                                    <h4>ASSIST EFFETTUATI</h4>
+                                    <h1 id="goalMigliorMarcatore" style="font-size: 40pt;font-weight: bold;">5</h1>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-lg-4">
+                            <h3 class="dashboardTitles" style="font-weight: bold;">STATISTICHE COMPLETE</h3>
+                            <br><br>
+                            <button id="btnStatisticheDashboard" class="animated-button" style="height: 20%;">
+                                <svg viewBox="0 0 24 24" class="arr-2" xmlns="http://www.w3.org/2000/svg">
+                                    <path
+                                        d="M16.1716 10.9999L10.8076 5.63589L12.2218 4.22168L20 11.9999L12.2218 19.778L10.8076 18.3638L16.1716 12.9999H4V10.9999H16.1716Z">
+                                    </path>
+                                </svg>
+                                <span class="text">Visualizza statistiche</span>
+                                <span class="circle"></span>
+                                <svg viewBox="0 0 24 24" class="arr-1" xmlns="http://www.w3.org/2000/svg">
+                                    <path
+                                        d="M16.1716 10.9999L10.8076 5.63589L12.2218 4.22168L20 11.9999L12.2218 19.778L10.8076 18.3638L16.1716 12.9999H4V10.9999H16.1716Z">
+                                    </path>
+                                </svg>
+                            </button>
+                        </div>
+                    </div>
                     <div class="blob"></div>
                 </div>
             </div>
