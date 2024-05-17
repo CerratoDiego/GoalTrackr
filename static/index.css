@@ -388,44 +388,44 @@ th.desc:after {
     -moz-user-select: none;
     -ms-user-select: none;
     user-select: none;
-  }
-  
-  .radio-inputs > * {
+}
+
+.radio-inputs>* {
     margin: 6px;
-  }
-  
-  .radio-input:checked + .radio-tile {
+}
+
+.radio-input:checked+.radio-tile {
     border-color: #2260ff;
     box-shadow: 0 5px 10px rgba(0, 0, 0, 0.1);
     color: #2260ff;
-  }
-  
-  .radio-input:checked + .radio-tile:before {
+}
+
+.radio-input:checked+.radio-tile:before {
     transform: scale(1);
     opacity: 1;
     background-color: #2260ff;
     border-color: #2260ff;
-  }
-  
-  .radio-input:checked + .radio-tile .radio-icon svg {
+}
+
+.radio-input:checked+.radio-tile .radio-icon svg {
     fill: #2260ff;
-  }
-  
-  .radio-input:checked + .radio-tile .radio-label {
+}
+
+.radio-input:checked+.radio-tile .radio-label {
     color: #2260ff;
-  }
-  
-  .radio-input:focus + .radio-tile {
+}
+
+.radio-input:focus+.radio-tile {
     border-color: #2260ff;
     box-shadow: 0 5px 10px rgba(0, 0, 0, 0.1), 0 0 0 4px #b5c9fc;
-  }
-  
-  .radio-input:focus + .radio-tile:before {
+}
+
+.radio-input:focus+.radio-tile:before {
     transform: scale(1);
     opacity: 1;
-  }
-  
-  .radio-tile {
+}
+
+.radio-tile {
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -439,9 +439,9 @@ th.desc:after {
     transition: 0.15s ease;
     cursor: pointer;
     position: relative;
-  }
-  
-  .radio-tile:before {
+}
+
+.radio-tile:before {
     content: "";
     position: absolute;
     display: block;
@@ -455,31 +455,31 @@ th.desc:after {
     opacity: 0;
     transform: scale(0);
     transition: 0.25s ease;
-  }
-  
-  .radio-tile:hover {
+}
+
+.radio-tile:hover {
     border-color: #2260ff;
-  }
-  
-  .radio-tile:hover:before {
+}
+
+.radio-tile:hover:before {
     transform: scale(1);
     opacity: 1;
-  }
-  
-  .radio-icon svg {
+}
+
+.radio-icon svg {
     width: 2rem;
     height: 2rem;
     fill: #494949;
-  }
-  
-  .radio-label {
+}
+
+.radio-label {
     color: #707070;
     transition: 0.375s ease;
     text-align: center;
     font-size: 13px;
-  }
-  
-  .radio-input {
+}
+
+.radio-input {
     clip: rect(0 0 0 0);
     -webkit-clip-path: inset(100%);
     clip-path: inset(100%);
@@ -488,4 +488,84 @@ th.desc:after {
     position: absolute;
     white-space: nowrap;
     width: 1px;
-  }
+}
+
+
+
+
+
+
+
+
+
+
+
+
+.searchBox {
+    display: flex;
+    max-width: 230px;
+    align-items: center;
+    justify-content: space-between;
+    gap: 8px;
+    background: #2f3640;
+    border-radius: 50px;
+    position: relative;
+}
+
+.searchButton {
+    color: white;
+    position: absolute;
+    right: 8px;
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    background: #107ed9;
+    border: 0;
+    display: inline-block;
+    transition: all 300ms cubic-bezier(.23, 1, 0.32, 1);
+}
+
+/*hover effect*/
+button:hover {
+    color: #fff;
+    background-color: #00b3ff;
+    box-shadow: rgba(0, 0, 0, 0.5) 0 10px 20px;
+    transform: translateY(-3px);
+}
+
+/*button pressing effect*/
+button:active {
+    box-shadow: none;
+    transform: translateY(0);
+}
+
+.searchInput {
+    border: none;
+    background: none;
+    outline: none;
+    color: white;
+    font-size: 15px;
+    padding: 24px 46px 24px 26px;
+}
+
+.suggestionsBox {
+    position: absolute;
+    margin-top: 10%;
+    width: 10%;
+    float: left;
+    background: white;
+    max-height: 200px;
+    overflow-y: auto;
+    z-index: 1000;
+}
+
+.suggestion {
+    padding: 10px;
+    cursor: pointer;
+    border: 1px solid #107ed9;
+    color: #107ed9;
+}
+
+.suggestion:hover {
+    background-color: #e0e0e0;
+}

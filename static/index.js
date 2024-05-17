@@ -830,6 +830,32 @@ $(document).ready(async function () {
     } */
 
 
+    //RICERCA NEL SITO
+
+    let suggestions = ["Home", "Statistiche", "Calendario", "Presenze", "Giocatori", "Account"];
+    $(".searchInput").on("input", function () {
+        let input = $(this).val().toLowerCase();
+        $(".suggestionsBox").empty();
+
+        if (input) {
+            let startsWithSuggestions = suggestions.filter(function (suggestion) {
+                return suggestion.toLowerCase().startsWith(input);
+            });
+
+            let containsSuggestions = suggestions.filter(function (suggestion) {
+                return suggestion.toLowerCase().includes(input) && !suggestion.toLowerCase().startsWith(input);
+            });
+
+            let filteredSuggestions = startsWithSuggestions.concat(containsSuggestions);
+
+            filteredSuggestions.forEach(function (suggestion) {
+                $("<div>").appendTo($(".suggestionsBox")).addClass("suggestion").text(suggestion).click(function () {
+                    window.location.href = suggestion.toLowerCase() + ".html";
+                });
+            });
+        }
+    });
+
 
 
 
