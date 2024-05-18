@@ -378,7 +378,7 @@ $(document).ready(async function () {
         let lunedìFormatNuovo = `${parti[2]}-${parti[1]}-${parti[0]}`;
         $("#selectData").val(lunedìFormatNuovo);
 
-        $("#visualizzazioneDettagliata h3").text(`Settimana selezionata: da ${lunedìFormat} a ${domenicaFormat}`);
+        // $("#visualizzazioneDettagliata h3").text(`Settimana selezionata: da ${lunedìFormat} a ${domenicaFormat}`);
 
         $("#theadOreCalendario").html("");
         let _tr = $("<tr>").appendTo($("#theadOreCalendario"));
@@ -392,6 +392,37 @@ $(document).ready(async function () {
 
     let eventiSettimana = [];
     let eventi = [];
+    let eventsForCalendar = [];
+
+    if (window.location.pathname.includes("calendario.html")) {
+        $('#visualizzazioneDettagliata').evoCalendar({
+            theme: 'Midnight Blue', // Tema del calendario
+            language: 'it', // Lingua del calendario
+            format: 'MM dd, yyyy', // Formato della data
+            todayHighlight: true, // Evidenzia il giorno corrente
+            sidebarDisplayDefault: true, // Mostra la barra laterale di default
+            calendarEvents: eventsForCalendar
+            /* [
+                {
+                    id: 'bHay68s', // Genera automaticamente un id
+                    name: "New Year", // Nome dell'evento
+                    date: "May/10/2024", // Data dell'evento
+                    type: "holiday", // Tipo di evento
+                },
+                {
+                    id: 'gD8s9s', // Genera automaticamente un id
+                    name: "Meeting", // Nome dell'evento
+                    date: "May/18/2024", // Data dell'evento
+                    type: "event" // Tipo di evento
+                }
+            ] */
+        });
+
+        $('.event-container').on('click', function () {
+            alert("OK")
+        }); //NON VAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+    }
+
     function getEventi() {
         let rq = inviaRichiesta('GET', '/api/getEventi', { utenteCorrente });
         rq.then(async (response) => {
@@ -419,6 +450,66 @@ $(document).ready(async function () {
             let nearestDate = new Date("3000-01-01");
             let nearestEvent;
             for (let item of eventi) {
+                let newType;
+                let newDate;
+                let month = item.data.split("-")[1]
+                switch (month) {
+                    case "01":
+                        newDate = `January/${item.data.split("-")[0]}/${item.data.split("-")[2]}`;
+                        break;
+                    case "02":
+                        newDate = `February/${item.data.split("-")[0]}/${item.data.split("-")[2]}`;
+                        break;
+                    case "03":
+                        newDate = `March/${item.data.split("-")[0]}/${item.data.split("-")[2]}`;
+                        break;
+                    case "04":
+                        newDate = `April/${item.data.split("-")[0]}/${item.data.split("-")[2]}`;
+                        break;
+                    case "05":
+                        newDate = `May/${item.data.split("-")[0]}/${item.data.split("-")[2]}`;
+                        break;
+                    case "06":
+                        newDate = `June/${item.data.split("-")[0]}/${item.data.split("-")[2]}`;
+                        break;
+                    case "07":
+                        newDate = `July/${item.data.split("-")[0]}/${item.data.split("-")[2]}`;
+                        break;
+                    case "08":
+                        newDate = `August/${item.data.split("-")[0]}/${item.data.split("-")[2]}`;
+                        break;
+                    case "09":
+                        newDate = `September/${item.data.split("-")[0]}/${item.data.split("-")[2]}`;
+                        break;
+                    case "10":
+                        newDate = `October/${item.data.split("-")[0]}/${item.data.split("-")[2]}`;
+                        break;
+                    case "11":
+                        newDate = `November/${item.data.split("-")[0]}/${item.data.split("-")[2]}`;
+                        break;
+                    case "12":
+                        newDate = `December/${item.data.split("-")[0]}/${item.data.split("-")[2]}`;
+                        break;
+                }
+                if (item.tipo === "Partita") {
+                    newType = "event";
+                }
+                else if (item.tipo === "Allenamento") {
+                    newType = "birthday";
+                }
+                else if (item.tipo === "Sessione Video") {
+                    newType = "holiday";
+                }
+                let evento = {
+                    id: item._id,
+                    name: item.nome,
+                    description: item.inizio + " - " + item.fine + " " + item.luogo + ", " + item.città,
+                    date: newDate,
+                    type: item.tipo === "Partita" ? "event" : item.tipo === "Allenamento" ? "birthday" : "holiday",
+                    color: item.tipo === "Partita" ? "green" : item.tipo === "Allenamento" ? "blue" : "yellow"
+                };
+                eventsForCalendar.push(evento);
+
                 let eventDateTime = parseDate(item.data);
                 let yesterday = new Date();
                 yesterday.setDate(yesterday.getDate() - 1); // Imposta la data a ieri
@@ -436,6 +527,23 @@ $(document).ready(async function () {
                     nearestEvent = item;
                 }
             }
+            eventsForCalendar.forEach(function (event) {
+                // Trova l'elemento .day corrispondente alla data dell'evento
+                var dayElement = $('.day[data-date="' + event.date + '"]');
+
+                // Aggiungi la classe appropriata in base al tipo di evento
+                switch (event.type) {
+                    case 'event':
+                        dayElement.addClass('green-dot');
+                        break;
+                    case 'birthday':
+                        dayElement.addClass('blue-dot');
+                        break;
+                    case 'holiday':
+                        dayElement.addClass('yellow-dot');
+                        break;
+                }
+            });
             $(".dashBoardTable").eq(0).text(nearestEvent.data);
             $(".dashBoardTable").eq(1).text(nearestEvent.nome);
             $(".dashBoardTable").eq(2).text(nearestEvent.città);
