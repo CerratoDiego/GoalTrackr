@@ -293,7 +293,7 @@ th.desc:after {
 
 
 #nGiocatoriH1,
-#goalMigliorMarcatore {
+#goalMigliorMarcatore, #assistMigliorAssistman {
     text-shadow: 0 0 10px #107ed9;
     animation: pulse 1.5s infinite;
 }
@@ -313,7 +313,8 @@ th.desc:after {
 }
 
 img {
-    width: 170px;
+    margin-top: 5%;
+    width: 150px;
     border-radius: 10px;
 }
 

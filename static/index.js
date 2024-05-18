@@ -29,10 +29,23 @@ $(document).ready(async function () {
     $("#btnSalvaModifiche").hide();
     $("#newGiocatoreContainer").hide();
 
-    if (!window.location.pathname.includes("login.html") || !window.location.pathname.includes("register.html")) {
+    if (window.location.pathname.includes("index.html")) {
         await getDatiPersonali();
         await getGiocatori();
         await getEventi();
+        await getStatistiche();
+    }
+    if(window.location.pathname.includes("calendario.html")) {
+        await getEventi();
+    }
+    if(window.location.pathname.includes("giocatori.html")) {
+        await getGiocatori();
+    }
+    if(window.location.pathname.includes("statistiche.html")) {
+        await getStatistiche();
+    }
+    if(window.location.pathname.includes("account.html")) {
+        await getDatiPersonali();
     }
 
     if (utenteCorrente.categoria === "allenatore") {
@@ -1017,14 +1030,14 @@ $(document).ready(async function () {
         });
     });
 
-    if (window.location.pathname.includes("statistiche.html")) {
-        await getStatistiche();
-    }
-
     function getStatistiche() {
         let rq = inviaRichiesta('GET', '/api/getGiocatori', { utenteCorrente });
         rq.then((response) => {
             console.log(response.data);
+            let maxGoals = 0;
+            let topGoalscorer, topGoalscorerImg;
+            let maxAssists = 0;
+            let topAssistman, topAssistmanImg;
             for (let item of response.data) {
                 let _tr = $("<tr>").appendTo($("#tbodyStatistiche"));
                 $("<td>").text(item.nome).appendTo(_tr);
@@ -1034,7 +1047,23 @@ $(document).ready(async function () {
                 $("<td>").text(item.statistiche.assist).appendTo(_tr);
                 $("<td>").text(item.statistiche.ammonizioni).appendTo(_tr);
                 $("<td>").text(item.statistiche.espulsioni).appendTo(_tr);
+                if(item.statistiche.gol > maxGoals) {
+                    maxGoals = item.statistiche.gol;
+                    topGoalscorer = item.nome + " " + item.cognome;
+                    topGoalscorerImg = item.immagine;
+                }
+                if(item.statistiche.assist > maxAssists) {
+                    maxAssists = item.statistiche.assist;
+                    topAssistman = item.nome + " " + item.cognome;
+                    topAssistmanImg = item.immagine;
+                }
             }
+            $("#topGoalscorer").text(topGoalscorer);
+            $("#topAssistman").text(topAssistman);
+            $("#goalMigliorMarcatore").text(maxGoals);
+            $("#assistMigliorAssistman").text(maxAssists);
+            $("#topGoalscorerImg").prop("src", topGoalscorerImg);
+            $("#topAssistmanImg").prop("src", topAssistmanImg);
         });
     }
 
