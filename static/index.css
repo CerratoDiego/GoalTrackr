@@ -108,8 +108,20 @@ th {
     line-height: normal;
 }
 
-#dashBoardTr {
+#dashBoardTr,
+#dashBoardTr>td {
     cursor: pointer;
+    border: 1px solid white;
+    background-color: #121212;
+    transition: all 0.3s ease;
+}
+
+#dashBoardTr:hover,
+#dashBoardTr:hover>td {
+    background-color: #107ed9;
+    color: white;
+    border: 1px solid white !important;
+    transition: all 0.3s ease;
 }
 
 td.dashBoardTable {
@@ -187,6 +199,10 @@ th.desc:after {
 
 .button-hidden {
     display: none;
+}
+
+.presentBtns {
+    margin-right: 2%;
 }
 
 
@@ -293,7 +309,8 @@ th.desc:after {
 
 
 #nGiocatoriH1,
-#goalMigliorMarcatore, #assistMigliorAssistman {
+#goalMigliorMarcatore,
+#assistMigliorAssistman {
     text-shadow: 0 0 10px #107ed9;
     animation: pulse 1.5s infinite;
 }
@@ -573,6 +590,7 @@ img {
 button {
     transition: color 0.3s ease, box-shadow 0.3s ease, transform 0.3s ease !important;
 }
+
 /*hover effect*/
 button:hover {
     color: #fff;
@@ -615,4 +633,77 @@ button:active {
 
 .suggestion:hover {
     background-color: #e0e0e0;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+.tooltip-container {
+    align-items: center;
+    position: relative;
+    transition: all 0.3s;
+    background-color: rgb(255, 255, 255);
+    cursor: pointer;
+    border: 1px solid rgb(211, 211, 211);
+}
+
+.text {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    font-size: 14px;
+    font-weight: 600;
+    color: rgb(0, 0, 0);
+}
+
+.svgIcon {
+    width: 16px;
+    height: auto;
+}
+
+.tooltip {
+    margin-top: 20px;
+    position: absolute;
+    top: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    padding: 0.3em 0.6em;
+    opacity: 0;
+    pointer-events: none;
+    transition: all 0.3s;
+    background-color: #107ed9;
+    border: 1px solid black;
+    border-radius: 12px;
+    color: white;
+}
+
+.tooltip::before {
+    position: absolute;
+    content: "";
+    height: 0.6em;
+    width: 0.6em;
+    bottom: -0.2em;
+    left: 50%;
+    transform: translate(-50%) rotate(45deg);
+    background-color: #107ed9;
+}
+
+.tooltip-container:hover .tooltip {
+    top: -100%;
+    opacity: 1;
+    visibility: visible;
+    pointer-events: auto;
 }
