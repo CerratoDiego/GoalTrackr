@@ -10,6 +10,7 @@
 
 }(function ($) {
     'use strict';
+    var titoloData;
     var EvoCalendar = window.EvoCalendar || {};
 
     EvoCalendar = (function () {
@@ -606,6 +607,7 @@
         _.$active.events = [];
         // Event date
         var title = _.formatDate(_.$active.date, _.options.eventHeaderFormat, _.options.language);
+        titoloData = title;
         _.$elements.eventEl.find('.event-header > p').text(title);
         // Event list
         var eventListEl = _.$elements.eventEl.find('.event-list');
@@ -650,7 +652,7 @@
         var eventListEl = _.$elements.eventEl.find('.event-list');
         if (eventListEl.find('[data-event-index]').length === 0) eventListEl.empty();
         _.$active.events.push(event_data);
-        markup = '<div class="event-container" role="button" data-event-index="' + (event_data.id) + '">';
+        markup = `<div onclick="clickEvent('${event_data.name}', '${event_data.type}', '${event_data.description}', '${titoloData}')" class="event-container" role="button" data-event-index="' + (event_data.id) + '">`;
         markup += '<div class="event-icon"><div class="event-bullet-' + event_data.type + '"';
         if (event_data.color) {
             markup += 'style="background-color:' + event_data.color + '"'
