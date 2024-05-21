@@ -650,9 +650,10 @@
     EvoCalendar.prototype.addEventList = function (event_data) {
         var _ = this, markup;
         var eventListEl = _.$elements.eventEl.find('.event-list');
+        console.log(event_data)
         if (eventListEl.find('[data-event-index]').length === 0) eventListEl.empty();
         _.$active.events.push(event_data);
-        markup = `<div onclick="clickEvent('${event_data.name}', '${event_data.type}', '${event_data.description}', '${titoloData}')" class="event-container" role="button" data-event-index="' + (event_data.id) + '">`;
+        markup = `<div onclick="clickEvent('${event_data.id}', '${event_data.name}', '${event_data.type}', '${event_data.description}', '${titoloData}')" class="event-container" role="button" data-event-index="' + (event_data.id) + '">`;
         markup += '<div class="event-icon"><div class="event-bullet-' + event_data.type + '"';
         if (event_data.color) {
             markup += 'style="background-color:' + event_data.color + '"'

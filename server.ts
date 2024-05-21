@@ -465,41 +465,33 @@ app.post("/api/newEvento", async (req, res, next) => {
 });
 
 app.patch("/api/confermaPresenza", async (req, res, next) => {
-    let squadra = req.body.utenteCorrente.squadra;
     let userId = new ObjectId(req.body.utenteCorrente._id);
-    let nome = req.body.nome;
-    let tipo = req.body.tipo;
-    let data = req.body.data;
-    let inizio = req.body.inizio;
-    let fine = req.body.fine;
-    let luogo = req.body.luogo;
-    let città = req.body.città;
+    let id = new ObjectId(req.body.id);
     const client = new MongoClient(connectionString);
     await client.connect();
     let db = client.db(DBNAME).collection('events');
-    let updateCriteria = {
-        squadra: squadra,
-        nome: nome,
-        tipo: tipo,
-        data: data,
-        inizio: inizio,
-        fine: fine,
-        luogo: luogo,
-        città: città
-    };
-    let update = {
-        $set: { [`presenze.${userId}`]: 'presente' }
-    };
-    console.log(userId)
-    let request = db.updateOne(updateCriteria, update);
-    request.then((data) => {
-        if (data.matchedCount > 0) {
-            res.status(200).send("Presenza aggiunta correttamente");
+    let findRequest = db.findOne({ "_id": id, "presenze.userId": userId });
+
+    findRequest.then((evento) => {
+        if (evento) {
+            res.status(200).send("L'utente ha già confermato la presenza");
         } else {
-            res.status(404).send("Evento non trovato");
+            let update = {
+                $addToSet: { "presenze": { "userId": userId, "presenza": true, "descrizione": null } }
+            };
+
+            let updateRequest = db.updateOne({ "_id": id }, update);
+            updateRequest.then((data) => {
+                if (data.matchedCount > 0) {
+                    res.status(200).send("Presenza aggiunta correttamente");
+                } else {
+                    res.status(404).send("Evento non trovato");
+                }
+            }).catch((err) => {
+                res.status(500).send("Errore esecuzione query: " + err);
+            });
         }
-    });
-    request.catch((err) => {
+    }).catch((err) => {
         res.status(500).send("Errore esecuzione query: " + err);
     });
 });

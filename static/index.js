@@ -1,6 +1,7 @@
 "use strict"
 
 let giorniSettimana = ["Lunedì", "Martedì", "Mercoledì", "Giovedì", "Venerdì", "Sabato", "Domenica"];
+let utenteCorrente
 
 $(document).ready(async function () {
     // Variabili globali
@@ -9,7 +10,7 @@ $(document).ready(async function () {
     let dataCorrente = new Date();
     let dataSelezionata = dataCorrente;
     let mail = localStorage.getItem('mail') || "";
-    let utenteCorrente = JSON.parse(localStorage.getItem('utenteCorrente')) || "";
+    utenteCorrente = JSON.parse(localStorage.getItem('utenteCorrente')) || "";
 
     // Puntatori HTML
     let _wrapper = $("#wrapper");
@@ -34,18 +35,23 @@ $(document).ready(async function () {
         await getGiocatori();
         await getEventi();
         await getStatistiche();
+        $(".accountName").text(utenteCorrente.nome + " " + utenteCorrente.cognome);
     }
-    if(window.location.pathname.includes("calendario.html")) {
+    if (window.location.pathname.includes("calendario.html")) {
         await getEventi();
+        $(".accountName").text(utenteCorrente.nome + " " + utenteCorrente.cognome);
     }
-    if(window.location.pathname.includes("giocatori.html")) {
+    if (window.location.pathname.includes("giocatori.html")) {
         await getGiocatori();
+        $(".accountName").text(utenteCorrente.nome + " " + utenteCorrente.cognome);
     }
-    if(window.location.pathname.includes("statistiche.html")) {
+    if (window.location.pathname.includes("statistiche.html")) {
         await getStatistiche();
+        $(".accountName").text(utenteCorrente.nome + " " + utenteCorrente.cognome);
     }
-    if(window.location.pathname.includes("account.html")) {
+    if (window.location.pathname.includes("account.html")) {
         await getDatiPersonali();
+        $(".accountName").text(utenteCorrente.nome + " " + utenteCorrente.cognome);
     }
 
     if (utenteCorrente.categoria === "allenatore") {
@@ -408,7 +414,7 @@ $(document).ready(async function () {
     let eventsForCalendar = [];
 
     if (window.location.pathname.includes("calendario.html")) {
-        $('#visualizzazioneDettagliata').evoCalendar({
+        await $('#visualizzazioneDettagliata').evoCalendar({
             theme: 'Midnight Blue', // Tema del calendario
             language: 'it', // Lingua del calendario
             format: 'MM dd, yyyy', // Formato della data
@@ -430,10 +436,6 @@ $(document).ready(async function () {
                 }
             ] */
         });
-
-        $('.event-container').on('click', function () {
-            alert("OK")
-        }); //NON VAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
     }
 
     function getEventi() {
@@ -463,7 +465,6 @@ $(document).ready(async function () {
             let nearestDate = new Date("3000-01-01");
             let nearestEvent;
             for (let item of eventi) {
-                let newType;
                 let newDate;
                 let month = item.data.split("-")[1]
                 switch (month) {
@@ -504,19 +505,10 @@ $(document).ready(async function () {
                         newDate = `December/${item.data.split("-")[0]}/${item.data.split("-")[2]}`;
                         break;
                 }
-                if (item.tipo === "Partita") {
-                    newType = "event";
-                }
-                else if (item.tipo === "Allenamento") {
-                    newType = "birthday";
-                }
-                else if (item.tipo === "Sessione Video") {
-                    newType = "holiday";
-                }
                 let evento = {
                     id: item._id,
                     name: item.nome,
-                    description: item.inizio + " - " + item.fine + " " + item.luogo + ", " + item.città,
+                    description: item.inizio + " - " + item.fine + " - " + item.luogo + " - " + item.città,
                     date: newDate,
                     type: item.tipo === "Partita" ? "event" : item.tipo === "Allenamento" ? "birthday" : "holiday",
                     color: item.tipo === "Partita" ? "green" : item.tipo === "Allenamento" ? "blue" : "yellow"
@@ -534,6 +526,15 @@ $(document).ready(async function () {
                     $("<td>").text(item.luogo + ", " + item.città).appendTo(_tr);
                     $("<td>").text(item.inizio).appendTo(_tr);
                     $("<td>").text(item.fine).appendTo(_tr);
+                    $("<span>").appendTo($("<td>").addClass("statoPresenzaView")
+                        .addClass("tooltip-container")
+                        .appendTo(_tr)
+                        .text("Non definito")).text("Motivi di salute").addClass("tooltip");
+                    let _td = $("<td>").appendTo(_tr);
+                    $("<button>").prop("type", "button").addClass("btn").addClass("btn-success").addClass("presentBtns").appendTo(_td).text("PRESENTE").on("click", function () {
+                        gestionePresenze(item._id, item.nome, item.tipo, item.data, item.inizio, item.fine, item.luogo, item.città)
+                    });
+                    $("<button>").prop("type", "button").addClass("btn").addClass("btn-danger").addClass("absentBtns").appendTo(_td).text("ASSENTE");
                 }
                 if (eventDateTime.getTime() > yesterday.getTime() && eventDateTime.getTime() < nearestDate.getTime()) {
                     nearestDate = eventDateTime;
@@ -855,8 +856,8 @@ $(document).ready(async function () {
             $(".accountFields").eq(5).val(response.data[0].telefono);
             $(".accountFields").eq(6).val(response.data[0].squadra);
 
-            $(".accountName").text(response.data[0].nome + " " + response.data[0].cognome);
             utenteCorrente = {
+                "_id": response.data[0]._id,
                 "nome": response.data[0].nome,
                 "cognome": response.data[0].cognome,
                 "data_di_nascita": response.data[0].data_di_nascita,
@@ -1047,12 +1048,12 @@ $(document).ready(async function () {
                 $("<td>").text(item.statistiche.assist).appendTo(_tr);
                 $("<td>").text(item.statistiche.ammonizioni).appendTo(_tr);
                 $("<td>").text(item.statistiche.espulsioni).appendTo(_tr);
-                if(item.statistiche.gol > maxGoals) {
+                if (item.statistiche.gol > maxGoals) {
                     maxGoals = item.statistiche.gol;
                     topGoalscorer = item.nome + " " + item.cognome;
                     topGoalscorerImg = item.immagine;
                 }
-                if(item.statistiche.assist > maxAssists) {
+                if (item.statistiche.assist > maxAssists) {
                     maxAssists = item.statistiche.assist;
                     topAssistman = item.nome + " " + item.cognome;
                     topAssistmanImg = item.immagine;
@@ -1306,3 +1307,210 @@ $(document).ready(async function () {
         }
     }
 });
+
+
+function clickEvent(id, nome, tipo, descrizione = "", titoloData = "") {
+    let newType = "";
+    let newDate;
+    if (tipo === "event") {
+        newType = "Partita";
+    }
+    else if (tipo === "birthday") {
+        newType = "Allenamento";
+    }
+    else if (tipo === "holiday") {
+        newType = "Sessione Video";
+    }
+
+    let vetDesc = descrizione.split("-")
+    let inizio = vetDesc[0].trim()
+    let fine = vetDesc[1].trim()
+    let luogo = vetDesc[2].trim()
+    let città = vetDesc[3].trim()
+
+    let month = titoloData.split(",")[0].split(" ")[0]
+    let day = titoloData.split(",")[0].split(" ")[1]
+    let year = titoloData.split(",")[1].split(" ")[1]
+
+    switch (month) {
+        case "Gennaio":
+            newDate = `${day}-01-${year}`;
+            break;
+        case "Febbraio":
+            newDate = `${day}-02-${year}`;
+            break;
+        case "Marzo":
+            newDate = `${day}-03-${year}`;
+            break;
+        case "Aprile":
+            newDate = `${day}-04-${year}`;
+            break;
+        case "Maggio":
+            newDate = `${day}-05-${year}`;
+            break;
+        case "Giugno":
+            newDate = `${day}-06-${year}`;
+            break;
+        case "Loglio":
+            newDate = `${day}-07-${year}`;
+            break;
+        case "Agosto":
+            newDate = `${day}-08-${year}`;
+            break;
+        case "Settembre":
+            newDate = `${day}-09-${year}`;
+            break;
+        case "Ottobre":
+            newDate = `${day}-10-${year}`;
+            break;
+        case "Novembre":
+            newDate = `${day}-11-${year}`;
+            break;
+        case "Dicembre":
+            newDate = `${day}-12-${year}`;
+            break;
+    }
+
+    gestionePresenze(id, nome, newType, newDate, inizio, fine, luogo, città)
+}
+
+function gestionePresenze(id, nome, tipo, data, inizio, fine, luogo, città){
+    let dataCorrente = new Date().toLocaleDateString();
+    let condition = true
+    if (data < dataCorrente) {
+        condition = false;
+    }
+
+    let html = "<div>" +
+        "<p><strong>Nome:</strong> " + nome + "</p>" +
+        "<p><strong>Tipo:</strong> " + tipo + "</p>" +
+        "<p><strong>Data:</strong> " + data + "</p>" +
+        "<p><strong>Ora di inizio:</strong> " + inizio + "</p>" +
+        "<p><strong>Ora di fine:</strong> " + fine + "</p>" +
+        "<p><strong>Luogo:</strong> " + luogo + "</p>" +
+        "<p><strong>Città:</strong> " + città + "</p>" +
+        "</div>";
+
+    Swal.fire({
+        title: "Dettagli dell'evento",
+        html: html,
+        icon: "info",
+        confirmButtonText: condition ? "Gestisci presenza" : "Chiudi",
+        showCloseButton: true,
+        closeButtonAriaLabel: "Chiudi"
+    }).then((result) => {
+        if (result.isConfirmed) {
+            if (condition) {
+                Swal.fire({
+                    title: "Gestione presenza",
+                    showCancelButton: true,
+                    showConfirmButton: true,
+                    showCloseButton: true,
+                    confirmButtonText: "PRESENTE",
+                    confirmButtonColor: "green",
+                    cancelButtonText: "ASSENTE",
+                    cancelButtonColor: "red",
+                    preConfirm: () => {
+                        return Swal.fire({
+                            title: "Conferma presenza",
+                            text: "Sei sicuro di voler confermare la presenza?",
+                            icon: "question",
+                            showCancelButton: true,
+                            confirmButtonText: "Conferma",
+                            cancelButtonText: "Annulla",
+                            reverseButtons: true
+                        }).then((result) => {
+                            if (result.isConfirmed) {
+                                let rq = inviaRichiesta('PATCH', '/api/confermaPresenza', { id, utenteCorrente });
+                                rq.then((response) => {
+                                    console.log(response);
+                                    if (response.data == "Presenza aggiunta correttamente") {
+                                        Swal.fire({
+                                            title: "Presenza confermata!",
+                                            icon: "success",
+                                            showConfirmButton: false,
+                                            timer: 1500
+                                        });
+                                    } else
+                                        if (response.data == "L'utente ha già confermato la presenza") {
+                                            Swal.fire({
+                                                title: "Presenza già registrata!",
+                                                icon: "info",
+                                                showConfirmButton: false,
+                                                timer: 1500
+                                            });
+                                        }
+                                });
+                                rq.catch((error) => {
+                                    console.log(error);
+                                });
+                            }
+                        });
+                    }
+                }).then((result) => {
+                    if (result.dismiss === Swal.DismissReason.cancel) {
+                        Swal.fire({
+                            title: 'Assenze',
+                            html:
+                                '<span style="font-weight: bold;">Motivo dell\'assenza:</span>' +
+                                '<select id="motivoAssenza" class="form-control" style="margin-top: 10px;">' +
+                                '<option value="">Seleziona un motivo</option>' +
+                                '<option value="Malattia">Motivi di salute</option>' +
+                                '<option value="Malattia">Visita medica</option>' +
+                                '<option value="Impegni personali">Impegni personali</option>' +
+                                '<option value="Altro">Altro</option>' +
+                                '</select>',
+                            icon: 'warning',
+                            showCancelButton: true,
+                            confirmButtonColor: '#d33',
+                            cancelButtonColor: '#6c757d',
+                            confirmButtonText: 'Conferma',
+                            cancelButtonText: 'Annulla',
+                            preConfirm: () => {
+                                const motivo = document.getElementById('motivoAssenza').value;
+                                if (!motivo) {
+                                    Swal.showValidationMessage('Seleziona il motivo dell\'assenza');
+                                }
+                                return { motivo: motivo };
+                            }
+                        }).then((result) => {
+                            if (result.isConfirmed) {
+                                if (result.value.motivo == 'Altro') {
+                                    Swal.fire({
+                                        title: 'Motivo dell\'assenza',
+                                        input: 'text',
+                                        inputPlaceholder: 'Inserisci il motivo dell\'assenza',
+                                        showCancelButton: true,
+                                        confirmButtonColor: '#d33',
+                                        cancelButtonColor: '#6c757d',
+                                        confirmButtonText: 'Conferma',
+                                        cancelButtonText: 'Annulla',
+                                        inputValidator: (value) => {
+                                            if (!value) {
+                                                return 'E\' richiesto il motivo dell\'assenza!';
+                                            }
+                                        }
+                                    }).then((result) => {
+                                        if (result.isConfirmed) {
+                                            Swal.fire(
+                                                'Assenza segnata!',
+                                                'Motivo: ' + result.value,
+                                                'success'
+                                            );
+                                        }
+                                    });
+                                } else {
+                                    Swal.fire(
+                                        'Assenza segnata!',
+                                        'Motivo: ' + result.value.motivo,
+                                        'success'
+                                    );
+                                }
+                            }
+                        });
+                    }
+                });
+            }
+        }
+    });
+}
