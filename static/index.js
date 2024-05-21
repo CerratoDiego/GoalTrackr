@@ -29,6 +29,10 @@ $(document).ready(async function () {
     $("#btnAnnullaModifiche").hide();
     $("#btnSalvaModifiche").hide();
     $("#newGiocatoreContainer").hide();
+    $("#updateStats").hide();
+    $("#btnUpdateStats").show();
+    $("#btnAnnullaStats").hide();
+    $("#btnSalvaStats").hide();
 
     if (window.location.pathname.includes("index.html")) {
         await getDatiPersonali();
@@ -44,18 +48,20 @@ $(document).ready(async function () {
     if (window.location.pathname.includes("giocatori.html")) {
         await getGiocatori();
         $(".accountName").text(utenteCorrente.nome + " " + utenteCorrente.cognome);
+        if (utenteCorrente.categoria === "allenatore") {
+            $("#newGiocatoreContainer").show();
+        }
     }
     if (window.location.pathname.includes("statistiche.html")) {
         await getStatistiche();
         $(".accountName").text(utenteCorrente.nome + " " + utenteCorrente.cognome);
+        if (utenteCorrente.categoria === "allenatore") {
+            $("#updateStats").show();
+        }
     }
     if (window.location.pathname.includes("account.html")) {
         await getDatiPersonali();
         $(".accountName").text(utenteCorrente.nome + " " + utenteCorrente.cognome);
-    }
-
-    if (utenteCorrente.categoria === "allenatore") {
-        $("#newGiocatoreContainer").show();
     }
 
     if (isSidebarToggled === 'true') {
@@ -141,25 +147,6 @@ $(document).ready(async function () {
         }
     });
 
-    // Nascondi tutti i div all'avvio tranne quello selezionato
-    $('.presenceTables').hide();
-    $('#' + selectedSection).show();
-
-    // Gestisci il click su allenamentiToggler
-    $('#allenamentiToggler').click(function () {
-        localStorage.setItem('selectedSection', 'allenamenti');
-    });
-
-    // Gestisci il click su partiteToggler
-    $('#partiteToggler').click(function () {
-        localStorage.setItem('selectedSection', 'partite');
-    });
-
-    // Gestisci il click su sessionivideoToggler
-    $('#sessionivideoToggler').click(function () {
-        localStorage.setItem('selectedSection', 'sessionivideo');
-    });
-
     /****************************************************** GESTIONE BUTTON ************************************************************************/
 
     // Gestisci il click sul bottone Calendario dalla Dashboard
@@ -173,6 +160,64 @@ $(document).ready(async function () {
 
     $("#btnStatisticheDashboard").click(function () {
         window.location.href = "/statistiche.html";
+    });
+
+    $("#btnUpdateStats").click(function () {
+        $("input").prop("disabled", false);
+        $("#btnUpdateStats").hide();
+        $("#btnAnnullaStats").show();
+        $("#btnSalvaStats").show();
+    })
+
+    $("#btnAnnullaStats").click(function () {
+        $("input").prop("disabled", true);
+        $("#btnUpdateStats").show();
+        $("#btnAnnullaStats").hide();
+        $("#btnSalvaStats").hide();
+        $("#tbodyStatistiche").empty();
+        getStatistiche();
+    })
+
+    $("#btnSalvaStats").click(function () {
+        $("input").prop("disabled", true);
+        $("#btnUpdateStats").show();
+        $("#btnAnnullaStats").hide();
+        $("#btnSalvaStats").hide();
+        Swal.fire({
+            title: "Attendere...",
+            icon: "info",
+            timer: 5000,
+            showConfirmButton: false
+        });
+        // $("#tbodyStatistiche").empty();
+        let statistiche = [];
+        $("#tbodyStatistiche tr").each(function () {
+            let _tds = $(this).find("td");
+            let _stat = {
+                "nome": _tds.eq(0).find("input").val(),
+                "cognome": _tds.eq(1).find("input").val(),
+                "partite_giocate": _tds.eq(2).find("input").val(),
+                "gol": _tds.eq(3).find("input").val(),
+                "assist": _tds.eq(4).find("input").val(),
+                "ammonizioni": _tds.eq(5).find("input").val(),
+                "espulsioni": _tds.eq(6).find("input").val()
+            }
+            statistiche.push(_stat);
+        });
+        console.log(statistiche)
+        let rq = inviaRichiesta("PATCH", "/api/updateStatistiche", {statistiche});
+        rq.then((response) => {
+            console.log(response);
+            Swal.fire({
+                title: "Statistiche aggiornate!",
+                icon: "success",
+                timer: 2000,
+                showConfirmButton: false
+            });
+        });
+        rq.catch((error) => {
+            console.log(error);
+        });
     });
 
     // Gestisci il click sul bottone Assente
@@ -531,10 +576,23 @@ $(document).ready(async function () {
                         .appendTo(_tr)
                         .text("Non definito")).text("Motivi di salute").addClass("tooltip");
                     let _td = $("<td>").appendTo(_tr);
-                    $("<button>").prop("type", "button").addClass("btn").addClass("btn-success").addClass("presentBtns").appendTo(_td).text("PRESENTE").on("click", function () {
-                        gestionePresenze(item._id, item.nome, item.tipo, item.data, item.inizio, item.fine, item.luogo, item.città)
-                    });
-                    $("<button>").prop("type", "button").addClass("btn").addClass("btn-danger").addClass("absentBtns").appendTo(_td).text("ASSENTE");
+                    if (utenteCorrente.categoria === "giocatore") {
+                        $("<button>").prop("type", "button")
+                            .addClass("btn").addClass("btn-success").addClass("presentBtns")
+                            .appendTo(_td).text("PRESENTE")
+                            .on("click", function () {
+                                gestionePresenze(item._id, item.nome, item.tipo, item.data, item.inizio, item.fine, item.luogo, item.città, true)
+                            });
+                        $("<button>").prop("type", "button")
+                            .addClass("btn").addClass("btn-danger").addClass("absentBtns")
+                            .appendTo(_td).text("ASSENTE")
+                            .on("click", function () {
+                                gestionePresenze(item._id, item.nome, item.tipo, item.data, item.inizio, item.fine, item.luogo, item.città, false)
+                            });
+                    }
+                    else {
+                        $("<button>").prop("type", "button").addClass("btn").addClass("btn-primary").appendTo(_td).text("VISUALIZZA PRESENZE");
+                    }
                 }
                 if (eventDateTime.getTime() > yesterday.getTime() && eventDateTime.getTime() < nearestDate.getTime()) {
                     nearestDate = eventDateTime;
@@ -1041,13 +1099,24 @@ $(document).ready(async function () {
             let topAssistman, topAssistmanImg;
             for (let item of response.data) {
                 let _tr = $("<tr>").appendTo($("#tbodyStatistiche"));
-                $("<td>").text(item.nome).appendTo(_tr);
-                $("<td>").text(item.cognome).appendTo(_tr);
-                $("<td>").text(item.statistiche.partite_giocate).appendTo(_tr);
-                $("<td>").text(item.statistiche.gol).appendTo(_tr);
-                $("<td>").text(item.statistiche.assist).appendTo(_tr);
-                $("<td>").text(item.statistiche.ammonizioni).appendTo(_tr);
-                $("<td>").text(item.statistiche.espulsioni).appendTo(_tr);
+                if (utenteCorrente.categoria === "allenatore") {
+                    $("<input>").prop("disabled", true).prop("type", "text").css("width", "120px").css("text-align", "center").val(item.nome).appendTo($("<td>").appendTo(_tr));
+                    $("<input>").prop("disabled", true).prop("type", "text").css("width", "120px").css("text-align", "center").val(item.cognome).appendTo($("<td>").appendTo(_tr));
+                    $("<input>").prop("disabled", true).prop("type", "number").prop("min",0).css("width", "120px").css("text-align", "center").val(item.statistiche.partite_giocate).appendTo($("<td>").appendTo(_tr));
+                    $("<input>").prop("disabled", true).prop("type", "number").prop("min",0).css("width", "80px").css("text-align", "center").val(item.statistiche.gol).appendTo($("<td>").appendTo(_tr));
+                    $("<input>").prop("disabled", true).prop("type", "number").prop("min",0).css("width", "80px").css("text-align", "center").val(item.statistiche.assist).appendTo($("<td>").appendTo(_tr));
+                    $("<input>").prop("disabled", true).prop("type", "number").prop("min",0).css("width", "120px").css("text-align", "center").val(item.statistiche.ammonizioni).appendTo($("<td>").appendTo(_tr));
+                    $("<input>").prop("disabled", true).prop("type", "number").prop("min",0).css("width", "120px").css("text-align", "center").val(item.statistiche.espulsioni).appendTo($("<td>").appendTo(_tr));
+                } else {
+                    $("<td>").text(item.nome).appendTo(_tr);
+                    $("<td>").text(item.cognome).appendTo(_tr);
+                    $("<td>").text(item.statistiche.partite_giocate).appendTo(_tr);
+                    $("<td>").text(item.statistiche.gol).appendTo(_tr);
+                    $("<td>").text(item.statistiche.assist).appendTo(_tr);
+                    $("<td>").text(item.statistiche.ammonizioni).appendTo(_tr);
+                    $("<td>").text(item.statistiche.espulsioni).appendTo(_tr);
+                }
+
                 if (item.statistiche.gol > maxGoals) {
                     maxGoals = item.statistiche.gol;
                     topGoalscorer = item.nome + " " + item.cognome;
@@ -1374,7 +1443,7 @@ function clickEvent(id, nome, tipo, descrizione = "", titoloData = "") {
     gestionePresenze(id, nome, newType, newDate, inizio, fine, luogo, città)
 }
 
-function gestionePresenze(id, nome, tipo, data, inizio, fine, luogo, città){
+function gestionePresenze(id, nome, tipo, data, inizio, fine, luogo, città, isPresent = true) {
     let dataCorrente = new Date().toLocaleDateString();
     let condition = true
     if (data < dataCorrente) {
@@ -1421,7 +1490,7 @@ function gestionePresenze(id, nome, tipo, data, inizio, fine, luogo, città){
                             reverseButtons: true
                         }).then((result) => {
                             if (result.isConfirmed) {
-                                let rq = inviaRichiesta('PATCH', '/api/confermaPresenza', { id, utenteCorrente });
+                                let rq = inviaRichiesta('PATCH', '/api/confermaPresenza', { id, utenteCorrente, isPresent });
                                 rq.then((response) => {
                                     console.log(response);
                                     if (response.data == "Presenza aggiunta correttamente") {
@@ -1492,19 +1561,55 @@ function gestionePresenze(id, nome, tipo, data, inizio, fine, luogo, città){
                                         }
                                     }).then((result) => {
                                         if (result.isConfirmed) {
-                                            Swal.fire(
-                                                'Assenza segnata!',
-                                                'Motivo: ' + result.value,
-                                                'success'
-                                            );
+                                            let rq = inviaRichiesta('PATCH', '/api/confermaPresenza', { id, utenteCorrente, isPresent: false, motivo: result.value });
+                                            rq.then((response) => {
+                                                console.log(response);
+                                                if (response.data == "Assenza aggiunta correttamente") {
+                                                    Swal.fire({
+                                                        title: "Assenza confermata!",
+                                                        icon: "success",
+                                                        showConfirmButton: false,
+                                                        timer: 1500
+                                                    });
+                                                } else
+                                                    if (response.data == "L'utente ha già confermato l'assenza") {
+                                                        Swal.fire({
+                                                            title: "Assenza già registrata!",
+                                                            icon: "info",
+                                                            showConfirmButton: false,
+                                                            timer: 1500
+                                                        });
+                                                    }
+                                            });
+                                            rq.catch((error) => {
+                                                console.log(error);
+                                            });
                                         }
                                     });
                                 } else {
-                                    Swal.fire(
-                                        'Assenza segnata!',
-                                        'Motivo: ' + result.value.motivo,
-                                        'success'
-                                    );
+                                    let rq = inviaRichiesta('PATCH', '/api/confermaPresenza', { id, utenteCorrente, isPresent: false, motivo: result.value.motivo });
+                                    rq.then((response) => {
+                                        console.log(response);
+                                        if (response.data == "Assenza aggiunta correttamente") {
+                                            Swal.fire({
+                                                title: "Assenza confermata!",
+                                                icon: "success",
+                                                showConfirmButton: false,
+                                                timer: 1500
+                                            });
+                                        } else
+                                            if (response.data == "L'utente ha già confermato l'assenza") {
+                                                Swal.fire({
+                                                    title: "Assenza già registrata!",
+                                                    icon: "info",
+                                                    showConfirmButton: false,
+                                                    timer: 1500
+                                                });
+                                            }
+                                    });
+                                    rq.catch((error) => {
+                                        console.log(error);
+                                    });
                                 }
                             }
                         });

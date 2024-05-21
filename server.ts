@@ -337,6 +337,52 @@ app.get("/api/getGiocatori", async (req, res, next) => {
     })
 });
 
+app.patch("/api/updateStatistiche", async (req, res, next) => {
+    console.log(req.body.statistiche.length)
+    let noProblem = true;
+    for (let i = 0; i < req.body.statistiche.length; i++) {
+        let nome = req.body.statistiche[i].nome;
+        let cognome = req.body.statistiche[i].cognome;
+        console.log(nome + " " + cognome)
+        let partite_giocate = req.body.statistiche[i].partite_giocate;
+        let goal = req.body.statistiche[i].gol;
+        let assist = req.body.statistiche[i].assist;
+        let ammonizioni = req.body.statistiche[i].ammonizioni;
+        let espulsioni = req.body.statistiche[i].espulsioni;
+        const client = new MongoClient(connectionString);
+        await client.connect();
+        let db = client.db(DBNAME).collection('users');
+        let update = {
+            $set: {
+                "statistiche": {
+                    "partite_giocate": partite_giocate,
+                    "gol": goal,
+                    "assist": assist,
+                    "ammonizioni": ammonizioni,
+                    "espulsioni": espulsioni
+                }
+            }
+        };
+
+        let updateRequest = db.updateOne({ "nome": nome, "cognome": cognome }, update);
+        updateRequest.then((data) => {
+            if (data.matchedCount > 0) {
+                noProblem = true;
+            } else {
+                noProblem = false;
+                res.status(404).send("Giocatore non trovato");
+            }
+        }).catch((err) => {
+            res.status(500).send("Errore esecuzione query: " + err);
+        }).finally(() => {
+            client.close();
+        });
+    }
+    if (noProblem) {
+        res.status(200).send("Statistiche aggiornate correttamente");
+    }
+});
+
 app.get("/api/getEventi", async (req, res, next) => {
     let team = req["query"]["utenteCorrente"]["squadra"]
     const client = new MongoClient(connectionString)
@@ -467,32 +513,75 @@ app.post("/api/newEvento", async (req, res, next) => {
 app.patch("/api/confermaPresenza", async (req, res, next) => {
     let userId = new ObjectId(req.body.utenteCorrente._id);
     let id = new ObjectId(req.body.id);
+    let isPresent = req.body.isPresent;
+    let motivo = req.body.motivo;
     const client = new MongoClient(connectionString);
     await client.connect();
     let db = client.db(DBNAME).collection('events');
     let findRequest = db.findOne({ "_id": id, "presenze.userId": userId });
+    console.log(isPresent)
 
     findRequest.then((evento) => {
         if (evento) {
-            res.status(200).send("L'utente ha già confermato la presenza");
+            let presenzaCorrente = evento.presenze.find((presenza) => presenza.userId.equals(userId)).presenza;
+            console.log(evento.presenze.find((presenza) => presenza.userId.equals(userId)).presenza)
+            if (presenzaCorrente == isPresent) {
+                if (isPresent)
+                    res.status(200).send("L'utente ha già confermato la presenza");
+                else
+                    res.status(200).send("L'utente ha già confermato l'assenza");
+            } else {
+                let update = {
+                    $set: {
+                        "presenze":
+                            { "presenza": isPresent, "descrizione": isPresent ? null : motivo }
+                    }
+                };
+
+                let updateRequest = db.updateOne({ "presenze": { $elemMatch: { userId: userId } } }, update); //guardo questo che non va
+                updateRequest.then((data) => {
+                    if (data.matchedCount > 0) {
+                        if (isPresent)
+                            res.status(200).send("Presenza aggiunta correttamente");
+                        else
+                            res.status(200).send("Assenza aggiunta correttamente");
+                    } else {
+                        res.status(404).send("Evento non trovato");
+                    }
+                }).catch((err) => {
+                    res.status(500).send("Errore esecuzione query: " + err);
+                }).finally(() => {
+                    client.close();
+                });
+            }
         } else {
             let update = {
-                $addToSet: { "presenze": { "userId": userId, "presenza": true, "descrizione": null } }
+                $addToSet: {
+                    "presenze":
+                        { "userId": userId, "presenza": isPresent, "descrizione": isPresent ? null : motivo }
+                }
             };
 
             let updateRequest = db.updateOne({ "_id": id }, update);
             updateRequest.then((data) => {
                 if (data.matchedCount > 0) {
-                    res.status(200).send("Presenza aggiunta correttamente");
+                    if (isPresent)
+                        res.status(200).send("Presenza aggiunta correttamente");
+                    else
+                        res.status(200).send("Assenza aggiunta correttamente");
                 } else {
                     res.status(404).send("Evento non trovato");
                 }
             }).catch((err) => {
                 res.status(500).send("Errore esecuzione query: " + err);
+            }).finally(() => {
+                client.close();
             });
         }
     }).catch((err) => {
         res.status(500).send("Errore esecuzione query: " + err);
+    }).finally(() => {
+        client.close();
     });
 });
 
