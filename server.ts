@@ -511,8 +511,8 @@ app.post("/api/newEvento", async (req, res, next) => {
 });
 
 app.patch("/api/confermaPresenza", async (req, res, next) => {
-    let userId = new ObjectId(req.body.utenteCorrente._id);
-    let id = new ObjectId(req.body.id);
+    let userId = new ObjectId(req.body.utenteCorrente._id as string);
+    let id = new ObjectId(req.body.id as string);
     let isPresent = req.body.isPresent;
     let motivo = req.body.motivo;
     const client = new MongoClient(connectionString);
@@ -533,12 +533,15 @@ app.patch("/api/confermaPresenza", async (req, res, next) => {
             } else {
                 let update = {
                     $set: {
-                        "presenze":
-                            { "presenza": isPresent, "descrizione": isPresent ? null : motivo }
+                        "presenze.$[elem].presenza": isPresent,
+                        "presenze.$[elem].descrizione": isPresent ? null : motivo
                     }
                 };
 
-                let updateRequest = db.updateOne({ "presenze": { $elemMatch: { userId: userId } } }, update); //guardo questo che non va
+                let arrayFilters = [{ "elem.userId": userId }];
+
+                let updateRequest = db.updateOne({ "_id": id }, update, { arrayFilters: arrayFilters });
+
                 updateRequest.then((data) => {
                     if (data.matchedCount > 0) {
                         if (isPresent)
@@ -556,9 +559,9 @@ app.patch("/api/confermaPresenza", async (req, res, next) => {
             }
         } else {
             let update = {
-                $addToSet: {
+                "$addToSet": {
                     "presenze":
-                        { "userId": userId, "presenza": isPresent, "descrizione": isPresent ? null : motivo }
+                        { "userId": userId, "presenza": isPresent, "descrizione": isPresent ? "" : motivo }
                 }
             };
 
@@ -573,16 +576,14 @@ app.patch("/api/confermaPresenza", async (req, res, next) => {
                     res.status(404).send("Evento non trovato");
                 }
             }).catch((err) => {
-                res.status(500).send("Errore esecuzione query: " + err);
+                res.status(500).send("Errore esecuzione query: AAA " + err);
             }).finally(() => {
                 client.close();
             });
         }
     }).catch((err) => {
         res.status(500).send("Errore esecuzione query: " + err);
-    }).finally(() => {
-        client.close();
-    });
+    })
 });
 
 app.post("/api/", async (req, res, next) => { });

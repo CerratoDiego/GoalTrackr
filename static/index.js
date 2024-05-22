@@ -583,10 +583,11 @@ $(document).ready(async function () {
                     $("<td>").text(item.luogo + ", " + item.città).appendTo(_tr);
                     $("<td>").text(item.inizio).appendTo(_tr);
                     $("<td>").text(item.fine).appendTo(_tr);
-                    $("<span>").appendTo($("<td>").addClass("statoPresenzaView")
-                        .addClass("tooltip-container")
-                        .appendTo(_tr)
-                        .text("Non definito")).text("Motivi di salute").addClass("tooltip");
+                    let _tdStatoPresenza = $("<td>").addClass("statoPresenzaView")
+                    .addClass("tooltip-container")
+                    .appendTo(_tr)
+                    .text("Non definito");
+                    $("<span>").appendTo().text("Motivi di salute").addClass("tooltip");
                     let _td = $("<td>").appendTo(_tr);
                     if (utenteCorrente.categoria === "giocatore") {
                         $("<button>").prop("type", "button")
@@ -603,6 +604,8 @@ $(document).ready(async function () {
                             });
                     }
                     else {
+                        $("#tdStatoPresenza").hide();
+                        _tdStatoPresenza.hide();
                         $("<button>").prop("type", "button").addClass("btn").addClass("btn-primary").appendTo(_td).text("VISUALIZZA PRESENZE");
                     }
                 }
@@ -1538,8 +1541,8 @@ function gestionePresenze(id, nome, tipo, data, inizio, fine, luogo, città, isP
                                 '<span style="font-weight: bold;">Motivo dell\'assenza:</span>' +
                                 '<select id="motivoAssenza" class="form-control" style="margin-top: 10px;">' +
                                 '<option value="">Seleziona un motivo</option>' +
-                                '<option value="Malattia">Motivi di salute</option>' +
-                                '<option value="Malattia">Visita medica</option>' +
+                                '<option value="Motivi di salute">Motivi di salute</option>' +
+                                '<option value="Visita medica">Visita medica</option>' +
                                 '<option value="Impegni personali">Impegni personali</option>' +
                                 '<option value="Altro">Altro</option>' +
                                 '</select>',
