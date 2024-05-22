@@ -10,7 +10,7 @@ $(document).ready(async function () {
     let dataCorrente = new Date();
     let dataSelezionata = dataCorrente;
     let mail = localStorage.getItem('mail') || "";
-    utenteCorrente = JSON.parse(localStorage.getItem('utenteCorrente')) || "";
+    utenteCorrente = "";
 
     // Puntatori HTML
     let _wrapper = $("#wrapper");
@@ -36,16 +36,21 @@ $(document).ready(async function () {
 
     if (window.location.pathname.includes("index.html")) {
         await getDatiPersonali();
+        utenteCorrente = JSON.parse(localStorage.getItem('utenteCorrente'));
         await getGiocatori();
         await getEventi();
         await getStatistiche();
-        $(".accountName").text(utenteCorrente.nome + " " + utenteCorrente.cognome);
+        setTimeout(() => {
+            $(".accountName").text(utenteCorrente.nome + " " + utenteCorrente.cognome);
+        }, 1000);
     }
     if (window.location.pathname.includes("calendario.html")) {
+        utenteCorrente = JSON.parse(localStorage.getItem('utenteCorrente'))
         await getEventi();
         $(".accountName").text(utenteCorrente.nome + " " + utenteCorrente.cognome);
     }
     if (window.location.pathname.includes("giocatori.html")) {
+        utenteCorrente = JSON.parse(localStorage.getItem('utenteCorrente'))
         await getGiocatori();
         $(".accountName").text(utenteCorrente.nome + " " + utenteCorrente.cognome);
         if (utenteCorrente.categoria === "allenatore") {
@@ -53,6 +58,7 @@ $(document).ready(async function () {
         }
     }
     if (window.location.pathname.includes("statistiche.html")) {
+        utenteCorrente = JSON.parse(localStorage.getItem('utenteCorrente'))
         await getStatistiche();
         $(".accountName").text(utenteCorrente.nome + " " + utenteCorrente.cognome);
         if (utenteCorrente.categoria === "allenatore") {
@@ -60,6 +66,7 @@ $(document).ready(async function () {
         }
     }
     if (window.location.pathname.includes("account.html")) {
+        utenteCorrente = JSON.parse(localStorage.getItem('utenteCorrente'))
         await getDatiPersonali();
         $(".accountName").text(utenteCorrente.nome + " " + utenteCorrente.cognome);
     }
@@ -164,10 +171,14 @@ $(document).ready(async function () {
 
     $("#btnUpdateStats").click(function () {
         $("input").prop("disabled", false);
+        $("tr").each(function () {
+            $(this).find("input[type='text']").eq(0).prop("disabled", true);
+            $(this).find("input[type='text']").eq(1).prop("disabled", true);
+        });
         $("#btnUpdateStats").hide();
         $("#btnAnnullaStats").show();
         $("#btnSalvaStats").show();
-    })
+    });
 
     $("#btnAnnullaStats").click(function () {
         $("input").prop("disabled", true);
@@ -179,6 +190,7 @@ $(document).ready(async function () {
     })
 
     $("#btnSalvaStats").click(function () {
+        $("input").prop("disabled", true);
         $("input").prop("disabled", true);
         $("#btnUpdateStats").show();
         $("#btnAnnullaStats").hide();
@@ -205,7 +217,7 @@ $(document).ready(async function () {
             statistiche.push(_stat);
         });
         console.log(statistiche)
-        let rq = inviaRichiesta("PATCH", "/api/updateStatistiche", {statistiche});
+        let rq = inviaRichiesta("PATCH", "/api/updateStatistiche", { statistiche });
         rq.then((response) => {
             console.log(response);
             Swal.fire({
@@ -1102,11 +1114,11 @@ $(document).ready(async function () {
                 if (utenteCorrente.categoria === "allenatore") {
                     $("<input>").prop("disabled", true).prop("type", "text").css("width", "120px").css("text-align", "center").val(item.nome).appendTo($("<td>").appendTo(_tr));
                     $("<input>").prop("disabled", true).prop("type", "text").css("width", "120px").css("text-align", "center").val(item.cognome).appendTo($("<td>").appendTo(_tr));
-                    $("<input>").prop("disabled", true).prop("type", "number").prop("min",0).css("width", "120px").css("text-align", "center").val(item.statistiche.partite_giocate).appendTo($("<td>").appendTo(_tr));
-                    $("<input>").prop("disabled", true).prop("type", "number").prop("min",0).css("width", "80px").css("text-align", "center").val(item.statistiche.gol).appendTo($("<td>").appendTo(_tr));
-                    $("<input>").prop("disabled", true).prop("type", "number").prop("min",0).css("width", "80px").css("text-align", "center").val(item.statistiche.assist).appendTo($("<td>").appendTo(_tr));
-                    $("<input>").prop("disabled", true).prop("type", "number").prop("min",0).css("width", "120px").css("text-align", "center").val(item.statistiche.ammonizioni).appendTo($("<td>").appendTo(_tr));
-                    $("<input>").prop("disabled", true).prop("type", "number").prop("min",0).css("width", "120px").css("text-align", "center").val(item.statistiche.espulsioni).appendTo($("<td>").appendTo(_tr));
+                    $("<input>").prop("disabled", true).prop("type", "number").prop("min", 0).css("width", "120px").css("text-align", "center").val(item.statistiche.partite_giocate).appendTo($("<td>").appendTo(_tr));
+                    $("<input>").prop("disabled", true).prop("type", "number").prop("min", 0).css("width", "80px").css("text-align", "center").val(item.statistiche.gol).appendTo($("<td>").appendTo(_tr));
+                    $("<input>").prop("disabled", true).prop("type", "number").prop("min", 0).css("width", "80px").css("text-align", "center").val(item.statistiche.assist).appendTo($("<td>").appendTo(_tr));
+                    $("<input>").prop("disabled", true).prop("type", "number").prop("min", 0).css("width", "120px").css("text-align", "center").val(item.statistiche.ammonizioni).appendTo($("<td>").appendTo(_tr));
+                    $("<input>").prop("disabled", true).prop("type", "number").prop("min", 0).css("width", "120px").css("text-align", "center").val(item.statistiche.espulsioni).appendTo($("<td>").appendTo(_tr));
                 } else {
                     $("<td>").text(item.nome).appendTo(_tr);
                     $("<td>").text(item.cognome).appendTo(_tr);
@@ -1117,12 +1129,12 @@ $(document).ready(async function () {
                     $("<td>").text(item.statistiche.espulsioni).appendTo(_tr);
                 }
 
-                if (item.statistiche.gol > maxGoals) {
+                if (parseInt(item.statistiche.gol) > parseInt(maxGoals)) {
                     maxGoals = item.statistiche.gol;
                     topGoalscorer = item.nome + " " + item.cognome;
                     topGoalscorerImg = item.immagine;
                 }
-                if (item.statistiche.assist > maxAssists) {
+                if (parseInt(item.statistiche.assist) > parseInt(maxAssists)) {
                     maxAssists = item.statistiche.assist;
                     topAssistman = item.nome + " " + item.cognome;
                     topAssistmanImg = item.immagine;
@@ -1214,13 +1226,15 @@ $(document).ready(async function () {
             controllaLogin();
     });
 
-    let rq = inviaRichiesta("PATCH", "/api/encryptPassword");
-    rq.then(function (data) {
-        console.log(data);
-    });
-    rq.catch(function (err) {
-        console.log(err);
-    });
+    if (window.location.pathname.includes("login.html")) {
+        let rq = inviaRichiesta("PATCH", "/api/encryptPassword");
+        rq.then(function (data) {
+            console.log(data);
+        });
+        rq.catch(function (err) {
+            console.log(err);
+        });
+    }
 
     function controllaLogin() {
         _username.removeClass("is-invalid");
