@@ -584,9 +584,9 @@ $(document).ready(async function () {
                     $("<td>").text(item.inizio).appendTo(_tr);
                     $("<td>").text(item.fine).appendTo(_tr);
                     let _tdStatoPresenza = $("<td>").addClass("statoPresenzaView")
-                    .addClass("tooltip-container")
-                    .appendTo(_tr)
-                    .text("Non definito");
+                        .addClass("tooltip-container")
+                        .appendTo(_tr)
+                        .text("Non definito");
                     $("<span>").appendTo().text("Motivi di salute").addClass("tooltip");
                     let _td = $("<td>").appendTo(_tr);
                     if (utenteCorrente.categoria === "giocatore") {
@@ -604,9 +604,25 @@ $(document).ready(async function () {
                             });
                     }
                     else {
-                        $("#tdStatoPresenza").hide();
+                        $("#thStatoPresenza").hide();
                         _tdStatoPresenza.hide();
-                        $("<button>").prop("type", "button").addClass("btn").addClass("btn-primary").appendTo(_td).text("VISUALIZZA PRESENZE");
+                        $("<button>").prop("type", "button").addClass("btn").addClass("btn-primary").appendTo(_td).text("VISUALIZZA PRESENZE").click(function () {
+                            let contPres = 0, contAss = 0;
+                            for (let presenza of item.presenze) {
+                                if (presenza.presenza)
+                                    contPres++;
+                                else
+                                    contAss++;
+                            }
+                            Swal.fire({
+                                title: "Presenze",
+                                html: `<p>Numero giocatori presenti: ${contPres}</p>
+                                <br>
+                                <p>Numero giocatori assenti: ${contAss}</p>`,
+                                icon: "info",
+                                confirmButtonText: "Chiudi"
+                            });
+                        });
                     }
                 }
                 if (eventDateTime.getTime() > yesterday.getTime() && eventDateTime.getTime() < nearestDate.getTime()) {
