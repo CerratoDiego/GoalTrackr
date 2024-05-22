@@ -203,13 +203,14 @@
             <div id="content">
                 <div class="container-fluid">
                     <h1 class="mb-4 text-gray-800">Il mio account</h1>
-                    <div class="row">
-                        <div class="col-lg-12">
-                            <div class="card shadow mb-4">
-                                <div class="card-header py-3">
-                                    <h6 class="m-0 font-weight-bold text-primary">Informazioni personali</h6>
-                                </div>
-                                <div class="card-body">
+
+                    <div class="card shadow mb-4">
+                        <div class="card-header py-3">
+                            <h6 class="m-0 font-weight-bold text-primary">Informazioni personali</h6>
+                        </div>
+                        <div class="card-body">
+                            <div class="row">
+                                <div class="col-lg-7" style="border-right: 1px solid #107ed9;">
                                     <div class="form-group">
                                         <label for="name">Nome</label>
                                         <input type="text" class="form-control accountFields" id="name" disabled>
@@ -239,8 +240,16 @@
                                         <input type="text" class="form-control accountFields" id="team" disabled>
                                     </div>
                                     <button id="btnModificaDati" type="button" class="btn btn-primary">Modifica</button>
-                                    <button id="btnAnnullaModifiche" type="button" class="btn btn-danger">Annulla</button>
+                                    <button id="btnAnnullaModifiche" type="button"
+                                        class="btn btn-danger">Annulla</button>
                                     <button id="btnSalvaModifiche" type="button" class="btn btn-success">Salva</button>
+                                </div>
+                                <div class="col-lg-5">
+                                    <img id="profileImage" src="img/defaultUser.png" alt="Profile Image"
+                                        style="width: 70%; height: auto; margin-left: 15%; border-radius: 50%;">
+                                        <br><br>
+                                    <button id="btnModificaImmagine" type="button" class="btn btn-primary"
+                                    style="margin-left: 43%;">Carica</button>
                                 </div>
                             </div>
                         </div>
