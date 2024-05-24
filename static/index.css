@@ -109,7 +109,8 @@ th {
 }
 
 #dashBoardTr,
-#dashBoardTr>td {
+#dashBoardTr>td,
+#mobileDashboardTd {
     cursor: pointer;
     border: 1px solid white;
     background-color: #121212;
@@ -117,7 +118,8 @@ th {
 }
 
 #dashBoardTr:hover,
-#dashBoardTr:hover>td {
+#dashBoardTr:hover>td,
+#mobileDashboardTd:hover {
     background-color: #107ed9;
     color: white;
     border: 1px solid white !important;
@@ -652,7 +654,6 @@ button:active {
     position: relative;
     transition: all 0.3s;
     background-color: rgb(255, 255, 255);
-    cursor: pointer;
     border: 1px solid rgb(211, 211, 211);
 }
 
@@ -683,7 +684,7 @@ button:active {
     opacity: 0;
     pointer-events: none;
     transition: all 0.3s;
-    background-color: #107ed9;
+    background-color: red;
     border: 1px solid black;
     border-radius: 12px;
     color: white;
@@ -697,7 +698,9 @@ button:active {
     bottom: -0.2em;
     left: 50%;
     transform: translate(-50%) rotate(45deg);
-    background-color: #107ed9;
+    background-color: red;
+    border-bottom: 1px solid black;
+    border-right: 1px solid black;
 }
 
 .tooltip-container:hover .tooltip {
@@ -705,4 +708,143 @@ button:active {
     opacity: 1;
     visibility: visible;
     pointer-events: auto;
+}
+
+#mobileDashboardTd {
+    display: none;
+    color: #107ed9;
+    font-weight: bold;
+}
+
+
+
+
+
+
+
+@media (max-width: 1270px) {
+    h3 {
+        font-size: 1.5rem;
+        /* Cambia la dimensione del font di h3 */
+    }
+
+    h4 {
+        font-size: 1.2rem;
+        /* Cambia la dimensione del font di h4 */
+    }
+
+    #topGoalscorer,
+    #topAssistman {
+        width: 100px;
+        /* Imposta la larghezza a 100px */
+    }
+
+    #topGoalscorerImg,
+    #topAssistmanImg {
+        width: 100px;
+        /* Imposta la larghezza delle immagini a 100px */
+        height: auto;
+        /* Mantiene il rapporto d'aspetto delle immagini */
+    }
+
+    #dashBoardTr {
+        display: none;
+        /* Nasconde la riga con ID #dashBoardTr */
+    }
+
+    #mobileDashboardTd {
+        display: table-cell;
+        /* Mostra la cella con ID #mobileDashboardTd */
+    }
+}
+
+@media (max-width: 1000px) {
+    .navbar-nav.ml-auto {
+        padding-left: 87% !important;
+    }
+
+    .blob {
+        display: none;
+        /* Nasconde l'elemento con la classe .blob */
+    }
+
+    .accountNameLi {
+        background-color: #107ed9 !important;
+        color: white !important;
+    }
+
+    .accountNameLi i {
+        color: white !important;
+    }
+
+    .dashboardCard:nth-of-type(3) {
+        height: 2000px !important;
+    }
+
+    .border-right-div {
+        padding-bottom: 5% !important;
+        border-right: none !important;
+        border-bottom: 1px solid #107ed9;
+    }
+}
+
+@media (max-width: 768px) {
+    #accordionSidebar {
+        display: none;
+        /* Nasconde l'elemento con ID #accordionSidebar */
+    }
+
+    #wrapper {
+        margin-left: 0;
+        height: 150%;
+    }
+
+    h1 {
+        font-size: 3rem !important;
+        /* Cambia la dimensione del font di h1 */
+    }
+
+    .navbar-nav.ml-auto {
+        padding-left: 77% !important;
+    }
+}
+
+@media (max-width: 550px) {
+    .dashboardCard {
+        width: 95%;
+    }
+
+    .navbar-nav.ml-auto {
+        padding-left: 70% !important;
+    }
+}
+
+@media (max-width: 450px) {
+    .navbar-nav.ml-auto {
+        padding-left: 65% !important;
+    }
+
+    #btnModificaImmagine {
+        margin-left: 39% !important;
+    }
+}
+
+@media (max-width: 360px) {
+    h1 {
+        font-size: 2rem !important;
+        /* Cambia la dimensione del font di h1 */
+    }
+
+    #btnGiocatoriDashboard {
+        width: 60%;
+    }
+
+    .navbar-nav.ml-auto {
+        padding-left: 60% !important;
+        /* Modifica il padding-left a 90% */
+    }
+
+    #btnModificaImmagine {
+        margin-left: 33% !important;
+    }
 }
