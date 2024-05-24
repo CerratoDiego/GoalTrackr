@@ -500,7 +500,7 @@ app.post("/api/newEvento", async (req, res, next) => {
     let db = client.db(DBNAME).collection("events")
     let request = db.insertOne({
         "squadra": squadra, "nome": nome, "tipo": tipo,
-        "data": data, "inizio": inizio, "fine": fine, "luogo": luogo, "città": città, "creatore": creatore
+        "data": data, "inizio": inizio, "fine": fine, "luogo": luogo, "città": città, "creatore": creatore, "presenze": []
     })
     request.then((data) => {
         res.status(200).send("Evento aggiunto correttamente")
@@ -515,6 +515,8 @@ app.patch("/api/confermaPresenza", async (req, res, next) => {
     let id = new ObjectId(req.body.id as string);
     let isPresent = req.body.isPresent;
     let motivo = req.body.motivo;
+    let nome = req.body.utenteCorrente.nome;
+    let cognome = req.body.utenteCorrente.cognome;
     const client = new MongoClient(connectionString);
     await client.connect();
     let db = client.db(DBNAME).collection('events');
@@ -534,7 +536,9 @@ app.patch("/api/confermaPresenza", async (req, res, next) => {
                 let update = {
                     $set: {
                         "presenze.$[elem].presenza": isPresent,
-                        "presenze.$[elem].descrizione": isPresent ? null : motivo
+                        "presenze.$[elem].descrizione": isPresent ? null : motivo,
+                        "presenze.$[elem].nome": nome,
+                        "presenze.$[elem].cognome": cognome
                     }
                 };
 
@@ -561,7 +565,10 @@ app.patch("/api/confermaPresenza", async (req, res, next) => {
             let update = {
                 "$addToSet": {
                     "presenze":
-                        { "userId": userId, "presenza": isPresent, "descrizione": isPresent ? "" : motivo }
+                    {
+                        "userId": userId, "presenza": isPresent, "descrizione": isPresent ? "" : motivo,
+                        "nome": nome, "cognome": cognome
+                    }
                 }
             };
 
@@ -583,6 +590,23 @@ app.patch("/api/confermaPresenza", async (req, res, next) => {
         }
     }).catch((err) => {
         res.status(500).send("Errore esecuzione query: " + err);
+    })
+});
+
+app.get("/api/getPresenze", async (req, res, next) => {
+    let id = new ObjectId(req["query"]["id"])
+    const client = new MongoClient(connectionString)
+    await client.connect()
+    let db = client.db(DBNAME).collection("events")
+    let request = db.findOne({ "_id": id })
+    request.then((data) => {
+        res.status(200).send(data)
+    })
+    request.catch((err) => {
+        res.status(500).send("Errore esecuzione query: " + err)
+    })
+    request.finally(() => {
+        client.close()
     })
 });
 
