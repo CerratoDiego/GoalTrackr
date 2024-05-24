@@ -525,6 +525,14 @@ $(document).ready(async function () {
             //voglio mettergli la data 3000-01-01 per farlo comparire sempre
             let nearestDate = new Date("3000-01-01");
             let nearestEvent;
+            if (eventi.length == 0 && window.location.pathname.includes("calendario.html")) {
+                Swal.fire({
+                    title: "Nessun evento in programma",
+                    icon: "info",
+                    showConfirmButton: false,
+                    timer: 2000
+                });
+            }
             for (let item of eventi) {
                 let newDate;
                 let month = item.data.split("-")[1]
@@ -592,7 +600,17 @@ $(document).ready(async function () {
                         .addClass("tooltip-container")
                         .appendTo(_tr)
                         .text("Non definito");
-                    $("<span>").appendTo().text("Motivi di salute").addClass("tooltip");
+                    for (let pres of item.presenze) {
+                        console.log(pres);
+                        if (pres.userId == utenteCorrente._id) {
+                            if (pres.presenza) {
+                                _tdStatoPresenza.text("Presente").css('background-color', '#28a745').css('color', 'white');
+                            } else if (!pres.presenza) {
+                                _tdStatoPresenza.text("Assente").css('background-color', '#dc3545').css('color', 'white');
+                                $("<span>").appendTo(_tdStatoPresenza).text(pres.descrizione).addClass("tooltip");
+                            }
+                        }
+                    }
                     let _td = $("<td>").appendTo(_tr);
                     if (utenteCorrente.categoria === "giocatore") {
                         $("<button>").prop("type", "button")
@@ -772,18 +790,33 @@ $(document).ready(async function () {
                         break;
                 }
             });
-            $(".dashBoardTable").eq(0).text(nearestEvent.data);
-            $(".dashBoardTable").eq(1).text(nearestEvent.nome);
-            $(".dashBoardTable").eq(2).text(nearestEvent.città);
-            $("#dashBoardTr").click(function () {
-                if (utenteCorrente.categoria === "giocatore")
-                    gestionePresenze(nearestEvent._id, nearestEvent.nome, nearestEvent.tipo, nearestEvent.data,
-                        nearestEvent.inizio, nearestEvent.fine, nearestEvent.luogo, nearestEvent.città);
-                else
-                    gestionePresenzeAllenatore(nearestEvent._id, nearestEvent.nome, nearestEvent.tipo, nearestEvent.data,
-                        nearestEvent.inizio, nearestEvent.fine, nearestEvent.luogo, nearestEvent.città, nearestEvent.presenze);
+
+            if (nearestEvent != undefined) {
+                $(".dashBoardTable").eq(0).text(nearestEvent.data);
+                $(".dashBoardTable").eq(1).text(nearestEvent.nome);
+                $(".dashBoardTable").eq(2).text(nearestEvent.città);
+                $("#dashBoardTr").click(function () {
+                    if (utenteCorrente.categoria === "giocatore")
+                        gestionePresenze(nearestEvent._id, nearestEvent.nome, nearestEvent.tipo, nearestEvent.data,
+                            nearestEvent.inizio, nearestEvent.fine, nearestEvent.luogo, nearestEvent.città);
+                    else
+                        gestionePresenzeAllenatore(nearestEvent._id, nearestEvent.nome, nearestEvent.tipo, nearestEvent.data,
+                            nearestEvent.inizio, nearestEvent.fine, nearestEvent.luogo, nearestEvent.città, nearestEvent.presenze);
+                });
+                $("#mobileDashboardTd").text(nearestEvent.nome).click(function () {
+                    if (utenteCorrente.categoria === "giocatore")
+                        gestionePresenze(nearestEvent._id, nearestEvent.nome, nearestEvent.tipo, nearestEvent.data,
+                            nearestEvent.inizio, nearestEvent.fine, nearestEvent.luogo, nearestEvent.città);
+                    else
+                        gestionePresenzeAllenatore(nearestEvent._id, nearestEvent.nome, nearestEvent.tipo, nearestEvent.data,
+                            nearestEvent.inizio, nearestEvent.fine, nearestEvent.luogo, nearestEvent.città, nearestEvent.presenze);
+                });
+            } else {
+                $(".dashBoardTable").eq(0).text("Nessun evento in programma");
+                $(".dashBoardTable").eq(1).text("Nessun evento in programma");
+                $(".dashBoardTable").eq(2).text("Nessun evento in programma");
+                $("#mobileDashboardTd").text("Nessun evento in programma");
             }
-            );
 
             eventiSettimana = filterEventsForSelectedWeek(eventi);
             riempiVisualizzazioneDettagliata(eventiSettimana);
@@ -1199,12 +1232,28 @@ $(document).ready(async function () {
                     topAssistmanImg = item.immagine;
                 }
             }
-            $("#topGoalscorer").text(topGoalscorer);
-            $("#topAssistman").text(topAssistman);
             $("#goalMigliorMarcatore").text(maxGoals);
             $("#assistMigliorAssistman").text(maxAssists);
-            $("#topGoalscorerImg").prop("src", topGoalscorerImg);
-            $("#topAssistmanImg").prop("src", topAssistmanImg);
+            if (maxGoals > 0) {
+                $("#topGoalscorerImg").prop("src", topGoalscorerImg).css("cursor", "pointer").click(function () {
+                    window.location.href = "statistiche.html";
+                });
+                $("#topGoalscorer").text(topGoalscorer);
+            }
+            else {
+                $("#topGoalscorerImg").prop("src", "https://res.cloudinary.com/doxdpaiqr/image/upload/v1716055693/GoalTrackr/h9y1tserq3xlqheyfhzr.png");
+                $("#topGoalscorer").text("Nessuna rete segnata");
+            }
+            if (maxAssists > 0) {
+                $("#topAssistmanImg").prop("src", topAssistmanImg).css("cursor", "pointer").click(function () {
+                    window.location.href = "statistiche.html";
+                });
+                $("#topAssistman").text(topAssistman);
+            }
+            else {
+                $("#topAssistmanImg").prop("src", "https://res.cloudinary.com/doxdpaiqr/image/upload/v1716055693/GoalTrackr/h9y1tserq3xlqheyfhzr.png");
+                $("#topAssistman").text("Nessun assist fornito");
+            }
         });
     }
 
