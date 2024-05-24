@@ -154,7 +154,6 @@ th.desc:after {
 .button-container {
     display: flex;
     justify-content: center;
-    margin-top: 50px;
 }
 
 .switch-button {
