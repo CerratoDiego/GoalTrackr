@@ -1,0 +1,293 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+    <title>GoalTrackr - Statistiche Giocatore</title>
+
+    <link rel="icon" type="image/png" href="pages/img/logo.png" />
+
+    <!-- Custom fonts for this template-->
+    <link href="pages/vendor/fontawesome-free/css/all.min.css" rel="stylesheet" type="text/css">
+    <link
+        href="https://fonts.googleapis.com/css?family=Nunito:200,200i,300,300i,400,400i,600,600i,700,700i,800,800i,900,900i"
+        rel="stylesheet">
+
+    <!-- Custom styles for this template-->
+    <link href="pages/css/sb-admin-2.min.css" rel="stylesheet">
+    <link href="index.css" rel="stylesheet">
+
+    <!-- Libraries-->
+    <script src="./jquery-3.5.1.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    <script src="./axios@1.1.2.min.js"></script>
+    <script src="./libreria.js"></script>
+    <script src="./index.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+</head>
+
+<body>
+    <div id="wrapper">
+        <!-- Sidebar -->
+        <ul class="navbar-nav bg-gradient-primary sidebar sidebar-dark accordion" id="accordionSidebar">
+
+            <!-- Sidebar - Brand -->
+            <a class="sidebar-brand d-flex align-items-center justify-content-center" href="index.html">
+                <div class="sidebar-brand-icon rotate-n-15">
+                    <i class="fas fa-futbol"></i>
+                </div>
+                <div class="sidebar-brand-text mx-3">GoalTrac<sup>k</sup>r</div>
+            </a>
+
+            <!-- Divider -->
+            <hr class="sidebar-divider d-none d-md-block">
+
+            <!-- Sidebar Toggler (Sidebar) -->
+            <div class="text-center d-none d-md-inline">
+                <button class="rounded-circle border-0" id="sidebarToggle"></button>
+            </div>
+
+            <!-- Divider -->
+            <hr class="sidebar-divider my-0">
+
+            <!-- Nav Item - Dashboard -->
+            <li class="nav-item">
+                <a id="dashboardToggler" class="nav-link" href="index.html">
+                    <i class="fas fa-fw fa-tachometer-alt"></i>
+                    <span>Dashboard</span>
+                </a>
+            </li>
+
+            <!-- Divider -->
+            <hr class="sidebar-divider">
+
+            <!-- Heading -->
+            <div class="sidebar-heading">
+                Gestione account
+            </div>
+
+            <!-- Nav Item - Login -->
+            <li class="nav-item">
+                <a class="nav-link" href="account.html">
+                    <i class="fas fa-user"></i>
+                    <span>Il mio Account</span></a>
+            </li>
+
+            <!-- Divider -->
+            <hr class="sidebar-divider">
+
+            <!-- Heading -->
+            <div class="sidebar-heading">
+                Gestione eventi
+            </div>
+
+            <!-- Nav Item - Calendario Collapse Menu -->
+            <li class="nav-item">
+                <a id="calendarToggler" class="nav-link collapsed" href="calendario.html">
+                    <i class="fas fa-calendar"></i>
+                    <span>Calendario</span>
+                </a>
+            </li>
+
+            <!-- Nav Item - Eventi Collapse Menu -->
+            <!-- <li class="nav-item">
+                <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseEventi"
+                    aria-expanded="true" aria-controls="collapseEventi">
+                    <i class="fas fa-calendar-check"></i>
+                    <span>Eventi</span>
+                </a>
+                <div id="collapseEventi" class="collapse" aria-labelledby="headingUtilities"
+                    data-parent="#accordionSidebar">
+                    <div class="bg-white py-2 collapse-inner rounded">
+                        <h6 class="collapse-header">Eventi disponibili:</h6>
+                        <a class="collapse-item" href="eventi.html">
+                            <i class="fas fa-dumbbell"></i>
+                            Allenamenti
+                        </a>
+                        <a class="collapse-item" href="eventi.html">
+                            <i class="fas fa-trophy"></i>
+                            Partite
+                        </a>
+                        <a class="collapse-item" href="eventi.html">
+                            <i class="fas fa-video"></i>
+                            Sessioni video
+                        </a>
+                    </div>
+                </div>
+            </li> -->
+
+            <!-- Divider -->
+            <hr class="sidebar-divider">
+
+            <!-- Heading -->
+            <div class="sidebar-heading">
+                Dati
+            </div>
+
+            <!-- Nav Item - Tables -->
+            <li class="nav-item">
+                <a class="nav-link" href="giocatori.html">
+                    <i class="fas fa-running"></i>
+                    <span>Giocatori</span></a>
+            </li>
+
+            <!-- Nav Item - Statistiche -->
+            <li class="nav-item active">
+                <a class="nav-link" href="statistiche.html">
+                    <i class="fas fa-chart-area"></i>
+                    <span>Statistiche</span></a>
+            </li>
+
+            <!-- <li class="nav-item">
+                <a class="nav-link" href="squadra.html">
+                    <i class="fas fa-users"></i>
+                    <span>Squadra</span></a>
+            </li> -->
+
+            <!-- Divider -->
+            <hr class="sidebar-divider">
+
+            <!-- Heading -->
+            <div class="sidebar-heading">
+                Accesso
+            </div>
+
+            <!-- Nav Item - Registrazione -->
+            <li class="nav-item">
+                <a class="nav-link" href="register.html">
+                    <i class="fas fa-user-plus"></i>
+                    <span>Registrazione</span></a>
+            </li>
+
+            <!-- Nav Item - Logout -->
+            <li class="nav-item">
+                <a class="nav-link" href="login.html">
+                    <i class="fas fa-sign-out-alt"></i>
+                    <span>Logout</span></a>
+            </li>
+
+        </ul>
+        <!-- End of Sidebar -->
+
+        <div id="mainContentWrapper" class="d-flex flex-column" style="width: 100%;">
+            <!-- Topbar -->
+            <nav class="navbar navbar-expand navbar-light bg-white topbar mb-4 static-top shadow" style="height: 80px">
+
+                <!-- Sidebar Toggle (Topbar) -->
+                <button id="sidebarToggleTop" class="btn btn-link d-md-none rounded-circle mr-3">
+                    <i class="fa fa-bars"></i>
+                </button>
+
+                <!-- Topbar Navbar -->
+                <ul class="navbar-nav ml-auto" style="padding-left: 80%; padding-top: 5px; padding-bottom: 5px;">
+
+                    <!-- Nav Item - User Information -->
+                    <li class="nav-item accountNameLi">
+                        <a class="nav-link" href="account.html" class="userDropdown">
+                            <span class="mr-2 d-none d-lg-inline accountName"></span>
+                            <i class="fas fa-user userAccount"></i>
+                        </a>
+                    </li>
+
+                </ul>
+
+            </nav>
+            <!-- End of Topbar -->
+            <div id="content">
+                <div class="container-fluid">
+                    <h1 id="statsGiocatoreH1" class="mb-4 text-gray-800">Statistiche di </h1>
+
+                    <div class="card shadow mb-4">
+                        <div class="card-header py-3">
+                            <h6 class="m-0 font-weight-bold text-primary">Informazioni personali</h6>
+                        </div>
+                        <div class="card-body">
+                            <div class="row" style="align-items: center;">
+                                <div class="col-lg-2">
+                                    <img id="imgPlayer" src="" alt="Profile Image"
+                                        style="width: 100%; height: auto; margin: auto; border-radius: 50%;">
+                                    <br><br>
+                                </div>
+                                <div class="col-lg-2">
+                                    <label for="partiteGiocate">Partite giocate:</label>
+                                    <input type="number" class="form-control" id="partiteGiocate" name="partiteGiocate"
+                                        readonly>
+                                </div>
+                                <div class="col-lg-2">
+                                    <label for="goalSegnati">Goal segnati:</label>
+                                    <input type="number" class="form-control" id="goalSegnati" name="goalSegnati"
+                                        readonly>
+                                </div>
+                                <div class="col-lg-2">
+                                    <label for="assistEffettuati">Assist effettuati:</label>
+                                    <input type="number" class="form-control" id="assistEffettuati"
+                                        name="assistEffettuati" readonly>
+                                </div>
+                                <div class="col-lg-2">
+                                    <label for="ammonizioni">Ammonizioni:</label>
+                                    <input type="number" class="form-control" id="ammonizioni" name="ammonizioni"
+                                        readonly>
+                                </div>
+                                <div class="col-lg-2">
+                                    <label for="espulsioni">Espulsioni:</label>
+                                    <input type="number" class="form-control" id="espulsioni" name="espulsioni"
+                                        readonly>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-lg-3">
+                                    <label for="presenze">Presenze:</label>
+                                    <input type="number" class="form-control" id="presenze" name="presenze" readonly>
+                                </div>
+                                <div class="col-lg-3">
+                                    <label for="presenzePartite">Presenze alle partite:</label>
+                                    <input type="number" class="form-control" id="presenzePartite"
+                                        name="presenzePartite" readonly>
+                                </div>
+                                <div class="col-lg-3">
+                                    <label for="presenzeAllenamenti">Presenze agli allenamenti:</label>
+                                    <input type="number" class="form-control" id="presenzeAllenamenti"
+                                        name="presenzeAllenamenti" readonly>
+                                </div>
+                                <div class="col-lg-3">
+                                    <label for="presenzeSessioniVideo">Presenze alle sessioni video:</label>
+                                    <input type="number" class="form-control" id="presenzeSessioniVideo"
+                                        name="presenzeSessioniVideo" readonly>
+                                </div>
+                            </div>
+                            <br>
+                            <div class="row">
+                                <div class="col-lg-3">
+                                    <label for="assenze">Assenze:</label>
+                                    <input type="number" class="form-control" id="assenze" name="assenze" readonly>
+                                </div>
+                                <div class="col-lg-3">
+                                    <label for="assenzePartite">Assenze alle partite:</label>
+                                    <input type="number" class="form-control" id="assenzePartite" name="assenzePartite"
+                                        readonly>
+                                </div>
+                                <div class="col-lg-3">
+                                    <label for="assenzeAllenamenti">Assenze agli allenamenti:</label>
+                                    <input type="number" class="form-control" id="assenzeAllenamenti"
+                                        name="assenzeAllenamenti" readonly>
+                                </div>
+                                <div class="col-lg-3">
+                                    <label for="assenzeSessioniVideo">Assenze alle sessioni video:</label>
+                                    <input type="number" class="form-control" id="assenzeSessioniVideo"
+                                        name="assenzeSessioniVideo" readonly>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>

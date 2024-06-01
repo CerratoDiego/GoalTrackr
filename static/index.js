@@ -1,7 +1,7 @@
 "use strict"
 
 let giorniSettimana = ["Lunedì", "Martedì", "Mercoledì", "Giovedì", "Venerdì", "Sabato", "Domenica"];
-let utenteCorrente
+let utenteCorrente, giocatoreSelezionato;
 
 $(document).ready(async function () {
     // Variabili globali
@@ -11,6 +11,7 @@ $(document).ready(async function () {
     let dataSelezionata = dataCorrente;
     let mail = localStorage.getItem('mail') || "";
     utenteCorrente = "";
+    giocatoreSelezionato = "";
 
     // Puntatori HTML
     let _wrapper = $("#wrapper");
@@ -426,8 +427,9 @@ $(document).ready(async function () {
                 $("<td>").text(item.data_di_nascita).appendTo(_tr);
                 $("<td>").text(item.numero).appendTo(_tr);
                 $("<td>").text(item.ruolo).appendTo(_tr);
-                $("<button>").text("VISUALIZZA STATISTICHE").addClass("stats-button").css("background-color", "#107ed9").appendTo($("<td>").appendTo(_tr)).click(function () {
-                    window.location.href = "/statistiche.html";
+                $("<button>").text("VISUALIZZA STATISTICHE").addClass("stats-button").css("background-color", "#107ed9").appendTo($("<td>").appendTo(_tr)).click(async function () {
+                    await (giocatoreSelezionato = localStorage.setItem('giocatoreSelezionato', JSON.stringify(item)));
+                    window.location.href = "/statisticheGiocatore.html";
                 });
             }
         });
@@ -437,6 +439,24 @@ $(document).ready(async function () {
         rq.finally(() => {
             console.log("Chiamata getGiocatori terminata");
         });
+    }
+
+    if (window.location.pathname.includes("statisticheGiocatore.html")) {
+        utenteCorrente = JSON.parse(localStorage.getItem('utenteCorrente'))
+        $(".accountName").text(utenteCorrente.nome + " " + utenteCorrente.cognome);
+        let giocatoreSelezionato = JSON.parse(localStorage.getItem('giocatoreSelezionato'));
+        $("#statsGiocatoreH1").text("Statistiche di " + giocatoreSelezionato.cognome + " " + giocatoreSelezionato.nome);
+        $("#imgPlayer").prop("src", giocatoreSelezionato.immagine);
+        $("#partiteGiocate").val(giocatoreSelezionato.statistiche.partite_giocate);
+        $("#goalSegnati").val(giocatoreSelezionato.statistiche.gol);
+        $("#assistEffettuati").val(giocatoreSelezionato.statistiche.assist);
+        $("#ammonizioni").val(giocatoreSelezionato.statistiche.ammonizioni);
+        $("#espulsioni").val(giocatoreSelezionato.statistiche.espulsioni);
+        let presenzeTotali = giocatoreSelezionato.presenze.partite + giocatoreSelezionato.presenze.allenamenti + giocatoreSelezionato.presenze.sessioni_video;
+        $("#presenze").val(presenzeTotali);
+        $("#presenzePartite").val(giocatoreSelezionato.presenze.partite);
+        $("#presenzeAllenamenti").val(giocatoreSelezionato.presenze.allenamenti);
+        $("#presenzeSessioniVideo").val(giocatoreSelezionato.presenze.sessioni_video);
     }
 
     // Funzione per inserire gli eventi nella tabella ------------------------------------------------------
@@ -640,6 +660,14 @@ $(document).ready(async function () {
                                                     timer: 1500
                                                 });
                                                 _tdStatoPresenza.text("Presente").css('background-color', '#28a745').css('color', 'white');
+                                                let request = inviaRichiesta('PATCH', '/api/aggiornaPresenzeGiocatore', { "tipo": item.tipo, utenteCorrente });
+                                                request.then((response) => {
+                                                    console.log(response);
+                                                    alert("Presenza aggiornata correttamente");
+                                                });
+                                                request.catch((error) => {
+                                                    console.log(error);
+                                                });
                                             } else
                                                 if (response.data == "L'utente ha già confermato la presenza") {
                                                     Swal.fire({
@@ -1580,9 +1608,14 @@ function clickEvent(id, nome, tipo, descrizione = "", titoloData = "") {
 }
 
 function gestionePresenze(id, nome, tipo, data, inizio, fine, luogo, città, isPresent = true) {
-    let dataCorrente = new Date().toLocaleDateString();
-    let condition = true
-    if (data < dataCorrente) {
+    let dataNow = new Date().toLocaleDateString('it-IT');
+    let aus = dataNow.split("/");
+    let dataCorrente = `${aus[0]}-${aus[1]}-${aus[2]}`;
+    let dateToCompare = new Date(aus[2], aus[1] - 1, aus[0]);
+    let dataParts = data.split("-");
+    let dataToCompare = new Date(dataParts[2], dataParts[1] - 1, dataParts[0]);
+    let condition = true;
+    if (dataToCompare < dateToCompare) {
         condition = false;
     }
 
@@ -1635,6 +1668,14 @@ function gestionePresenze(id, nome, tipo, data, inizio, fine, luogo, città, isP
                                             icon: "success",
                                             showConfirmButton: false,
                                             timer: 1500
+                                        });
+                                        let request = inviaRichiesta('PATCH', '/api/aggiornaPresenzeGiocatore', { tipo, utenteCorrente });
+                                        request.then((response) => {
+                                            console.log(response);
+                                            alert("Presenza aggiornata correttamente");
+                                        });
+                                        request.catch((error) => {
+                                            console.log(error);
                                         });
                                     } else
                                         if (response.data == "L'utente ha già confermato la presenza") {

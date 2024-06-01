@@ -383,6 +383,22 @@ app.patch("/api/updateStatistiche", async (req, res, next) => {
     }
 });
 
+app.get("/api/getStatisticheGiocatore", async (req, res, next) => {
+    let id = new ObjectId(req["query"]["giocatoreSelezionato"]["_id"]);
+    let squadra = req["query"]["utenteCorrente"]["squadra"];
+    const client = new MongoClient(connectionString);
+    await client.connect();
+    let db = client.db(DBNAME).collection('users');
+    let request = db.findOne({ "_id": id, "squadra": squadra });
+    request.then((data) => {
+        res.status(200).send(data);
+    }).catch((err) => {
+        res.status(500).send("Errore esecuzione query: " + err);
+    }).finally(() => {
+        client.close();
+    });
+});
+
 app.get("/api/getEventi", async (req, res, next) => {
     let team = req["query"]["utenteCorrente"]["squadra"]
     const client = new MongoClient(connectionString)
@@ -591,6 +607,42 @@ app.patch("/api/confermaPresenza", async (req, res, next) => {
     }).catch((err) => {
         res.status(500).send("Errore esecuzione query: " + err);
     })
+});
+
+app.patch("/api/aggiornaPresenzeGiocatore", async (req, res, next) => {
+    let id = new ObjectId(req["body"]["utenteCorrente"]["_id"] as string);
+    let tipo = req["body"]["tipo"];
+    const client = new MongoClient(connectionString);
+    await client.connect();
+    let db = client.db(DBNAME).collection('users');
+    let update;
+
+    if(tipo == "Partita") {
+        update = {
+            $inc: { "presenze.partite": 1 }
+        };
+    } else if(tipo == "Allenamento") {
+        update = {
+            $inc: { "presenze.allenamenti": 1 }
+        };
+    } else if(tipo == "Sessione Video") {
+        update = {
+            $inc: { "presenze.sessioni_video": 1 }
+        };
+    }
+
+    let updateRequest = db.updateOne({ "_id": id }, update);
+    updateRequest.then((data) => {
+        if (data.matchedCount > 0) {
+            res.status(200).send("Presenze aggiornate correttamente");
+        } else {
+            res.status(404).send("Evento non trovato");
+        }
+    }).catch((err) => {
+        res.status(500).send("Errore esecuzione query: " + err);
+    }).finally(() => {
+        client.close();
+    });
 });
 
 app.get("/api/getPresenze", async (req, res, next) => {
