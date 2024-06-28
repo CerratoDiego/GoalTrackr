@@ -424,8 +424,8 @@ $(document).ready(async function () {
                 let _tr = $("<tr>").appendTo($("#tbodyGiocatori"));
                 $("<td>").text(item.nome).appendTo(_tr);
                 $("<td>").text(item.cognome).appendTo(_tr);
-                $("<td>").text(item.data_di_nascita).appendTo(_tr);
-                $("<td>").text(item.numero).appendTo(_tr);
+                $("<td>").text(item.data_di_nascita).appendTo(_tr).css("width", "18%");
+                $("<td>").text(item.numero).appendTo(_tr).css("width", "20%");
                 $("<td>").text(item.ruolo).appendTo(_tr);
                 $("<button>").text("VISUALIZZA STATISTICHE").addClass("stats-button").css("background-color", "#107ed9").appendTo($("<td>").appendTo(_tr)).click(async function () {
                     await (giocatoreSelezionato = localStorage.setItem('giocatoreSelezionato', JSON.stringify(item)));
@@ -663,7 +663,6 @@ $(document).ready(async function () {
                                                 let request = inviaRichiesta('PATCH', '/api/aggiornaPresenzeGiocatore', { "tipo": item.tipo, utenteCorrente });
                                                 request.then((response) => {
                                                     console.log(response);
-                                                    alert("Presenza aggiornata correttamente");
                                                 });
                                                 request.catch((error) => {
                                                     console.log(error);
@@ -1118,7 +1117,8 @@ $(document).ready(async function () {
                 '<label for="cognome">Cognome: </label><input id="cognome" class="swal2-input">' +
                 '<label for="email">Email: </label><input id="email" class="swal2-input">' +
                 '<label for="data_di_nascita">Data di nascita: </label><input id="data_di_nascita" type="date" class="swal2-input">' +
-                '<label for="ruolo">Ruolo: </label><input id="ruolo" class="swal2-input">',
+                '<label for="ruolo">Ruolo: </label><input id="ruolo" class="swal2-input">' +
+                '<label for="maglia">Numero: </label><input id="maglia" class="swal2-input">',
             focusConfirm: false,
             showCancelButton: true,
             confirmButtonText: 'Conferma',
@@ -1129,14 +1129,15 @@ $(document).ready(async function () {
                     document.getElementById('cognome').value,
                     document.getElementById('email').value,
                     document.getElementById('data_di_nascita').value,
-                    document.getElementById('ruolo').value
+                    document.getElementById('ruolo').value,
+                    document.getElementById('maglia').value
                 ]
             }
         }).then((result) => {
             if (result.isConfirmed) {
-                const [nome, cognome, email, data_di_nascita, ruolo] = result.value;
-                // console.log(nome, cognome, email, data_di_nascita, ruolo);
-                let rq = inviaRichiesta('POST', '/api/newGiocatore', { nome, cognome, email, data_di_nascita, ruolo, utenteCorrente });
+                const [nome, cognome, email, data_di_nascita, ruolo, maglia] = result.value;
+                // console.log(nome, cognome, email, data_di_nascita, ruolo, maglia);
+                let rq = inviaRichiesta('POST', '/api/newGiocatore', { nome, cognome, email, data_di_nascita, ruolo, maglia, utenteCorrente });
                 rq.then((response) => {
                     console.log(response);
                     Swal.fire({
@@ -1263,8 +1264,8 @@ $(document).ready(async function () {
             $("#goalMigliorMarcatore").text(maxGoals);
             $("#assistMigliorAssistman").text(maxAssists);
             if (maxGoals > 0) {
-                $("#topGoalscorerImg").prop("src", topGoalscorerImg).css("cursor", "pointer").click(function () {
-                    window.location.href = "statistiche.html";
+                $("#topGoalscorerImg").prop("src", topGoalscorerImg).css("cursor", "pointer").click(async function () {
+                    window.location.href = "/statisticheGiocatore.html";
                 });
                 $("#topGoalscorer").text(topGoalscorer);
             }
@@ -1274,7 +1275,7 @@ $(document).ready(async function () {
             }
             if (maxAssists > 0) {
                 $("#topAssistmanImg").prop("src", topAssistmanImg).css("cursor", "pointer").click(function () {
-                    window.location.href = "statistiche.html";
+                    window.location.href = "statisticheGiocatore.html";
                 });
                 $("#topAssistman").text(topAssistman);
             }
@@ -1284,6 +1285,10 @@ $(document).ready(async function () {
             }
         });
     }
+
+    $("div.day").click(function () {
+        alert($(this).text());
+    });
 
     /* if (window.location.pathname.includes("presenze.html")) {
         await presenze();
@@ -1402,6 +1407,12 @@ $(document).ready(async function () {
                 _password.addClass("is-invalid");
                 _password.prev().addClass("icona-rossa");
                 errore(err)
+                Swal.fire({
+                    title: "Credenziali errate",
+                    icon: "error",
+                    showConfirmButton: false,
+                    timer: 1500
+                });
             });
             request.then(function (response) {
                 window.location.href = "index.html"
@@ -1672,7 +1683,6 @@ function gestionePresenze(id, nome, tipo, data, inizio, fine, luogo, città, isP
                                         let request = inviaRichiesta('PATCH', '/api/aggiornaPresenzeGiocatore', { tipo, utenteCorrente });
                                         request.then((response) => {
                                             console.log(response);
-                                            alert("Presenza aggiornata correttamente");
                                         });
                                         request.catch((error) => {
                                             console.log(error);

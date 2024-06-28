@@ -471,9 +471,9 @@ app.post("/api/newGiocatore", async (req, res, next) => {
     let telefono = ""
     let dataNascita = req["body"]["data_di_nascita"]
     let ruolo = req["body"]["ruolo"]
+    let maglia = req["body"]["maglia"]
     let squadra = req["body"]["utenteCorrente"]["squadra"]
     let categoria = "giocatore"
-    let numero = req["body"]["numero"]
     let statistiche = {
         "partite_giocate": 0,
         "goal": 0,
@@ -487,8 +487,8 @@ app.post("/api/newGiocatore", async (req, res, next) => {
     let request = db.insertOne({
         "nome": nome, "cognome": cognome, "username": username,
         "telefono": telefono, "data_di_nascita": dataNascita, "email": username,
-        "ruolo": ruolo, "squadra": squadra, "categoria": categoria,
-        "password": cognome, "numero": numero
+        "ruolo": ruolo, "numero": maglia, "squadra": squadra, "categoria": categoria,
+        "password": cognome
     })
     request.then((data) => {
         res.status(200).send("Giocatore aggiunto correttamente")
@@ -617,15 +617,15 @@ app.patch("/api/aggiornaPresenzeGiocatore", async (req, res, next) => {
     let db = client.db(DBNAME).collection('users');
     let update;
 
-    if(tipo == "Partita") {
+    if (tipo == "Partita") {
         update = {
             $inc: { "presenze.partite": 1 }
         };
-    } else if(tipo == "Allenamento") {
+    } else if (tipo == "Allenamento") {
         update = {
             $inc: { "presenze.allenamenti": 1 }
         };
-    } else if(tipo == "Sessione Video") {
+    } else if (tipo == "Sessione Video") {
         update = {
             $inc: { "presenze.sessioni_video": 1 }
         };
