@@ -74,12 +74,56 @@ $(document).ready(async function () {
         utenteCorrente = JSON.parse(localStorage.getItem('utenteCorrente'))
         await getDatiPersonali();
         $(".accountName").text(utenteCorrente.nome + " " + utenteCorrente.cognome);
+        $("#profileImage").prop("src", utenteCorrente.immagine)
+        console.log(utenteCorrente);
     }
 
     if (isSidebarToggled === 'true') {
         $('body').addClass('sidebar-toggled');
         _navbar.addClass('toggled');
     }
+
+    $("#btnSalvaImmagine").click(async function () {
+        let img = $("#txtFile").prop("files")[0];
+        if (!img) {
+            alert("Inserire immagine");
+        }
+        else {
+            Swal.fire({
+                title: "Attendere...",
+                icon: "info",
+                timer: 9000,
+                showConfirmButton: false
+            });
+            let imgBase64 = await base64Convert(img).catch((err) => alert(`Errore conversione file: ${err}`));
+            console.log(imgBase64);
+            let rq = inviaRichiesta("POST", "/api/addBase64CloudinaryImage", { "_id": utenteCorrente._id, imgBase64 });
+            rq.catch((errore) => {
+                console.log(errore);
+                Swal.fire({
+                    title: "Errore!",
+                    icon: "error",
+                    timer: 2000,
+                    showConfirmButton: false
+                });
+            });
+            rq.then((response) => {
+                Swal.fire({
+                    title: "Immagine inserita!",
+                    icon: "success",
+                    timer: 2000,
+                    showConfirmButton: false
+                });
+                $("#txtUser").val("");
+                $("#txtFile").val("");
+                getDatiPersonali();
+            });
+        }
+    });
+
+    $("#profileImage").click(async function () {
+        $("#txtFile").click();
+    });
 
     // Ordinamento delle tabelle per campi
     $("th").click(function () {
@@ -420,6 +464,11 @@ $(document).ready(async function () {
         rq.then((response) => {
             console.log(response.data);
             $("#nGiocatoriH1").text(response.data.length);
+            if (utenteCorrente.categoria === "allenatore") {
+                if ($("#trGiocatori th").filter(function () { return $(this).text() === "Elimina"; }).length === 0) {
+                    $("<th>").text("Elimina").appendTo($("#trGiocatori"));
+                }
+            }
             for (let item of response.data) {
                 let _tr = $("<tr>").appendTo($("#tbodyGiocatori"));
                 $("<td>").text(item.nome).appendTo(_tr);
@@ -431,6 +480,39 @@ $(document).ready(async function () {
                     await (giocatoreSelezionato = localStorage.setItem('giocatoreSelezionato', JSON.stringify(item)));
                     window.location.href = "/statisticheGiocatore.html";
                 });
+                if (utenteCorrente.categoria === "allenatore") {
+                    $("<button>").text("ELIMINA").addClass("stats-button").css("background-color", "#f00").appendTo($("<td>").appendTo(_tr)).click(async function () {
+                        Swal.fire({
+                            title: "Eliminazione giocatore",
+                            text: "Sei sicuro di voler eliminare il giocatore?",
+                            icon: "warning",
+                            showCancelButton: true,
+                            confirmButtonText: "Conferma",
+                            cancelButtonText: "Annulla",
+                            reverseButtons: true
+                        }).then((result) => {
+                            if (result.isConfirmed) {
+                                let rq = inviaRichiesta('DELETE', '/api/eliminaGiocatore', { "_id": item._id });
+                                rq.then((response) => {
+                                    console.log(response);
+                                    if (response.data == "Giocatore eliminato correttamente") {
+                                        Swal.fire({
+                                            title: "Giocatore eliminato!",
+                                            icon: "success",
+                                            showConfirmButton: false,
+                                            timer: 2000
+                                        });
+                                        $("#tbodyGiocatori").empty();
+                                        getGiocatori();
+                                    }
+                                });
+                                rq.catch((error) => {
+                                    console.log(error);
+                                });
+                            }
+                        });
+                    });
+                }
             }
         });
         rq.catch((error) => {
@@ -447,6 +529,7 @@ $(document).ready(async function () {
         let giocatoreSelezionato = JSON.parse(localStorage.getItem('giocatoreSelezionato'));
         $("#statsGiocatoreH1").text("Statistiche di " + giocatoreSelezionato.cognome + " " + giocatoreSelezionato.nome);
         $("#imgPlayer").prop("src", giocatoreSelezionato.immagine);
+        console.log(giocatoreSelezionato);
         $("#partiteGiocate").val(giocatoreSelezionato.statistiche.partite_giocate);
         $("#goalSegnati").val(giocatoreSelezionato.statistiche.gol);
         $("#assistEffettuati").val(giocatoreSelezionato.statistiche.assist);
@@ -1028,6 +1111,7 @@ $(document).ready(async function () {
             $(".accountFields").eq(4).val(response.data[0].username);
             $(".accountFields").eq(5).val(response.data[0].telefono);
             $(".accountFields").eq(6).val(response.data[0].squadra);
+            $("#profileImage").prop("src", response.data[0].immagine);
 
             utenteCorrente = {
                 "_id": response.data[0]._id,
@@ -1038,8 +1122,10 @@ $(document).ready(async function () {
                 "username": response.data[0].username,
                 "telefono": response.data[0].telefono,
                 "squadra": response.data[0].squadra,
-                "categoria": response.data[0].categoria
+                "categoria": response.data[0].categoria,
+                "immagine": response.data[0].immagine
             };
+            console.log(response.data[0].immagine)
             localStorage.setItem('utenteCorrente', JSON.stringify(utenteCorrente));
         });
         rq.catch((error) => {
@@ -1063,16 +1149,18 @@ $(document).ready(async function () {
             $("#btnSalvaModifiche").hide();
             $("#btnAnnullaModifiche").hide();
 
-            var isValid = true;
-            $("input").each(function () {
-                if ($(this).val().trim() === "") {
-                    isValid = false;
-                    return false;
-                }
-            });
+            // var isValid = true;
+            // $("input").each(function () {
+            //     if ($(this).val().trim() === "") {
+            //         isValid = false;
+            //         return false;
+            //     }
+            // });
 
-            if (!isValid) {
+            if ($(".accountFields").eq(0).val() === "" || $(".accountFields").eq(1).val() === ""
+                || $(".accountFields").eq(2).val() === "" || $(".accountFields").eq(3).val() === "") {
                 Swal.fire("Errore", "Compilare tutti i campi", "error");
+                getDatiPersonali();
             } else {
                 let accountDetails = {};
                 accountDetails.nome = $(".accountFields").eq(0).val();
@@ -1200,7 +1288,6 @@ $(document).ready(async function () {
                 // console.log(nome, tipo, data, inizio, fine, luogo, città);
                 let aus = data.split("-");
                 console.log(aus);
-                alert("FERMA")
                 let newData = `${aus[2]}-${aus[1]}-${aus[0]}`;
                 let rq = inviaRichiesta('POST', '/api/newEvento', { nome, tipo, "data": newData, inizio, fine, luogo, città, utenteCorrente });
                 rq.then((response) => {
@@ -1231,7 +1318,10 @@ $(document).ready(async function () {
             let maxAssists = 0;
             let topAssistman, topAssistmanImg;
             for (let item of response.data) {
-                let _tr = $("<tr>").appendTo($("#tbodyStatistiche"));
+                let _tr = $("<tr>").appendTo($("#tbodyStatistiche")).click(async function () {
+                    await (giocatoreSelezionato = localStorage.setItem('giocatoreSelezionato', JSON.stringify(item)));
+                    window.location.href = "/statisticheGiocatore.html";
+                });
                 if (utenteCorrente.categoria === "allenatore") {
                     $("<input>").prop("disabled", true).prop("type", "text").css("width", "120px").css("text-align", "center").val(item.nome).appendTo($("<td>").appendTo(_tr));
                     $("<input>").prop("disabled", true).prop("type", "text").css("width", "120px").css("text-align", "center").val(item.cognome).appendTo($("<td>").appendTo(_tr));
@@ -1286,9 +1376,9 @@ $(document).ready(async function () {
         });
     }
 
-    $("div.day").click(function () {
+    /* $("div.day").click(function () {
         alert($(this).text());
-    });
+    }); */
 
     /* if (window.location.pathname.includes("presenze.html")) {
         await presenze();
@@ -1367,7 +1457,7 @@ $(document).ready(async function () {
             controllaLogin();
     });
 
-    if (window.location.pathname.includes("login.html")) {
+    /* if (window.location.pathname.includes("login.html")) {
         let rq = inviaRichiesta("PATCH", "/api/encryptPassword");
         rq.then(function (data) {
             console.log(data);
@@ -1375,7 +1465,7 @@ $(document).ready(async function () {
         rq.catch(function (err) {
             console.log(err);
         });
-    }
+    } */
 
     function controllaLogin() {
         _username.removeClass("is-invalid");
@@ -1900,6 +1990,30 @@ function visualizzaPresenze(presenze) {
                     visualizzaPresenze(presenze);
                 }
             });
+        }
+    });
+}
+
+
+
+
+
+
+
+
+function base64Convert(fileObject) {
+    return new Promise((resolve, reject) => {
+        let reader = new FileReader();
+        reader.readAsDataURL(fileObject);
+        // event viene passato a tutte le procedure Javascript e contiene 
+        // un parametro chiamato target che rappresenta il puntatore all'elemento 
+        // che ha scatenato l'evento
+        reader.onload = (event) => {
+            // resolve(reader.result);
+            resolve(event.target.result);
+        }
+        reader.onerror = (err) => {
+            reject(err);
         }
     });
 }
