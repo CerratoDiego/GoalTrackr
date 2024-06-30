@@ -8,7 +8,7 @@ import _fileUpload from "express-fileupload";
 // const _nodemailer = require("nodemailer");
 import _jwt from "jsonwebtoken";
 import _bcrypt from "bcryptjs"; // + @types
-// import _cloudinary, { UploadApiResponse } from 'cloudinary';
+import _cloudinary, { UploadApiResponse } from 'cloudinary';
 // import _streamifier from "streamifier";
 // import _axios from "axios";
 // import _nodemailer from "nodemailer";
@@ -19,11 +19,11 @@ import _bcrypt from "bcryptjs"; // + @types
 _dotenv.config({ "path": ".env" });
 
 // Configurazione Cloudinary
-// _cloudinary.v2.config({
-//     cloud_name: process.env.cloud_name,
-//     api_key: process.env.api_key,
-//     api_secret: process.env.api_secret
-// });
+_cloudinary.v2.config({
+    cloud_name: process.env.cloud_name,
+    api_key: process.env.api_key,
+    api_secret: process.env.api_secret
+});
 
 // Variabili relative a MongoDB ed Express
 import { MongoClient, ObjectId } from "mongodb";
@@ -467,7 +467,8 @@ app.patch("/api/updateDatiPersonali", async (req, res, next) => {
 app.post("/api/newGiocatore", async (req, res, next) => {
     let nome = req["body"]["nome"]
     let cognome = req["body"]["cognome"]
-    let username = ""
+    let username = nome.toLowerCase() + "." + cognome.toLowerCase()
+    let email = username + "@example.com"
     let telefono = ""
     let dataNascita = req["body"]["data_di_nascita"]
     let ruolo = req["body"]["ruolo"]
@@ -476,22 +477,46 @@ app.post("/api/newGiocatore", async (req, res, next) => {
     let categoria = "giocatore"
     let statistiche = {
         "partite_giocate": 0,
-        "goal": 0,
+        "gol": 0,
         "assist": 0,
         "ammonizioni": 0,
         "espulsioni": 0
+    }
+    let presenze = {
+        "partite": 0,
+        "allenamenti": 0,
+        "sessioni_video": 0
     }
     const client = new MongoClient(connectionString)
     await client.connect()
     let db = client.db(DBNAME).collection("users")
     let request = db.insertOne({
         "nome": nome, "cognome": cognome, "username": username,
-        "telefono": telefono, "data_di_nascita": dataNascita, "email": username,
-        "ruolo": ruolo, "numero": maglia, "squadra": squadra, "categoria": categoria,
-        "password": cognome
+        "telefono": telefono, "data_di_nascita": dataNascita, "email": email,
+        "ruolo": ruolo, "numero": maglia, "squadra": squadra, "categoria": categoria, "oldPassword": cognome, 
+        "immagine": "https://res.cloudinary.com/doxdpaiqr/image/upload/v1716055693/GoalTrackr/h9y1tserq3xlqheyfhzr.png",
+        "password": "", statistiche, presenze
     })
     request.then((data) => {
         res.status(200).send("Giocatore aggiunto correttamente")
+    })
+    request.catch((err) => {
+        res.status(500).send("Errore esecuzione query: " + err)
+    })
+    request.finally(() => {
+        client.close()
+    })
+});
+
+app.delete("/api/eliminaGiocatore", async (req, res, next) => {
+    let id = new ObjectId(req["body"]["_id"])
+    const client = new MongoClient(connectionString)
+    await client.connect()
+    let db = client.db(DBNAME).collection("users")
+    let request = db.deleteOne({ "_id": id })
+    console.log("AO: " + id)
+    request.then((data) => {
+        res.status(200).send("Giocatore eliminato correttamente")
     })
     request.catch((err) => {
         res.status(500).send("Errore esecuzione query: " + err)
@@ -660,6 +685,29 @@ app.get("/api/getPresenze", async (req, res, next) => {
     request.finally(() => {
         client.close()
     })
+});
+
+app.post("/api/addBase64CloudinaryImage", async (req, res, next) => {
+    let imgBase64 = req["body"].imgBase64;
+    let id = new ObjectId(req["body"]._id);
+    _cloudinary.v2.uploader.upload(imgBase64, {
+        "folder": "GoalTrackr",
+        "width": 500,
+        "height": 500,
+        "crop": "fill"
+    })
+        .catch((err) => {
+            res.status(500).send(`Error uploading file to Cloudinary: ${err}`);
+        })
+        .then(async (response: UploadApiResponse) => {
+            const client = new MongoClient(connectionString);
+            await client.connect();
+            let collection = client.db(DBNAME).collection("users");
+            let rq = collection.updateOne({ "_id": id }, { $set: { "immagine": response.secure_url } });
+            rq.then((data) => res.send(data));
+            rq.catch((err) => res.status(500).send(`Errore esecuzione query: ${err}`));
+            rq.finally(() => client.close());
+        })
 });
 
 app.post("/api/", async (req, res, next) => { });
